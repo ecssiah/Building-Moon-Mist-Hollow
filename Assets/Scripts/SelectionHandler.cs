@@ -22,7 +22,7 @@ public class SelectionHandler : MonoBehaviour
     private void OnMouseDown()
     {
         Vector3 selectedPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector3 isoGridVector = ConversionUtilities.ToIsoGrid(selectedPosition);
+        Vector3 isoGridVector = Utilities.ToIsoGrid(selectedPosition);
 
         selectionData.selectedCell = isoGridVector;
     }

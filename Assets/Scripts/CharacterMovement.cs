@@ -57,6 +57,6 @@ public class CharacterMovement : MonoBehaviour
             random.Next(-1, 2), random.Next(-1, 2), 0
         );
 
-        return ConversionUtilities.CartesianToIso(newDirection);
+        return Utilities.CartesianToIso(newDirection);
     }
 }
