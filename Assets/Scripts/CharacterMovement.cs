@@ -57,16 +57,6 @@ public class CharacterMovement : MonoBehaviour
             random.Next(-1, 2), random.Next(-1, 2), 0
         );
 
-        return ToIso(newDirection.normalized);
-    }
-
-
-    private Vector3 ToIso(Vector3 cartesianVector)
-    {
-        return new Vector3(
-            cartesianVector.x - cartesianVector.y,
-            (cartesianVector.x + cartesianVector.y) / 2,
-            0
-        );
+        return ConversionUtilities.CartesianToIso(newDirection);
     }
 }

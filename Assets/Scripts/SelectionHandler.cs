@@ -6,10 +6,12 @@ public class SelectionHandler : MonoBehaviour
 {
     private SelectionData selectionData;
 
+
     void Start()
     {
         selectionData = GetComponentInParent<SelectionData>();    
     }
+
 
     void Update()
     {
@@ -20,7 +22,8 @@ public class SelectionHandler : MonoBehaviour
     private void OnMouseDown()
     {
         Vector3 selectedPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 isoGridVector = ConversionUtilities.ToIsoGrid(selectedPosition);
 
-        selectionData.selectedCell = selectedPosition; 
+        selectionData.selectedCell = isoGridVector;
     }
 }
