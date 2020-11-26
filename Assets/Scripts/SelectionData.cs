@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class SelectionData : MonoBehaviour
 {
-    public Vector3 selectedCell;
+    public Vector3Int selectedCell;
 }
