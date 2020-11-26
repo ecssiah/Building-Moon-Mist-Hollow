@@ -21,6 +21,5 @@ public class CharacterSelectionHandler : MonoBehaviour
 
     private void OnMouseDown()
     {
-        selectionHandler.OnCharacterSelection();
     }
 }

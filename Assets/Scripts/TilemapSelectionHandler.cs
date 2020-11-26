@@ -21,6 +21,5 @@ public class TilemapSelectionHandler : MonoBehaviour
 
     private void OnMouseDown()
     {
-        selectionHandler.OnTilemapSelection();
     }
 }

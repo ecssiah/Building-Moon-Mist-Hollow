@@ -38,20 +38,30 @@ public class SelectionHandler : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
 
+            if (hit.collider != null)
+            {
+                OnEntitySelection(hit.transform.gameObject);
+            } else
+            {
+                OnTilemapSelection();
+            }
+        }
     }
 
 
-    public void OnCharacterSelection()
+    private void OnEntitySelection(GameObject gameObject)
     {
-        Debug.Log("Character selected");
+        Debug.Log(gameObject.name);
     }
 
 
-    public void OnTilemapSelection()
+    private void OnTilemapSelection()
     {
-        Debug.Log("Tilemap selected");
-
         tilemaps["Overlay"].SetTile(selectionData.selectedCell, null);
 
         Vector3 selectedPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
