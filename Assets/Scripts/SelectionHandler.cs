@@ -17,25 +17,6 @@ public class SelectionHandler : MonoBehaviour
     }
 
 
-    private void InitTilemaps()
-    {
-        selectionData = GetComponentInParent<SelectionData>();
-
-        selectionTile = Resources.Load<Tile>("Tiles/Selection_1");
-
-        tilemaps = new Dictionary<string, Tilemap>();
-
-        Tilemap[] tilemapsArray = GetComponentsInChildren<Tilemap>();
-
-        foreach (Tilemap tilemap in tilemapsArray)
-        {
-            tilemaps[tilemap.name] = tilemap;
-        }
-
-
-    }
-
-
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
@@ -54,6 +35,23 @@ public class SelectionHandler : MonoBehaviour
     }
 
 
+    private void InitTilemaps()
+    {
+        selectionData = GetComponentInParent<SelectionData>();
+
+        selectionTile = Resources.Load<Tile>("Tiles/Selection_1");
+
+        tilemaps = new Dictionary<string, Tilemap>();
+
+        Tilemap[] tilemapsArray = GetComponentsInChildren<Tilemap>();
+
+        foreach (Tilemap tilemap in tilemapsArray)
+        {
+            tilemaps[tilemap.name] = tilemap;
+        }
+    }
+
+
     private void OnEntitySelection(GameObject gameObject)
     {
         Debug.Log(gameObject.name);
@@ -62,7 +60,7 @@ public class SelectionHandler : MonoBehaviour
 
     private void OnTilemapSelection()
     {
-        tilemaps["Overlay"].SetTile(selectionData.selectedCell, null);
+        ResetSelection();
 
         Vector3 selectedPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3Int isoGridVector = Utilities.ToIsoGrid(selectedPosition);
@@ -70,5 +68,11 @@ public class SelectionHandler : MonoBehaviour
         tilemaps["Overlay"].SetTile(isoGridVector, selectionTile);
 
         selectionData.selectedCell = isoGridVector;
+    }
+
+
+    private void ResetSelection()
+    {
+        tilemaps["Overlay"].SetTile(selectionData.selectedCell, null);
     }
 }
