@@ -10,10 +10,16 @@ public class SelectionHandler : MonoBehaviour
 
     private Dictionary<string, Tilemap> tilemaps;
 
+    private InfoPanelController infoPanelController;
+
 
     void Start()
     {
         InitTilemaps();
+
+        infoPanelController = GameObject.Find("Info Panel").GetComponent<InfoPanelController>();
+
+        Debug.Log(infoPanelController);
     }
 
 
@@ -38,7 +44,6 @@ public class SelectionHandler : MonoBehaviour
     private void InitTilemaps()
     {
         selectionData = GetComponentInParent<SelectionData>();
-
         selectionTile = Resources.Load<Tile>("Tiles/Selection_1");
 
         tilemaps = new Dictionary<string, Tilemap>();
@@ -66,6 +71,8 @@ public class SelectionHandler : MonoBehaviour
         Vector3Int isoGridVector = Utilities.ToIsoGrid(selectedPosition);
 
         tilemaps["Overlay"].SetTile(isoGridVector, selectionTile);
+
+        infoPanelController.updateSelection(isoGridVector);
 
         selectionData.selectedCell = isoGridVector;
     }
