@@ -15,17 +15,18 @@ public class EntitySystem : MonoBehaviour
 
         namingSystem = GetComponent<NamingSystem>();
 
-        GenerateCharacter(new Vector3(-1, 0, 0));
-        GenerateCharacter(new Vector3(1, 0, 0));
-        GenerateCharacter(new Vector3(0, 1, 0));
-        GenerateCharacter(new Vector3(0, -1, 0));
+        GenerateCharacter(new Vector3(0, 0, 0));
+        GenerateCharacter(new Vector3(-2, -2, 0));
+        GenerateCharacter(new Vector3(2, -2, 0));
     }
 
 
     private void GenerateCharacter(Vector3 position)
     {
+        Vector3 screenPosition = Utilities.CartesianToIso(position * 0.5f);
+
         GameObject characterObject = Instantiate(
-            characterPrefab, position, Quaternion.identity
+            characterPrefab, screenPosition, Quaternion.identity
         );
 
         characterObject.transform.parent = this.transform;
