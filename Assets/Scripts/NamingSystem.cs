@@ -4,15 +4,30 @@ using UnityEngine;
 
 public class NamingSystem : MonoBehaviour
 {
+    public string[] names;
+
+    private int currentNameIndex;
+
     private string[] initialElements = { "Lri", "Ats", "Kar", "Dea" };
     private string[] middleElements = { "kah", "tre", "ede", "she" };
     private string[] finalElements = { "cale", "si", "silt", "treh" };
 
-    public string[] names;
 
-    // Start is called before the first frame update
     void Start()
     {
+        GenerateNames();
+    }
+
+
+    void Update()
+    {
+        
+    }
+
+
+    private void GenerateNames()
+    {
+        currentNameIndex = 0;
         names = new string[50];
 
         for (int i = 0; i < names.Length; i++)
@@ -27,9 +42,14 @@ public class NamingSystem : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+
+    public string GetName()
     {
-        
-    }
+        if (currentNameIndex >= names.Length)
+        {
+            GenerateNames();
+        }
+
+        return names[currentNameIndex++];
+    } 
 }

@@ -13,26 +13,21 @@ public class EntitySystem : MonoBehaviour
     {
         namingSystem = GetComponent<NamingSystem>();
 
-        GameObject characterObject1 = Instantiate(
-            characterPrefab, new Vector3(0, 0, 0), Quaternion.identity
+        GenerateCharacter(new Vector3(-4, 0, 0));
+        GenerateCharacter(new Vector3(4, 0, 0));
+        GenerateCharacter(new Vector3(0, 4, 0));
+        GenerateCharacter(new Vector3(0, -4, 0));
+    }
+
+
+    private void GenerateCharacter(Vector3 position)
+    {
+        GameObject characterObject = Instantiate(
+            characterPrefab, position, Quaternion.identity
         );
 
-        characterObject1.transform.parent = this.transform;
-        characterObject1.name = namingSystem.names[0];
-
-        GameObject characterObject2 = Instantiate(
-            characterPrefab, new Vector3(4, 4, 0), Quaternion.identity
-        );
-
-        characterObject2.transform.parent = this.transform;
-        characterObject2.name = namingSystem.names[1];
-
-        GameObject characterObject3 = Instantiate(
-            characterPrefab, new Vector3(-4, -4, 0), Quaternion.identity
-        );
-
-        characterObject3.transform.parent = this.transform;
-        characterObject3.name = namingSystem.names[2];
+        characterObject.transform.parent = this.transform;
+        characterObject.name = namingSystem.GetName();
     }
 
 
