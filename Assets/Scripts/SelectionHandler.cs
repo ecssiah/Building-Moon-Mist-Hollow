@@ -7,7 +7,6 @@ public class SelectionHandler : MonoBehaviour
 {
     private SelectionData selectionData;
     private Tile selectionTile;
-
     private Dictionary<string, Tilemap> tilemaps;
 
     private InfoPanelController infoPanelController;
@@ -16,10 +15,7 @@ public class SelectionHandler : MonoBehaviour
     void Start()
     {
         InitTilemaps();
-
-        infoPanelController = GameObject.Find("Info Panel").GetComponent<InfoPanelController>();
-
-        Debug.Log(infoPanelController);
+        InitInfoPanel();
     }
 
 
@@ -27,16 +23,7 @@ public class SelectionHandler : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
-
-            if (hit.collider != null)
-            {
-                OnEntitySelection(hit.transform.gameObject);
-            } else
-            {
-                OnTilemapSelection();
-            }
+            OnSelection();
         }
     }
 
@@ -57,9 +44,31 @@ public class SelectionHandler : MonoBehaviour
     }
 
 
+    private void InitInfoPanel()
+    {
+        infoPanelController = GameObject.Find("Info Panel").GetComponent<InfoPanelController>();
+    }
+
+
     private void OnEntitySelection(GameObject gameObject)
     {
         Debug.Log(gameObject.name);
+    }
+
+
+    private void OnSelection()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
+
+        if (hit.collider != null)
+        {
+            OnEntitySelection(hit.transform.gameObject);
+        }
+        else
+        {
+            OnTilemapSelection();
+        }
     }
 
 

@@ -23,7 +23,7 @@ public class CharacterAnimator : MonoBehaviour
 
     private CharacterAnimationType currentAnimationType;
 
-    // Start is called before the first frame update
+
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -32,7 +32,6 @@ public class CharacterAnimator : MonoBehaviour
     }
 
 
-    // Update is called once per frame
     void Update()
     {
         UpdateFrame();

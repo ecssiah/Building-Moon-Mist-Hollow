@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -51,7 +52,7 @@ public class CharacterMovement : MonoBehaviour
 
     private Vector2 GetDirection()
     {
-        System.Random random = new System.Random();
+        System.Random random = new System.Random(Guid.NewGuid().GetHashCode());
 
         Vector3 newDirection = new Vector3(
             random.Next(-1, 2), random.Next(-1, 2), 0
