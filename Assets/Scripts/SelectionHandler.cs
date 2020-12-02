@@ -77,7 +77,7 @@ public class SelectionHandler : MonoBehaviour
         ResetSelection();
 
         Vector3 selectedPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector3Int isoGridVector = Utilities.ToIsoGrid(selectedPosition);
+        Vector3Int isoGridVector = Utilities.ScreenToIsoGrid(selectedPosition);
 
         tilemaps["Overlay"].SetTile(isoGridVector, selectionTile);
 
