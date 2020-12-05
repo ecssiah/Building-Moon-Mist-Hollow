@@ -9,15 +9,28 @@ public class EntitySystem : MonoBehaviour
     private NamingSystem namingSystem;
 
 
-    void Start()
+    void Awake()
     {
         Physics2D.IgnoreLayerCollision(8, 8, true);
 
         namingSystem = GetComponent<NamingSystem>();
 
-        GenerateCharacter(new Vector3(0, 0, 0));
+        GenerateCharacter(new Vector3(-2, 2, 0));
         GenerateCharacter(new Vector3(-2, -2, 0));
         GenerateCharacter(new Vector3(2, -2, 0));
+        GenerateCharacter(new Vector3(2, 2, 0));
+    }
+
+
+    void Start()
+    {
+
+    }
+
+
+    void Update()
+    {
+        
     }
 
 
@@ -32,11 +45,5 @@ public class EntitySystem : MonoBehaviour
         characterObject.transform.parent = this.transform;
         characterObject.name = namingSystem.GetName();
         characterObject.layer = 8;
-    }
-
-
-    void Update()
-    {
-        
     }
 }

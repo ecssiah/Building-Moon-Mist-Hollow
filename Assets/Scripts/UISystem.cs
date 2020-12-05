@@ -9,33 +9,62 @@ public class UISystem : MonoBehaviour
     public GameObject entityLabelPrefab;
 
     private GameObject labelsObject;
+    private GameObject entitiesObject;
+
+    private GameObject[] entities;
+    private GameObject[] labels;
+
+
+    void Awake()
+    {
+        labelsObject = GameObject.Find("Labels");
+    }
+
 
     void Start()
     {
-        Init();
+        entitiesObject = GameObject.Find("Entities");
+
+        entities = new GameObject[entitiesObject.transform.childCount];
+        labels = new GameObject[entitiesObject.transform.childCount];
+
+        int i = 0;
+        foreach (Transform t in entitiesObject.transform)
+        {
+            entities[i] = t.transform.gameObject;
+            labels[i] = CreateLabel(t.transform.gameObject);
+
+            i++;
+        }
     }
 
 
-    void Update()
+    private GameObject CreateLabel(GameObject entity)
     {
-        
-    }
+        Debug.Log(entity.transform.position);
 
-
-    private void Init()
-    {
-        labelsObject = GameObject.Find("Labels");
-
-        Vector3 worldPosition = new Vector3(0, 0, 0);
-        Vector3 screenPosition = Utilities.WorldToScreen(worldPosition);
+        Vector3 screenPosition = Utilities.WorldToScreen(entity.transform.position);
 
         GameObject newLabel = Instantiate(
             entityLabelPrefab, screenPosition, Quaternion.identity
         );
 
         TextMeshProUGUI text = newLabel.GetComponent<TextMeshProUGUI>();
-        text.text = "Entity Name";
+        text.text = entity.name;
 
         newLabel.transform.SetParent(labelsObject.transform, true);
+
+        return newLabel;
+    }
+
+
+    void Update()
+    {
+        for (int i = 0; i < entities.Length; i++)
+        {
+            labels[i].transform.position = Utilities.WorldToScreen(
+                entities[i].transform.position
+            );
+        }
     }
 }
