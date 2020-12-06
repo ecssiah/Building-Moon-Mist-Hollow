@@ -5,11 +5,11 @@ using UnityEngine.Tilemaps;
 
 public class SelectionHandler : MonoBehaviour
 {
-    private SelectionData selectionData;
-    private Tile selectionTile;
-    private Dictionary<string, Tilemap> tilemaps;
+    private SelectionData SelectionData;
+    private Tile SelectedTile;
+    private Dictionary<string, Tilemap> Tilemaps;
 
-    private InfoPanelController infoPanelController;
+    private InfoPanelController InfoPanelController;
 
 
     void Start()
@@ -30,23 +30,23 @@ public class SelectionHandler : MonoBehaviour
 
     private void InitTilemaps()
     {
-        selectionData = GetComponentInParent<SelectionData>();
-        selectionTile = Resources.Load<Tile>("Tiles/Selection_1");
+        SelectionData = GetComponentInParent<SelectionData>();
+        SelectedTile = Resources.Load<Tile>("Tiles/Selection_1");
 
-        tilemaps = new Dictionary<string, Tilemap>();
+        Tilemaps = new Dictionary<string, Tilemap>();
 
-        Tilemap[] tilemapsArray = GetComponentsInChildren<Tilemap>();
+        Tilemap[] TilemapsArray = GetComponentsInChildren<Tilemap>();
 
-        foreach (Tilemap tilemap in tilemapsArray)
+        foreach (Tilemap Tilemap in TilemapsArray)
         {
-            tilemaps[tilemap.name] = tilemap;
+            Tilemaps[Tilemap.name] = Tilemap;
         }
     }
 
 
     private void InitInfoPanel()
     {
-        infoPanelController = GameObject.Find("Info Panel").GetComponent<InfoPanelController>();
+        InfoPanelController = GameObject.Find("Info Panel").GetComponent<InfoPanelController>();
     }
 
 
@@ -58,12 +58,12 @@ public class SelectionHandler : MonoBehaviour
 
     private void OnSelection()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
+        Ray CameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit2D Hit = Physics2D.Raycast(CameraRay.origin, CameraRay.direction);
 
-        if (hit.collider != null)
+        if (Hit.collider != null)
         {
-            OnEntitySelection(hit.transform.gameObject);
+            OnEntitySelection(Hit.transform.gameObject);
         }
         else
         {
@@ -76,19 +76,21 @@ public class SelectionHandler : MonoBehaviour
     {
         ResetSelection();
 
-        Vector3 selectedPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector3Int isoGridVector = Utilities.ScreenToIsoGrid(selectedPosition);
+        Vector3 SelectedPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        SelectedPosition.y += 0.25f;
 
-        tilemaps["Overlay"].SetTile(isoGridVector, selectionTile);
+        Vector3Int IsoGridVector = Utilities.ScreenToIsoGrid(SelectedPosition);
 
-        infoPanelController.updateSelection(isoGridVector);
+        Tilemaps["Overlay"].SetTile(IsoGridVector, SelectedTile);
 
-        selectionData.selectedCell = isoGridVector;
+        InfoPanelController.updateSelection(IsoGridVector);
+
+        SelectionData.selectedCell = IsoGridVector;
     }
 
 
     private void ResetSelection()
     {
-        tilemaps["Overlay"].SetTile(selectionData.selectedCell, null);
+        Tilemaps["Overlay"].SetTile(SelectionData.selectedCell, null);
     }
 }

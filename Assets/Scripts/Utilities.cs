@@ -26,11 +26,11 @@ public static class Utilities
 
     public static Vector3Int ScreenToIsoGrid(Vector3 screen)
     {
-        Vector3 isoVector = ScreenToIso(screen);
+        Vector3 IsoVector = ScreenToIso(screen);
 
         return new Vector3Int(
-            (int)Mathf.Floor(isoVector.x),
-            (int)Mathf.Floor(isoVector.y),
+            (int)Mathf.Floor(IsoVector.x),
+            (int)Mathf.Floor(IsoVector.y),
             0
         );
     }
@@ -38,6 +38,8 @@ public static class Utilities
 
     public static Vector3 WorldToScreen(Vector3 worldPosition)
     {
-        return RectTransformUtility.WorldToScreenPoint(Camera.main, worldPosition);
+        return RectTransformUtility.WorldToScreenPoint(
+            Camera.main, worldPosition
+        );
     }
 }

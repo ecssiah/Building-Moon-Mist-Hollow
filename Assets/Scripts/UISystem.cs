@@ -6,35 +6,37 @@ using UnityEngine.UI;
 
 public class UISystem : MonoBehaviour
 {
-    public GameObject entityLabelPrefab;
+    public GameObject EntityLabelPrefab;
 
-    private GameObject labelsObject;
-    private GameObject entitiesObject;
+    private GameObject LabelsObject;
+    private GameObject EntitiesObject;
 
-    private GameObject[] entities;
-    private GameObject[] labels;
+    private int[] SelectedEntities;
+
+    private GameObject[] Entities;
+    private GameObject[] Labels;
 
     private const int DEFAULT_ORTHOGRAPHIC_SIZE = 4;
 
 
     void Awake()
     {
-        labelsObject = GameObject.Find("Labels");
+        LabelsObject = GameObject.Find("Labels");
     }
 
 
     void Start()
     {
-        entitiesObject = GameObject.Find("Entities");
+        EntitiesObject = GameObject.Find("Entities");
 
-        entities = new GameObject[entitiesObject.transform.childCount];
-        labels = new GameObject[entitiesObject.transform.childCount];
+        Entities = new GameObject[EntitiesObject.transform.childCount];
+        Labels = new GameObject[EntitiesObject.transform.childCount];
 
         int i = 0;
-        foreach (Transform t in entitiesObject.transform)
+        foreach (Transform t in EntitiesObject.transform)
         {
-            entities[i] = t.transform.gameObject;
-            labels[i] = CreateLabel(t.transform.gameObject);
+            Entities[i] = t.transform.gameObject;
+            Labels[i] = CreateLabel(t.transform.gameObject);
 
             i++;
         }
@@ -43,33 +45,33 @@ public class UISystem : MonoBehaviour
 
     private GameObject CreateLabel(GameObject entity)
     {
-        Debug.Log(entity.transform.position);
+        Vector3 ScreenPosition = Utilities.WorldToScreen(entity.transform.position);
 
-        Vector3 screenPosition = Utilities.WorldToScreen(entity.transform.position);
-
-        GameObject newLabel = Instantiate(
-            entityLabelPrefab, screenPosition, Quaternion.identity
+        GameObject NewLabel = Instantiate(
+            EntityLabelPrefab, ScreenPosition, Quaternion.identity
         );
 
-        TextMeshProUGUI text = newLabel.GetComponent<TextMeshProUGUI>();
-        text.text = entity.name;
-        text.fontSize = 14;
+        TextMeshProUGUI Text = NewLabel.GetComponent<TextMeshProUGUI>();
+        Text.text = entity.name;
+        Text.fontSize = 14;
 
-        newLabel.transform.SetParent(labelsObject.transform, true);
+        NewLabel.transform.SetParent(LabelsObject.transform, true);
 
-        return newLabel;
+        return NewLabel;
 
     }
 
 
     void Update()
     {
-        for (int i = 0; i < entities.Length; i++)
-        {
-            Vector3 labelPosition = Utilities.WorldToScreen(entities[i].transform.position);
-            labelPosition.y += (64 * DEFAULT_ORTHOGRAPHIC_SIZE / Camera.main.orthographicSize);
+        float CameraSizeRatio = DEFAULT_ORTHOGRAPHIC_SIZE / Camera.main.orthographicSize;
 
-            labels[i].transform.position = labelPosition;
+        for (int i = 0; i < Entities.Length; i++)
+        {
+            Vector3 LabelPosition = Utilities.WorldToScreen(Entities[i].transform.position);
+            LabelPosition.y += 64 * CameraSizeRatio;
+
+            Labels[i].transform.position = LabelPosition;
         }
     }
 }

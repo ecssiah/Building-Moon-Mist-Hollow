@@ -5,12 +5,12 @@ using UnityEngine.UI;
 
 public class InfoPanelController : MonoBehaviour
 {
-    private Text cellLabel;
+    private Text DataText;
 
 
     void Start()
     {
-        cellLabel = GameObject.Find("Cell Info").GetComponent<Text>();    
+        DataText = GameObject.Find("Data").GetComponent<Text>();    
     }
 
 
@@ -22,7 +22,7 @@ public class InfoPanelController : MonoBehaviour
 
     public void updateSelection(Vector3Int selection)
     {
-        cellLabel.text = $"({selection.x},{selection.y})";
+        DataText.text = $"({selection.x},{selection.y})";
     }
 
 

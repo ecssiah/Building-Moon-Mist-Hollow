@@ -7,13 +7,13 @@ public class CameraController : MonoBehaviour
     public float panSpeed = 24f;
     public float zoomSpeed = 10f;
 
-    // Start is called before the first frame update
+
     void Start()
     {
         
     }
 
-    // Update is called once per frame
+
     void Update()
     {
         float dx = panSpeed * Time.deltaTime * Input.GetAxis("Horizontal");

@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class EntitySystem : MonoBehaviour
 {
-    public GameObject characterPrefab;
+    public GameObject CharacterPrefab;
 
-    private NamingSystem namingSystem;
+    private NamingSystem NamingSystem;
 
 
     void Awake()
     {
         Physics2D.IgnoreLayerCollision(8, 8, true);
 
-        namingSystem = GetComponent<NamingSystem>();
+        NamingSystem = GetComponent<NamingSystem>();
 
         GenerateCharacter(new Vector3(-2, 2, 0));
         GenerateCharacter(new Vector3(-2, -2, 0));
@@ -36,14 +36,14 @@ public class EntitySystem : MonoBehaviour
 
     private void GenerateCharacter(Vector3 position)
     {
-        Vector3 screenPosition = Utilities.CartesianToIso(position * 0.5f);
+        Vector3 ScreenPosition = Utilities.CartesianToIso(position * 0.5f);
 
-        GameObject characterObject = Instantiate(
-            characterPrefab, screenPosition, Quaternion.identity
+        GameObject CharacterObject = Instantiate(
+            CharacterPrefab, ScreenPosition, Quaternion.identity
         );
 
-        characterObject.transform.parent = this.transform;
-        characterObject.name = namingSystem.GetName();
-        characterObject.layer = 8;
+        CharacterObject.transform.parent = this.transform;
+        CharacterObject.name = NamingSystem.GetName();
+        CharacterObject.layer = 8;
     }
 }
