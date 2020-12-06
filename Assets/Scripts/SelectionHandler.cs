@@ -12,10 +12,16 @@ public class SelectionHandler : MonoBehaviour
     private InfoPanelController InfoPanelController;
 
 
-    void Start()
+    void Awake()
     {
         InitTilemaps();
         InitInfoPanel();
+    }
+
+
+    void Start()
+    {
+        
     }
 
 
@@ -46,7 +52,7 @@ public class SelectionHandler : MonoBehaviour
 
     private void InitInfoPanel()
     {
-        InfoPanelController = GameObject.Find("Info Panel").GetComponent<InfoPanelController>();
+        InfoPanelController = GameObject.Find("Info").GetComponent<InfoPanelController>();
     }
 
 
@@ -85,12 +91,12 @@ public class SelectionHandler : MonoBehaviour
 
         InfoPanelController.updateSelection(IsoGridVector);
 
-        SelectionData.selectedCell = IsoGridVector;
+        SelectionData.SelectedCell = IsoGridVector;
     }
 
 
     private void ResetSelection()
     {
-        Tilemaps["Overlay"].SetTile(SelectionData.selectedCell, null);
+        Tilemaps["Overlay"].SetTile(SelectionData.SelectedCell, null);
     }
 }

@@ -1,16 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class InfoPanelController : MonoBehaviour
 {
-    private Text DataText;
+    private TextMeshProUGUI DataText;
 
 
     void Start()
     {
-        DataText = GameObject.Find("Data").GetComponent<Text>();    
+        DataText = GameObject.Find("Data").GetComponent<TextMeshProUGUI>();    
     }
 
 
