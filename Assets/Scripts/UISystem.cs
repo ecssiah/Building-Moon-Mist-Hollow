@@ -53,6 +53,7 @@ public class UISystem : MonoBehaviour
 
         TextMeshProUGUI text = newLabel.GetComponent<TextMeshProUGUI>();
         text.text = entity.name;
+        text.fontSize = 14;
 
         newLabel.transform.SetParent(labelsObject.transform, true);
 
@@ -66,7 +67,7 @@ public class UISystem : MonoBehaviour
         for (int i = 0; i < entities.Length; i++)
         {
             Vector3 labelPosition = Utilities.WorldToScreen(entities[i].transform.position);
-            labelPosition.y += (168 * DEFAULT_ORTHOGRAPHIC_SIZE / Camera.main.orthographicSize);
+            labelPosition.y += (64 * DEFAULT_ORTHOGRAPHIC_SIZE / Camera.main.orthographicSize);
 
             labels[i].transform.position = labelPosition;
         }
