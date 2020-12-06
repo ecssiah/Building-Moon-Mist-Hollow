@@ -14,6 +14,8 @@ public class UISystem : MonoBehaviour
     private GameObject[] entities;
     private GameObject[] labels;
 
+    private const int DEFAULT_ORTHOGRAPHIC_SIZE = 4;
+
 
     void Awake()
     {
@@ -53,7 +55,6 @@ public class UISystem : MonoBehaviour
         text.text = entity.name;
 
         newLabel.transform.SetParent(labelsObject.transform, true);
-        Debug.Log(Camera.main.orthographicSize);
 
         return newLabel;
 
@@ -65,7 +66,7 @@ public class UISystem : MonoBehaviour
         for (int i = 0; i < entities.Length; i++)
         {
             Vector3 labelPosition = Utilities.WorldToScreen(entities[i].transform.position);
-            labelPosition.y += (112 * 6 / Camera.main.orthographicSize);
+            labelPosition.y += (168 * DEFAULT_ORTHOGRAPHIC_SIZE / Camera.main.orthographicSize);
 
             labels[i].transform.position = labelPosition;
         }
