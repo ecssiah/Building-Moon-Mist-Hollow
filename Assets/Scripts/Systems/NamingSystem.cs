@@ -8,9 +8,9 @@ public class NamingSystem : MonoBehaviour
 
     private int currentNameIndex;
 
-    private string[] initialElements = { "Lra", "Ats", "Sen", "Dae", "Tel" };
-    private string[] middleElements = { "kah", "tre", "ede", "she", "rin" };
-    private string[] finalElements = { "cal", "si", "silt", "treh", "ehta" };
+    private string[] initialElements = { "La", "At", "Se", "Dea", "Tel", "Ce", "Re", "Til" };
+    private string[] middleElements = { "ekah", "tere", "ede", "she", "rin", "e", "il", "ci", "y" };
+    private string[] finalElements = { "cale", "si", "silit", "treh", "ehta", "ta", "lit", "ca" };
 
 
     void Start()

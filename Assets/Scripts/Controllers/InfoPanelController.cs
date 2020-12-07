@@ -6,12 +6,24 @@ using UnityEngine.UI;
 
 public class InfoPanelController : MonoBehaviour
 {
-    private TextMeshProUGUI DataText;
+    private TextMeshProUGUI dataText;
+
+    private GameObject entityTab;
+    private GameObject cellTab;
+
+
+    void Awake()
+    {
+        entityTab = GameObject.Find("Entity Tab");
+        cellTab = GameObject.Find("Cell Tab");
+
+        entityTab.SetActive(false);
+        cellTab.SetActive(false);
+    }
 
 
     void Start()
     {
-        DataText = GameObject.Find("Data").GetComponent<TextMeshProUGUI>();    
     }
 
 
@@ -19,13 +31,5 @@ public class InfoPanelController : MonoBehaviour
     {
         
     }
-
-
-    public void UpdateSelection(Vector3Int selection)
-    {
-        DataText.text = $"({selection.x},{selection.y})";
-    }
-
-
 
 }

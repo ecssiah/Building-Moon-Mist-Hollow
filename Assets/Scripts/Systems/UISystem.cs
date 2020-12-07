@@ -6,16 +6,19 @@ using UnityEngine.UI;
 
 public class UISystem : MonoBehaviour
 {
-    public GameObject entityLabelPrefab;
+    private EntitySystem entitySystem;
 
-    private GameObject entityInfo;
-    private GameObject cellInfo;
+    private InfoPanelController infoPanelController;
+
+    private const float LabelYOffset = 64;
+
+    private GameObject[] labels;
+    public GameObject entityLabelPrefab;
 
     private GameObject entitiesObject;
     private GameObject labelsObject;
 
     private GameObject[] entities;
-    private GameObject[] labels;
 
     private int[] selectedEntities;
 
@@ -24,11 +27,13 @@ public class UISystem : MonoBehaviour
 
     void Awake()
     {
-        entityInfo = GameObject.Find("Entity");
-        cellInfo = GameObject.Find("Cell");
-
         entitiesObject = GameObject.Find("Entities");
+        entitySystem = entitiesObject.GetComponent<EntitySystem>();
+
+
         labelsObject = GameObject.Find("Labels");
+
+        infoPanelController = GameObject.Find("Info Panel").GetComponent<InfoPanelController>();
     }
 
 
@@ -68,7 +73,6 @@ public class UISystem : MonoBehaviour
 
     void Update()
     {
-        const float LabelYOffset = 64;
         float cameraSizeRatio = DefaultOrthographicSize / Camera.main.orthographicSize;
 
         for (int index = 0; index < entities.Length; index++)

@@ -9,39 +9,21 @@ public class SelectionHandler : MonoBehaviour
     private Vector3Int currentCell;
     private Dictionary<string, Tilemap> tilemaps;
 
-    private InfoPanelController infoPanelController;
-    private GameObject cellInfoObject;
-    private GameObject entityInfoObject;
-
 
     void Awake()
     {
-        InitTilemaps();
-        GatherComponents();
-    }
-
-
-    private void GatherComponents()
-    {
-        cellInfoObject = GameObject.Find("Cell");
-        entityInfoObject = GameObject.Find("Entity");
-
-        infoPanelController = GameObject.Find("Info").GetComponent<InfoPanelController>();
     }
 
 
     void Start()
     {
-        
+        InitTilemaps();
+
     }
 
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            OnSelection();
-        }
     }
 
 
@@ -50,7 +32,7 @@ public class SelectionHandler : MonoBehaviour
         tilemaps = new Dictionary<string, Tilemap>();
         selectedTile = Resources.Load<Tile>("Tiles/Selection_1");
 
-        Tilemap[] tilemapsArray = GetComponentsInChildren<Tilemap>();
+        Tilemap[] tilemapsArray = GameObject.Find("Grid").GetComponentsInChildren<Tilemap>();
 
         foreach (Tilemap tilemap in tilemapsArray)
         {
@@ -59,16 +41,7 @@ public class SelectionHandler : MonoBehaviour
     }
 
 
-    private void OnEntitySelection(GameObject gameObject)
-    {
-        cellInfoObject.SetActive(false);
-        entityInfoObject.SetActive(true);
-
-        ResetSelection();
-    }
-
-
-    private void OnSelection()
+    public void Select()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
@@ -84,11 +57,16 @@ public class SelectionHandler : MonoBehaviour
     }
 
 
+    private void OnEntitySelection(GameObject gameObject)
+    {
+        ResetSelection();
+
+        Debug.Log(gameObject.name);
+    }
+
+
     private void OnTilemapSelection()
     {
-        cellInfoObject.SetActive(true);
-        entityInfoObject.SetActive(false);
-
         ResetSelection();
 
         Vector3 selectedPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -97,7 +75,6 @@ public class SelectionHandler : MonoBehaviour
         currentCell = Utilities.ScreenToIsoGrid(selectedPosition);
 
         tilemaps["Overlay"].SetTile(currentCell, selectedTile);
-        infoPanelController.UpdateSelection(currentCell);
     }
 
 
