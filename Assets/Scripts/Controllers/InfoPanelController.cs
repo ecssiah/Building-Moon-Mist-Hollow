@@ -21,7 +21,7 @@ public class InfoPanelController : MonoBehaviour
     }
 
 
-    public void updateSelection(Vector3Int selection)
+    public void UpdateSelection(Vector3Int selection)
     {
         DataText.text = $"({selection.x},{selection.y})";
     }

@@ -5,17 +5,28 @@ using UnityEngine.Tilemaps;
 
 public class SelectionHandler : MonoBehaviour
 {
-    private SelectionData SelectionData;
-    private Tile SelectedTile;
-    private Dictionary<string, Tilemap> Tilemaps;
+    private Tile selectedTile;
+    private Vector3Int currentCell;
+    private Dictionary<string, Tilemap> tilemaps;
 
-    private InfoPanelController InfoPanelController;
+    private InfoPanelController infoPanelController;
+    private GameObject cellInfoObject;
+    private GameObject entityInfoObject;
 
 
     void Awake()
     {
         InitTilemaps();
-        InitInfoPanel();
+        GatherComponents();
+    }
+
+
+    private void GatherComponents()
+    {
+        cellInfoObject = GameObject.Find("Cell");
+        entityInfoObject = GameObject.Find("Entity");
+
+        infoPanelController = GameObject.Find("Info").GetComponent<InfoPanelController>();
     }
 
 
@@ -36,40 +47,35 @@ public class SelectionHandler : MonoBehaviour
 
     private void InitTilemaps()
     {
-        SelectionData = GetComponentInParent<SelectionData>();
-        SelectedTile = Resources.Load<Tile>("Tiles/Selection_1");
+        tilemaps = new Dictionary<string, Tilemap>();
+        selectedTile = Resources.Load<Tile>("Tiles/Selection_1");
 
-        Tilemaps = new Dictionary<string, Tilemap>();
+        Tilemap[] tilemapsArray = GetComponentsInChildren<Tilemap>();
 
-        Tilemap[] TilemapsArray = GetComponentsInChildren<Tilemap>();
-
-        foreach (Tilemap Tilemap in TilemapsArray)
+        foreach (Tilemap tilemap in tilemapsArray)
         {
-            Tilemaps[Tilemap.name] = Tilemap;
+            tilemaps[tilemap.name] = tilemap;
         }
-    }
-
-
-    private void InitInfoPanel()
-    {
-        InfoPanelController = GameObject.Find("Info").GetComponent<InfoPanelController>();
     }
 
 
     private void OnEntitySelection(GameObject gameObject)
     {
-        Debug.Log(gameObject.name);
+        cellInfoObject.SetActive(false);
+        entityInfoObject.SetActive(true);
+
+        ResetSelection();
     }
 
 
     private void OnSelection()
     {
-        Ray CameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit2D Hit = Physics2D.Raycast(CameraRay.origin, CameraRay.direction);
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
 
-        if (Hit.collider != null)
+        if (hit.collider != null)
         {
-            OnEntitySelection(Hit.transform.gameObject);
+            OnEntitySelection(hit.transform.gameObject);
         }
         else
         {
@@ -80,23 +86,23 @@ public class SelectionHandler : MonoBehaviour
 
     private void OnTilemapSelection()
     {
+        cellInfoObject.SetActive(true);
+        entityInfoObject.SetActive(false);
+
         ResetSelection();
 
-        Vector3 SelectedPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        SelectedPosition.y += 0.25f;
+        Vector3 selectedPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        selectedPosition.y += 0.25f;
 
-        Vector3Int IsoGridVector = Utilities.ScreenToIsoGrid(SelectedPosition);
+        currentCell = Utilities.ScreenToIsoGrid(selectedPosition);
 
-        Tilemaps["Overlay"].SetTile(IsoGridVector, SelectedTile);
-
-        InfoPanelController.updateSelection(IsoGridVector);
-
-        SelectionData.SelectedCell = IsoGridVector;
+        tilemaps["Overlay"].SetTile(currentCell, selectedTile);
+        infoPanelController.UpdateSelection(currentCell);
     }
 
 
     private void ResetSelection()
     {
-        Tilemaps["Overlay"].SetTile(SelectionData.SelectedCell, null);
+        tilemaps["Overlay"].SetTile(currentCell, null);
     }
 }
