@@ -3,17 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterAnimationController : MonoBehaviour
+public class CharacterAnimator : MonoBehaviour
 {
-    public Sprite[] idleUpFrames;
-    public Sprite[] idleDownFrames;
-    public Sprite[] idleLeftFrames;
-    public Sprite[] idleRightFrames;
+    private Sprite[] idleUpFrames;
+    private Sprite[] idleDownFrames;
+    private Sprite[] idleLeftFrames;
+    private Sprite[] idleRightFrames;
 
-    public Sprite[] walkUpFrames;
-    public Sprite[] walkDownFrames;
-    public Sprite[] walkLeftFrames;
-    public Sprite[] walkRightFrames;
+    private Sprite[] walkUpFrames;
+    private Sprite[] walkDownFrames;
+    private Sprite[] walkLeftFrames;
+    private Sprite[] walkRightFrames;
 
     private Sprite[] currentFrames;
 
@@ -21,12 +21,12 @@ public class CharacterAnimationController : MonoBehaviour
 
     private float timer = 0f;
     private int frameNumber = 0;
-    private float frameRate = 1 / 10f;
+    private readonly float frameRate = 1 / 10f;
 
     private CharacterAnimationType currentAnimationType;
 
     private float decisionTimer = 0;
-    private float decisionDeadline = 4f;
+    private readonly float decisionDeadline = 4f;
 
     private float speed = 48f;
 
@@ -39,6 +39,16 @@ public class CharacterAnimationController : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         rigidBody = GetComponent<Rigidbody2D>();
+
+        idleUpFrames = Resources.LoadAll<Sprite>("Character/Idle/Up");
+        idleDownFrames = Resources.LoadAll<Sprite>("Character/Idle/Down");
+        idleLeftFrames = Resources.LoadAll<Sprite>("Character/Idle/Left");
+        idleRightFrames = Resources.LoadAll<Sprite>("Character/Idle/Right");
+
+        walkUpFrames = Resources.LoadAll<Sprite>("Character/Walk/Up");
+        walkDownFrames = Resources.LoadAll<Sprite>("Character/Walk/Down");
+        walkLeftFrames = Resources.LoadAll<Sprite>("Character/Walk/Left");
+        walkRightFrames = Resources.LoadAll<Sprite>("Character/Walk/Right");
 
         PlayAnimation(CharacterAnimationType.WalkDown);
     }

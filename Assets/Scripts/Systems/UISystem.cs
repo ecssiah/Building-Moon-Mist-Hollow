@@ -13,7 +13,7 @@ public class UISystem : MonoBehaviour
     private const float LabelYOffset = 64;
 
     private GameObject[] labels;
-    public GameObject entityLabelPrefab;
+    private GameObject entityLabelPrefab;
 
     private GameObject entitiesObject;
     private GameObject labelsObject;
@@ -29,7 +29,7 @@ public class UISystem : MonoBehaviour
     {
         entitiesObject = GameObject.Find("Entities");
         entitySystem = entitiesObject.GetComponent<EntitySystem>();
-
+        entityLabelPrefab = Resources.Load<GameObject>("Prefabs/Entity Label");
 
         labelsObject = GameObject.Find("Labels");
 
@@ -47,6 +47,8 @@ public class UISystem : MonoBehaviour
         {
             entities[index] = transform.gameObject;
             labels[index] = CreateLabel(transform.gameObject);
+
+            Debug.Log(transform);
 
             index++;
         }

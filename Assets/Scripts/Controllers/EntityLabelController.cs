@@ -6,7 +6,6 @@ public class EntityLabelController : MonoBehaviour
 {
 
 
-
     void Awake()
     {
 

@@ -7,7 +7,6 @@ public class SelectionHandler : MonoBehaviour
 {
     private Tile selectedTile;
     private Vector3Int currentCell;
-    private Dictionary<string, Tilemap> tilemaps;
 
 
     void Awake()
@@ -17,27 +16,11 @@ public class SelectionHandler : MonoBehaviour
 
     void Start()
     {
-        InitTilemaps();
-
     }
 
 
     void Update()
     {
-    }
-
-
-    private void InitTilemaps()
-    {
-        tilemaps = new Dictionary<string, Tilemap>();
-        selectedTile = Resources.Load<Tile>("Tiles/Selection_1");
-
-        Tilemap[] tilemapsArray = GameObject.Find("Grid").GetComponentsInChildren<Tilemap>();
-
-        foreach (Tilemap tilemap in tilemapsArray)
-        {
-            tilemaps[tilemap.name] = tilemap;
-        }
     }
 
 
@@ -74,12 +57,12 @@ public class SelectionHandler : MonoBehaviour
 
         currentCell = Utilities.ScreenToIsoGrid(selectedPosition);
 
-        tilemaps["Overlay"].SetTile(currentCell, selectedTile);
+        //tilemaps["Overlay"].SetTile(currentCell, selectedTile);
     }
 
 
     private void ResetSelection()
     {
-        tilemaps["Overlay"].SetTile(currentCell, null);
+        //tilemaps["Overlay"].SetTile(currentCell, null);
     }
 }

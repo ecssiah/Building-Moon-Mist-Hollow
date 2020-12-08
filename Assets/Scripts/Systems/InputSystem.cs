@@ -13,7 +13,6 @@ public class InputSystem : MonoBehaviour
 
     void Start()
     {
-
         selectionHandler = gameObject.AddComponent<SelectionHandler>();
 
     }

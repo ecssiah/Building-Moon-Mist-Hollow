@@ -4,27 +4,26 @@ using UnityEngine;
 
 public class EntitySystem : MonoBehaviour
 {
-    public GameObject CharacterPrefab;
+    private GameObject characterPrefab;
 
-    private NamingSystem NamingSystem;
+    private NamingSystem namingSystem;
 
 
     void Awake()
     {
         Physics2D.IgnoreLayerCollision(8, 8, true);
 
-        NamingSystem = GetComponent<NamingSystem>();
-
-        GenerateCharacter(new Vector3(-2, 2, 0));
-        GenerateCharacter(new Vector3(-2, -2, 0));
-        GenerateCharacter(new Vector3(2, -2, 0));
-        GenerateCharacter(new Vector3(2, 2, 0));
+        characterPrefab = Resources.Load<GameObject>("Prefabs/Character");
+        namingSystem = GetComponent<NamingSystem>();
     }
 
 
     void Start()
     {
-
+        GenerateCharacter(new Vector3(-2, 2, 0));
+        GenerateCharacter(new Vector3(-2, -2, 0));
+        GenerateCharacter(new Vector3(2, -2, 0));
+        GenerateCharacter(new Vector3(2, 2, 0));
     }
 
 
@@ -36,14 +35,14 @@ public class EntitySystem : MonoBehaviour
 
     private void GenerateCharacter(Vector3 position)
     {
-        Vector3 ScreenPosition = Utilities.CartesianToIso(position * 0.5f);
+        Vector3 screenPosition = Utilities.CartesianToIso(position * 0.5f);
 
-        GameObject CharacterObject = Instantiate(
-            CharacterPrefab, ScreenPosition, Quaternion.identity
+        GameObject newCharacterObject = Instantiate(
+            characterPrefab, screenPosition, Quaternion.identity
         );
 
-        CharacterObject.transform.parent = this.transform;
-        CharacterObject.name = NamingSystem.GetName();
-        CharacterObject.layer = 8;
+        newCharacterObject.transform.parent = this.transform;
+        newCharacterObject.name = namingSystem.GetName();
+        newCharacterObject.layer = LayerMask.NameToLayer("Characters");
     }
 }
