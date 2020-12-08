@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InfoPanelController : MonoBehaviour
+public class InfoPanel : MonoBehaviour
 {
     private TextMeshProUGUI dataText;
 

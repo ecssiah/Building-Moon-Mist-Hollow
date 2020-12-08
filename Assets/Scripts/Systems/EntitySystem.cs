@@ -6,12 +6,18 @@ public class EntitySystem : MonoBehaviour
 {
     private GameObject characterPrefab;
 
+    private GameObject[] entities;
+
     private NamingSystem namingSystem;
 
 
     void Awake()
     {
-        Physics2D.IgnoreLayerCollision(8, 8, true);
+        Physics2D.IgnoreLayerCollision(
+            LayerMask.NameToLayer("Characters"),
+            LayerMask.NameToLayer("Characters"),
+            true
+        );
 
         characterPrefab = Resources.Load<GameObject>("Prefabs/Character");
         namingSystem = GetComponent<NamingSystem>();
@@ -25,7 +31,13 @@ public class EntitySystem : MonoBehaviour
 
     void Start()
     {
-        
+        entities = new GameObject[this.transform.childCount];
+
+        int index = 0;
+        foreach (Transform transform in this.transform)
+        {
+            entities[index++] = transform.gameObject;
+        }
     }
 
 
@@ -46,5 +58,11 @@ public class EntitySystem : MonoBehaviour
         newCharacterObject.transform.parent = this.transform;
         newCharacterObject.name = namingSystem.GetName();
         newCharacterObject.layer = LayerMask.NameToLayer("Characters");
+    }
+
+
+    public GameObject[] GetEntities()
+    {
+        return entities;
     }
 }
