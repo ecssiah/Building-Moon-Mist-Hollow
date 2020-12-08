@@ -1,13 +1,15 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterAnimator : MonoBehaviour
+public class CharacterAnimationController : MonoBehaviour
 {
     public Sprite[] idleUpFrames;
     public Sprite[] idleDownFrames;
     public Sprite[] idleLeftFrames;
     public Sprite[] idleRightFrames;
+
     public Sprite[] walkUpFrames;
     public Sprite[] walkDownFrames;
     public Sprite[] walkLeftFrames;
@@ -23,10 +25,20 @@ public class CharacterAnimator : MonoBehaviour
 
     private CharacterAnimationType currentAnimationType;
 
+    private float decisionTimer = 0;
+    private float decisionDeadline = 4f;
+
+    private float speed = 48f;
+
+    private Vector2 direction = Vector2.zero;
+
+    private Rigidbody2D rigidBody;
+
 
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        rigidBody = GetComponent<Rigidbody2D>();
 
         PlayAnimation(CharacterAnimationType.WalkDown);
     }
@@ -35,6 +47,9 @@ public class CharacterAnimator : MonoBehaviour
     void Update()
     {
         UpdateFrame();
+
+        Tick();
+        Move();
     }
 
 
@@ -129,5 +144,37 @@ public class CharacterAnimator : MonoBehaviour
         {
             PlayAnimation(CharacterAnimationType.WalkDown);
         }
+    }
+
+
+    private void Tick()
+    {
+        decisionTimer += Time.deltaTime;
+
+        if (decisionTimer >= decisionDeadline)
+        {
+            decisionTimer = 0;
+
+            direction = GetDirection();
+            SetAnimationDirection(direction);
+        }
+    }
+
+
+    private void Move()
+    {
+        rigidBody.velocity = Time.deltaTime * speed * direction;
+    }
+
+
+    private Vector2 GetDirection()
+    {
+        System.Random random = new System.Random(Guid.NewGuid().GetHashCode());
+
+        Vector3 newDirection = new Vector3(
+            random.Next(-1, 2), random.Next(-1, 2), 0
+        );
+
+        return Utilities.CartesianToIso(newDirection);
     }
 }
