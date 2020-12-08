@@ -48,8 +48,6 @@ public class UISystem : MonoBehaviour
             entities[index] = transform.gameObject;
             labels[index] = CreateLabel(transform.gameObject);
 
-            Debug.Log(transform);
-
             index++;
         }
     }

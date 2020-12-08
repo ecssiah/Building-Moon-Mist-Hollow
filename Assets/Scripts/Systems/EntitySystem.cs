@@ -15,15 +15,17 @@ public class EntitySystem : MonoBehaviour
 
         characterPrefab = Resources.Load<GameObject>("Prefabs/Character");
         namingSystem = GetComponent<NamingSystem>();
+
+        GenerateCharacter(new Vector3(-2, 2, 0));
+        GenerateCharacter(new Vector3(-2, -2, 0));
+        GenerateCharacter(new Vector3(2, -2, 0));
+        GenerateCharacter(new Vector3(2, 2, 0));
     }
 
 
     void Start()
     {
-        GenerateCharacter(new Vector3(-2, 2, 0));
-        GenerateCharacter(new Vector3(-2, -2, 0));
-        GenerateCharacter(new Vector3(2, -2, 0));
-        GenerateCharacter(new Vector3(2, 2, 0));
+        
     }
 
 
