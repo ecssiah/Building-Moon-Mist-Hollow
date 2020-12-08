@@ -23,6 +23,7 @@ public class EntityLabeler : MonoBehaviour
 
     void Awake()
     {
+        entities = new GameObject[0];
         entitiesObject = GameObject.Find("Entities");
         entitySystem = entitiesObject.GetComponent<EntitySystem>();
 
@@ -50,9 +51,9 @@ public class EntityLabeler : MonoBehaviour
     {
         float cameraSizeRatio = DefaultOrthographicSize / Camera.main.orthographicSize;
 
-        for (int index = 0; index < entitySystem.GetEntities().Length; index++)
+        for (int index = 0; index < entities.Length; index++)
         {
-            Vector3 labelPosition = Utilities.WorldToScreen(entitySystem.GetEntities()[index].transform.position);
+            Vector3 labelPosition = Utilities.WorldToScreen(entities[index].transform.position);
             labelPosition.y += LabelYOffset * cameraSizeRatio;
 
             labels[index].transform.position = labelPosition;

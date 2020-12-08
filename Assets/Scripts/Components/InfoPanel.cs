@@ -6,8 +6,6 @@ using UnityEngine.UI;
 
 public class InfoPanel : MonoBehaviour
 {
-    private TextMeshProUGUI dataText;
-
     private GameObject entityTab;
     private GameObject cellTab;
 

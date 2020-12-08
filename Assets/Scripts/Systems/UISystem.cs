@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class UISystem : MonoBehaviour
 {
     private EntitySystem entitySystem;
+
     private EntityLabeler entityLabeler;
 
 
