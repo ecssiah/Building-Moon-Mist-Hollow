@@ -304,7 +304,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &473533998
 GameObject:
@@ -1832,7 +1832,7 @@ Transform:
   - {fileID: 2034173822}
   - {fileID: 473534000}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &773707621
 GameObject:
@@ -4438,7 +4438,6 @@ GameObject:
   - component: {fileID: 1114894627}
   - component: {fileID: 1114894629}
   - component: {fileID: 1114894628}
-  - component: {fileID: 1114894630}
   m_Layer: 5
   m_Name: Info Panel
   m_TagString: Untagged
@@ -4504,18 +4503,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1114894626}
   m_CullTransparentMesh: 0
---- !u!114 &1114894630
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1114894626}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5d11b29f6dcb491f839694462bb0439, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1337163497
 GameObject:
   m_ObjectHideFlags: 0

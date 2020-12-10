@@ -9,12 +9,13 @@ public class InfoPanel : MonoBehaviour
     private GameObject entityTab;
     private GameObject cellTab;
 
-    private EntityData entity;
-    private CellData cell;
+    private EntityData entityData;
+    private CellData cellData;
 
     private InfoMode mode;
 
     private TextMeshProUGUI entityNameText;
+    private TextMeshProUGUI cellPositionText;
 
     public InfoMode Mode
     {
@@ -27,15 +28,26 @@ public class InfoPanel : MonoBehaviour
         }
     }
 
-    public EntityData Entity { get => entity; set => entity = value; }
-    public CellData Cell { get => cell; set => cell = value; }
+    public EntityData EntityData { get => entityData; set => entityData = value; }
+    public CellData CellData { get => cellData; set => cellData = value; }
+
 
     void Awake()
     {
         entityTab = GameObject.Find("Entity Tab");
         cellTab = GameObject.Find("Cell Tab");
 
-        entityNameText = entityTab.transform.Find("Name").Find("Data").GetComponent<TextMeshProUGUI>();
+        Transform entityNameTransform = entityTab.transform.Find("Name");
+        Transform cellPositionTransform = cellTab.transform.Find("Position");
+
+        entityNameText = entityNameTransform.Find("Data").GetComponent<TextMeshProUGUI>();
+        cellPositionText = cellPositionTransform.Find("Data").GetComponent<TextMeshProUGUI>();
+
+        TextMeshProUGUI entityNameLabel = entityNameTransform.Find("Label").GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI cellPositionLabel = cellPositionTransform.Find("Label").GetComponent<TextMeshProUGUI>();
+
+        entityNameLabel.text = "Name: ";
+        cellPositionLabel.text = "Position: ";
     }
 
 
@@ -71,23 +83,25 @@ public class InfoPanel : MonoBehaviour
     }
 
 
-    private void ActivateEntityMode()
+    public void ActivateEntityMode(EntityData entityData = new EntityData())
     {
         entityTab.SetActive(true);
         cellTab.SetActive(false);
 
-        entityNameText.text = entity.name;
+        entityNameText.text = entityData.name;
     }
 
 
-    private void ActivateCellMode()
+    public void ActivateCellMode(CellData cellData = new CellData())
     {
         entityTab.SetActive(false);
         cellTab.SetActive(true);
+
+        cellPositionText.text = $"{cellData.position}";
     }
 
 
-    private void Deactivate()
+    public void Deactivate()
     {
         entityTab.SetActive(false);
         cellTab.SetActive(false);

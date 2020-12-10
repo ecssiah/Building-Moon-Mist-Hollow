@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class UISystem : MonoBehaviour
 {
     private EntitySystem entitySystem;
+    private MapSystem mapSystem;
 
     private EntityLabeler entityLabeler;
     private InfoPanel infoPanel;
@@ -15,6 +16,7 @@ public class UISystem : MonoBehaviour
     void Awake()
     {
         entitySystem = GameObject.Find("Entities").GetComponent<EntitySystem>();
+        mapSystem = GameObject.Find("Map").GetComponent<MapSystem>();
 
         entityLabeler = this.gameObject.AddComponent<EntityLabeler>();
         infoPanel = this.gameObject.AddComponent<InfoPanel>();
@@ -35,12 +37,24 @@ public class UISystem : MonoBehaviour
 
     public void SelectEntity(GameObject entity)
     {
-        Debug.Log(entity);
+        EntityData entityData = new EntityData
+        {
+            name = entity.name
+        };
+
+        infoPanel.Mode = InfoMode.Entity;
+        infoPanel.ActivateEntityMode(entityData);
     }
 
 
     public void SelectCell(Vector3Int cellPosition)
     {
-        Debug.Log(cellPosition);
+        CellData cellData = new CellData
+        {
+            position = cellPosition
+        };
+
+        infoPanel.Mode = InfoMode.Cell;
+        infoPanel.ActivateCellMode(cellData);
     }
 }

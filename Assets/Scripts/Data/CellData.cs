@@ -1,7 +1,11 @@
 ﻿using System;
+using UnityEngine;
 
-public struct TileData
+
+public struct CellData
 {
+    public Vector3Int position;
+
     public CellType cellType;                     
     public BuildingType buildingType;
 }
