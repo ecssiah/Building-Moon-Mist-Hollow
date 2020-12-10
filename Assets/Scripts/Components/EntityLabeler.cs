@@ -17,28 +17,21 @@ public class EntityLabeler : MonoBehaviour
 
     private const int DefaultOrthographicSize = 4;
 
-    public GameObject[] Entities { get => entities; set => entities = value; }
 
     void Awake()
     {
-        Entities = new GameObject[0];
-        entitiesObject = GameObject.Find("Entities");
-
         entityLabelPrefab = Resources.Load<GameObject>("Prefabs/Entity Label");
 
+        entities = new GameObject[0];
+        entitiesObject = GameObject.Find("Entities");
+
+        labels = new GameObject[0];
         labelsObject = GameObject.Find("Labels");
     }
 
 
     void Start()
     {
-        labels = new GameObject[entitiesObject.transform.childCount];
-
-        int index = 0;
-        foreach (Transform transform in entitiesObject.transform)
-        {
-            labels[index++] = CreateLabel(transform.gameObject);
-        }
     }
 
 
@@ -46,9 +39,9 @@ public class EntityLabeler : MonoBehaviour
     {
         float cameraSizeRatio = DefaultOrthographicSize / Camera.main.orthographicSize;
 
-        for (int index = 0; index < Entities.Length; index++)
+        for (int index = 0; index < entities.Length; index++)
         {
-            Vector3 labelPosition = Utilities.WorldToScreen(Entities[index].transform.position);
+            Vector3 labelPosition = Utilities.WorldToScreen(entities[index].transform.position);
             labelPosition.y += LabelYOffset * cameraSizeRatio;
 
             labels[index].transform.position = labelPosition;
@@ -71,5 +64,26 @@ public class EntityLabeler : MonoBehaviour
         newLabel.transform.SetParent(labelsObject.transform, true);
 
         return newLabel;
+    }
+
+
+    public void SelectEntity(GameObject entity)
+    {
+        Clear();
+
+        entities = new GameObject[] { entity };
+        labels = new GameObject[] { CreateLabel(entity) };
+    }
+
+
+    public void Clear()
+    {
+        entities = new GameObject[0];
+        labels = new GameObject[0];
+
+        foreach (Transform child in labelsObject.transform)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
     }
 }

@@ -37,6 +37,10 @@ public class InputSystem : MonoBehaviour
 
     public void OnEntitySelection(GameObject entity)
     {
+        uiSystem.ClearSelection();
+        mapSystem.ClearSelection();
+        entitySystem.ClearSelection();
+
         uiSystem.SelectEntity(entity);
         entitySystem.SelectEntity(entity);
     }
@@ -44,6 +48,10 @@ public class InputSystem : MonoBehaviour
 
     public void OnCellSelection(Vector3Int cellPosition)
     {
+        uiSystem.ClearSelection();
+        mapSystem.ClearSelection();
+        entitySystem.ClearSelection();
+
         uiSystem.SelectCell(cellPosition);
         mapSystem.SelectCell(cellPosition);
     }

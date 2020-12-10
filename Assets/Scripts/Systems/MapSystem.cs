@@ -91,15 +91,13 @@ public class MapSystem: MonoBehaviour
 
     public void SelectCell(Vector3Int position)
     {
-        ResetSelection();
-
         selectedCell = position;
 
         tilemaps["Overlay"].SetTile(position, tiles["Selection_1"]);
     }
 
 
-    private void ResetSelection()
+    public void ClearSelection()
     {
         tilemaps["Overlay"].SetTile(selectedCell, null);
     }

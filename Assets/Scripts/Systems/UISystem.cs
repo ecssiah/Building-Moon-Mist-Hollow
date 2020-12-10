@@ -25,7 +25,6 @@ public class UISystem : MonoBehaviour
 
     void Start()
     {
-        entityLabeler.Entities = entitySystem.GetEntities();
     }
 
 
@@ -44,6 +43,8 @@ public class UISystem : MonoBehaviour
 
         infoPanel.Mode = InfoMode.Entity;
         infoPanel.ActivateEntityMode(entityData);
+
+        entityLabeler.SelectEntity(entity);
     }
 
 
@@ -56,5 +57,12 @@ public class UISystem : MonoBehaviour
 
         infoPanel.Mode = InfoMode.Cell;
         infoPanel.ActivateCellMode(cellData);
+    }
+
+
+    public void ClearSelection()
+    {
+        entityLabeler.Clear();
+        infoPanel.Deactivate();
     }
 }

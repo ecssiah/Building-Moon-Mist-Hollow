@@ -71,4 +71,10 @@ public class EntitySystem : MonoBehaviour
     {
         Debug.Log(entity);
     }
+
+
+    public void ClearSelection()
+    {
+
+    }
 }
