@@ -6,15 +6,17 @@ using UnityEngine.Tilemaps;
 public class MapSystem: MonoBehaviour
 {
     private const int MapSize = 100;
+    private const int MapWidth = 2 * MapSize + 1;
 
     private MapData mapData;
-
-    private Tile selectionTile;
 
     private Dictionary<string, Tile> tiles;
     private Dictionary<string, Tilemap> tilemaps;
 
     private Vector3Int selectedCell;
+
+    private Dictionary<CellType, string> cellTileNames;
+    private Dictionary<BuildingType, string> buildingTileNames;
 
 
     void Awake()
@@ -50,6 +52,20 @@ public class MapSystem: MonoBehaviour
         {
             tiles[tile.name] = tile;
         }
+
+        cellTileNames = new Dictionary<CellType, string>
+        {
+            [CellType.Grass] = "Dirt_Grass_C",
+            [CellType.Stone] = "Stone_A",
+            [CellType.Water] = "Water"
+        };
+
+        buildingTileNames = new Dictionary<BuildingType, string>
+        {
+            [BuildingType.StoneWall] = "Brick_C",
+            [BuildingType.WoodWall] = "Wood_A",
+        };
+
     }
 
 
@@ -68,7 +84,7 @@ public class MapSystem: MonoBehaviour
 
     public CellData GetCellData(int x, int y)
     {
-        return mapData.cells[0];
+        return mapData.cells[CoordsToIndex(x, y)];
     }
 
 
@@ -92,7 +108,7 @@ public class MapSystem: MonoBehaviour
     {
         mapData = new MapData
         {
-            cells = new CellData[(int)Mathf.Pow(2 * MapSize + 1, 2)]
+            cells = new CellData[(int)Mathf.Pow(MapWidth, 2)]
         };
 
         for (int x = -MapSize; x <= MapSize; x++)
@@ -101,7 +117,22 @@ public class MapSystem: MonoBehaviour
             {
                 CellData newCellData = new CellData();
 
-                mapData.cells[CoordsTo1DIndex(x, y)] = newCellData;
+                int roll = Random.Range(0, 2);
+
+                switch (roll)
+                {
+                    case 0:
+                        newCellData.cellType = CellType.Grass;
+                        break;
+                    case 1:
+                        newCellData.cellType = CellType.Stone;
+                        break;
+                    case 2:
+                        newCellData.cellType = CellType.Water;
+                        break;
+                }
+
+                mapData.cells[CoordsToIndex(x, y)] = newCellData;
             }
         }
     }
@@ -109,13 +140,29 @@ public class MapSystem: MonoBehaviour
 
     private void ConstructMap()
     {
+        for (int i = 0; i < mapData.cells.Length; i++)
+        {
+            Vector2Int cellPosition = IndexToCoords(i);
 
+            tilemaps["Ground"].SetTile(
+                new Vector3Int(cellPosition.x, cellPosition.y, 0),
+                tiles[cellTileNames[mapData.cells[i].cellType]]
+            );
+        }
     }
 
 
-    public int CoordsTo1DIndex(int x, int y)
+    public int CoordsToIndex(int x, int y)
     {
-        return (x + MapSize) + (2 * MapSize + 1) * (y + MapSize);
+        return (x + MapSize) + MapWidth * (y + MapSize);
+    }
+
+
+    public Vector2Int IndexToCoords(int i)
+    {
+        return new Vector2Int(
+            (i % MapWidth) - MapSize, (i / MapWidth) - MapSize
+        );
     }
 
 }
