@@ -142,12 +142,7 @@ public class MapSystem: MonoBehaviour
     {
         for (int i = 0; i < mapData.cells.Length; i++)
         {
-            CellType cellType = mapData.cells[i].cellType;
-            Vector2Int gridPosition = IndexToCoords(i);
-
-            var cellPosition = new Vector3Int(gridPosition.x, gridPosition.y, 0);
-
-            tilemaps["Ground"].SetTile(cellPosition, tiles[cellTileNames[cellType]]);
+            SetTile(IndexToCoords(i), mapData.cells[i].cellType);
         }
     }
 
@@ -163,6 +158,18 @@ public class MapSystem: MonoBehaviour
         return new Vector2Int(
             (i % MapWidth) - MapSize, (i / MapWidth) - MapSize
         );
+    }
+
+
+    private void SetTile(int x, int y, CellType cellType)
+    {
+        tilemaps["Ground"].SetTile(new Vector3Int(x, y, 0), tiles[cellTileNames[cellType]]);
+    }
+
+
+    private void SetTile(Vector2Int position, CellType cellType)
+    {
+        SetTile(position.x, position.y, cellType);
     }
 
 }
