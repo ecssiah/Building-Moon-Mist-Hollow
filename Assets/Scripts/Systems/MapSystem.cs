@@ -25,6 +25,7 @@ public class MapSystem: MonoBehaviour
 
         InitTiles();
         InitTilemaps();
+
         InitMap();
 
         ConstructMap();
@@ -98,7 +99,7 @@ public class MapSystem: MonoBehaviour
     }
 
 
-    public void ResetSelection()
+    private void ResetSelection()
     {
         tilemaps["Overlay"].SetTile(selectedCell, null);
     }
@@ -117,7 +118,7 @@ public class MapSystem: MonoBehaviour
             {
                 CellData newCellData = new CellData();
 
-                int roll = Random.Range(0, 2);
+                int roll = Random.Range(0, 3);
 
                 switch (roll)
                 {
@@ -147,13 +148,13 @@ public class MapSystem: MonoBehaviour
     }
 
 
-    public int CoordsToIndex(int x, int y)
+    private int CoordsToIndex(int x, int y)
     {
         return (x + MapSize) + MapWidth * (y + MapSize);
     }
 
 
-    public Vector2Int IndexToCoords(int i)
+    private Vector2Int IndexToCoords(int i)
     {
         return new Vector2Int(
             (i % MapWidth) - MapSize, (i / MapWidth) - MapSize

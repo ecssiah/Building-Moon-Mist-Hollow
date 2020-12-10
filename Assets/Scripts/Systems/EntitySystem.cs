@@ -65,4 +65,10 @@ public class EntitySystem : MonoBehaviour
     {
         return entities;
     }
+
+
+    public void SelectEntity(GameObject entity)
+    {
+        Debug.Log(entity);
+    }
 }
