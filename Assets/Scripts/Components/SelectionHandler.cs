@@ -1,27 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
-using UnityEngine.Tilemaps;
+
 
 public class SelectionHandler : MonoBehaviour
 {
-    private Tile selectedTile;
-    private Vector3Int currentCell;
-
-
-    void Awake()
-    {
-    }
-
-
-    void Start()
-    {
-    }
-
-
-    void Update()
-    {
-    }
+    public Action<GameObject> BroadcastEntitySelection;
+    public Action<Vector3Int> BroadcastCellSelection;
 
 
     public void Select()
@@ -31,38 +15,11 @@ public class SelectionHandler : MonoBehaviour
 
         if (hit.collider != null)
         {
-            OnEntitySelection(hit.transform.gameObject);
+            BroadcastEntitySelection(hit.transform.gameObject);
         }
         else
         {
-            OnTilemapSelection();
+            BroadcastCellSelection(Utilities.GetWorldPoint(Input.mousePosition));
         }
-    }
-
-
-    private void OnEntitySelection(GameObject gameObject)
-    {
-        ResetSelection();
-
-        Debug.Log(gameObject.name);
-    }
-
-
-    private void OnTilemapSelection()
-    {
-        ResetSelection();
-
-        Vector3 selectedPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        selectedPosition.y += 0.25f;
-
-        currentCell = Utilities.ScreenToIsoGrid(selectedPosition);
-
-        //tilemaps["Overlay"].SetTile(currentCell, selectedTile);
-    }
-
-
-    private void ResetSelection()
-    {
-        //tilemaps["Overlay"].SetTile(currentCell, null);
     }
 }

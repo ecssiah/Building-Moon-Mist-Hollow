@@ -5,9 +5,6 @@ using UnityEngine;
 
 public class EntityLabeler : MonoBehaviour
 {
-    private EntitySystem entitySystem;
-
-    private InfoPanel infoPanel;
     private GameObject entitiesObject;
 
     private const float LabelYOffset = 64;
@@ -20,18 +17,16 @@ public class EntityLabeler : MonoBehaviour
 
     private const int DefaultOrthographicSize = 4;
 
+    public GameObject[] Entities { get => entities; set => entities = value; }
 
     void Awake()
     {
-        entities = new GameObject[0];
+        Entities = new GameObject[0];
         entitiesObject = GameObject.Find("Entities");
-        entitySystem = entitiesObject.GetComponent<EntitySystem>();
 
         entityLabelPrefab = Resources.Load<GameObject>("Prefabs/Entity Label");
 
         labelsObject = GameObject.Find("Labels");
-
-        infoPanel = GameObject.Find("Info Panel").GetComponent<InfoPanel>();
     }
 
 
@@ -51,9 +46,9 @@ public class EntityLabeler : MonoBehaviour
     {
         float cameraSizeRatio = DefaultOrthographicSize / Camera.main.orthographicSize;
 
-        for (int index = 0; index < entities.Length; index++)
+        for (int index = 0; index < Entities.Length; index++)
         {
-            Vector3 labelPosition = Utilities.WorldToScreen(entities[index].transform.position);
+            Vector3 labelPosition = Utilities.WorldToScreen(Entities[index].transform.position);
             labelPosition.y += LabelYOffset * cameraSizeRatio;
 
             labels[index].transform.position = labelPosition;
@@ -76,11 +71,5 @@ public class EntityLabeler : MonoBehaviour
         newLabel.transform.SetParent(labelsObject.transform, true);
 
         return newLabel;
-    }
-
-
-    public void SetEntities(GameObject[] entities)
-    {
-        this.entities = entities;
     }
 }

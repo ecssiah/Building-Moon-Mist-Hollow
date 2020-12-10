@@ -42,4 +42,13 @@ public static class Utilities
             Camera.main, worldPosition
         );
     }
+
+
+    public static Vector3Int GetWorldPoint(Vector3 atPosition)
+    {
+        Vector3 selectedPosition = Camera.main.ScreenToWorldPoint(atPosition);
+        selectedPosition.y += 0.25f;
+
+        return Utilities.ScreenToIsoGrid(selectedPosition);
+    }
 }

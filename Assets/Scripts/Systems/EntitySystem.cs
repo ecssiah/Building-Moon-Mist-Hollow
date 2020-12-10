@@ -60,7 +60,7 @@ public class EntitySystem : MonoBehaviour
         newCharacterObject.layer = LayerMask.NameToLayer("Characters");
     }
 
-
+         
     public GameObject[] GetEntities()
     {
         return entities;

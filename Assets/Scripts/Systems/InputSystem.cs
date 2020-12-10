@@ -3,18 +3,24 @@ using System.Collections;
 
 public class InputSystem : MonoBehaviour
 {
+    private MapSystem mapSystem;
+    private UISystem uiSystem;
+
     private SelectionHandler selectionHandler;
 
 
     void Awake()
     {
+        uiSystem = GameObject.Find("UI").GetComponent<UISystem>();
+        mapSystem = GameObject.Find("Map").GetComponent<MapSystem>();
     }
 
 
     void Start()
     {
         selectionHandler = gameObject.AddComponent<SelectionHandler>();
-
+        selectionHandler.BroadcastEntitySelection = OnEntitySelection;
+        selectionHandler.BroadcastCellSelection = OnCellSelection;
     }
 
 
@@ -24,5 +30,17 @@ public class InputSystem : MonoBehaviour
         {
             selectionHandler.Select();
         }
+    }
+
+
+    public void OnEntitySelection(GameObject entity)
+    {
+        uiSystem.SelectEntity(entity);
+    }
+
+
+    public void OnCellSelection(Vector3Int cellPosition)
+    {
+        uiSystem.SelectCell(cellPosition);
     }
 }

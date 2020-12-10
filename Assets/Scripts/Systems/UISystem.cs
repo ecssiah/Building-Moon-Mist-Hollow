@@ -9,6 +9,7 @@ public class UISystem : MonoBehaviour
     private EntitySystem entitySystem;
 
     private EntityLabeler entityLabeler;
+    private InfoPanel infoPanel;
 
 
     void Awake()
@@ -16,17 +17,30 @@ public class UISystem : MonoBehaviour
         entitySystem = GameObject.Find("Entities").GetComponent<EntitySystem>();
 
         entityLabeler = this.gameObject.AddComponent<EntityLabeler>();
+        infoPanel = this.gameObject.AddComponent<InfoPanel>();
     }
 
 
     void Start()
     {
-        entityLabeler.SetEntities(entitySystem.GetEntities());
+        entityLabeler.Entities = entitySystem.GetEntities();
     }
 
 
     void Update()
     {
         
+    }
+
+
+    public void SelectEntity(GameObject entity)
+    {
+        Debug.Log(entity);
+    }
+
+
+    public void SelectCell(Vector3Int cellPosition)
+    {
+        Debug.Log(cellPosition);
     }
 }
