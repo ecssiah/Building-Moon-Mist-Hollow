@@ -142,12 +142,12 @@ public class MapSystem: MonoBehaviour
     {
         for (int i = 0; i < mapData.cells.Length; i++)
         {
-            Vector2Int cellPosition = IndexToCoords(i);
+            CellType cellType = mapData.cells[i].cellType;
+            Vector2Int gridPosition = IndexToCoords(i);
 
-            tilemaps["Ground"].SetTile(
-                new Vector3Int(cellPosition.x, cellPosition.y, 0),
-                tiles[cellTileNames[mapData.cells[i].cellType]]
-            );
+            var cellPosition = new Vector3Int(gridPosition.x, gridPosition.y, 0);
+
+            tilemaps["Ground"].SetTile(cellPosition, tiles[cellTileNames[cellType]]);
         }
     }
 
