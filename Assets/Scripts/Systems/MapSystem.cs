@@ -5,27 +5,51 @@ using UnityEngine.Tilemaps;
 
 public class MapSystem: MonoBehaviour
 {
-    private MapData map;
+    private const int MapSize = 100;
 
+    private MapData mapData;
+
+    private Tile selectionTile;
+
+    private Dictionary<string, Tile> tiles;
     private Dictionary<string, Tilemap> tilemaps;
 
+    private Vector3Int selectedCell;
 
 
     void Awake()
     {
+        selectedCell = new Vector3Int();
 
+        InitTiles();
+        InitTilemaps();
+        InitMap();
+
+        ConstructMap();
     }
 
 
     void Start()
     {
-        InitTilemaps();
     }
 
 
     void Update()
     {
         
+    }
+
+
+    private void InitTiles()
+    {
+        tiles = new Dictionary<string, Tile>();
+
+        Tile[] tilesArray = Resources.LoadAll<Tile>("Tiles");
+
+        foreach (Tile tile in tilesArray)
+        {
+            tiles[tile.name] = tile;
+        }
     }
 
 
@@ -42,9 +66,56 @@ public class MapSystem: MonoBehaviour
     }
 
 
-    public TileData GetTileData(int x, int y)
+    public CellData GetCellData(int x, int y)
     {
-        return new TileData();
+        return mapData.cells[0];
+    }
+
+
+    public void SelectCell(Vector3Int position)
+    {
+        ResetSelection();
+
+        selectedCell = position;
+
+        tilemaps["Overlay"].SetTile(position, tiles["Selection_1"]);
+    }
+
+
+    public void ResetSelection()
+    {
+        tilemaps["Overlay"].SetTile(selectedCell, null);
+    }
+
+
+    private void InitMap()
+    {
+        mapData = new MapData
+        {
+            cells = new CellData[(int)Mathf.Pow(2 * MapSize + 1, 2)]
+        };
+
+        for (int x = -MapSize; x <= MapSize; x++)
+        {
+            for (int y = -MapSize; y <= MapSize; y++)
+            {
+                CellData newCellData = new CellData();
+
+                mapData.cells[CoordsTo1DIndex(x, y)] = newCellData;
+            }
+        }
+    }
+
+
+    private void ConstructMap()
+    {
+
+    }
+
+
+    public int CoordsTo1DIndex(int x, int y)
+    {
+        return (x + MapSize) + (2 * MapSize + 1) * (y + MapSize);
     }
 
 }

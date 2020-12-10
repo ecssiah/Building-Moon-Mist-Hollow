@@ -42,5 +42,6 @@ public class InputSystem : MonoBehaviour
     public void OnCellSelection(Vector3Int cellPosition)
     {
         uiSystem.SelectCell(cellPosition);
+        mapSystem.SelectCell(cellPosition);
     }
 }
