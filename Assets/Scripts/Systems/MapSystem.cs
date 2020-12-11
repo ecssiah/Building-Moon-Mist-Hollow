@@ -125,6 +125,7 @@ public class MapSystem: MonoBehaviour
                         break;
                     case 1:
                         newCellData.cellType = CellType.Stone;
+                        newCellData.solid = true;
                         break;
                     case 2:
                         newCellData.cellType = CellType.Water;
@@ -132,6 +133,39 @@ public class MapSystem: MonoBehaviour
                 }
 
                 mapData.cells[CoordsToIndex(x, y)] = newCellData;
+            }
+        }
+    }
+
+
+    private void InitGround()
+    {
+
+    }
+
+
+    private void InitBuildings()
+    {
+
+    }
+
+
+    private void InitOverlay()
+    {
+
+    }
+
+
+    private void InitCollision()
+    {
+        for (int i = 0; i < mapData.cells.Length; i++)
+        {
+            if (mapData.cells[i].solid)
+            {
+                tilemaps["Collision"].SetTile(
+                    new Vector3Int(IndexToCoords(i).x, IndexToCoords(i).y, 0),
+                    tiles["Collision_1"]
+                );
             }
         }
     }

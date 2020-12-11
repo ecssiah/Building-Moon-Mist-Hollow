@@ -15,9 +15,7 @@ public class SelectionHandler : MonoBehaviour
 
         if (hit.collider != null && hit.collider.gameObject.CompareTag("Target"))
         {
-            GameObject entity = hit.transform.parent.gameObject;
-
-            BroadcastEntitySelection(entity);
+            BroadcastEntitySelection(hit.transform.parent.gameObject);
         }
         else
         {
