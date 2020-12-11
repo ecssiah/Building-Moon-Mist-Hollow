@@ -20,7 +20,7 @@ public class EntityLabeler : MonoBehaviour
 
     void Awake()
     {
-        entityLabelPrefab = Resources.Load<GameObject>("Prefabs/Entity Label");
+        entityLabelPrefab = Resources.Load<GameObject>("Prefabs/Label");
 
         entities = new GameObject[0];
         entitiesObject = GameObject.Find("Entities");
