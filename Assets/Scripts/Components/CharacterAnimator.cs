@@ -28,7 +28,7 @@ public class CharacterAnimator : MonoBehaviour
     private float decisionTimer = 0;
     private readonly float decisionDeadline = 4f;
 
-    private float speed = 48f;
+    private float speed = 16f;
 
     private Vector2 direction = Vector2.zero;
 
