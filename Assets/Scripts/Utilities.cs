@@ -4,39 +4,45 @@ using UnityEngine;
 
 public static class Utilities
 {
-    public static Vector3 CartesianToIso(Vector3 cartesianVector)
+    public static Vector3 WorldToIso(Vector3 worldPosition)
     {
         return new Vector3(
-            cartesianVector.x - cartesianVector.y,
-            (cartesianVector.x + cartesianVector.y) / 2,
-            cartesianVector.z
+            worldPosition.x + 2 * worldPosition.y,
+            -worldPosition.x + 2 * worldPosition.y,
+            0
         );
     }
 
 
-    public static Vector3Int ToIsoGrid(Vector3 screen)
+    public static Vector3Int WorldToIsoGrid(Vector3 worldPosition)
     {
-        Vector3 isoVector = new Vector3(
-            screen.x + 2 * screen.y,
-            -screen.x + 2 * screen.y,
-            0
-        );
+        Vector3 isoVector = WorldToIso(worldPosition);
 
-        Vector3Int isoGridVector = new Vector3Int(
+        return new Vector3Int(
             (int)Mathf.Floor(isoVector.x),
             (int)Mathf.Floor(isoVector.y),
             0
         );
-
-        return isoGridVector;
     }
 
 
-    public static Vector3Int GetWorldPoint(Vector3 atPosition)
+    public static Vector3 IsoToWorld(Vector3 isoVector)
     {
-        Vector3 selectedPosition = Camera.main.ScreenToWorldPoint(atPosition);
-        selectedPosition.y += 0.25f;
+        var matrixProduct = new Vector3(
+            2 * isoVector.x - 2 * isoVector.y,
+            1 * isoVector.x + 1 * isoVector.y,
+            0
+        );
 
-        return Utilities.ToIsoGrid(selectedPosition);
+        return (1 / 4f) * matrixProduct;
+    }
+
+
+    public static Vector3Int ScreenToIsoGrid(Vector3 screenPosition)
+    {
+        Vector3 worldPosition = Camera.main.ScreenToWorldPoint(screenPosition);
+        worldPosition.y += 0.25f;
+
+        return Utilities.WorldToIsoGrid(worldPosition);
     }
 }

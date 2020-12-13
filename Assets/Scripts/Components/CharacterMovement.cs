@@ -51,12 +51,12 @@ public class CharacterMovement : MonoBehaviour
 
     private Vector2 GetDirection()
     {
-        System.Random random = new System.Random();
-
-        Vector3 newDirection = new Vector3(
-            random.Next(-1, 2), random.Next(-1, 2), 0
+        Vector3 newIsoDirection = new Vector3(
+            Random.Range(-2, 2),
+            Random.Range(-2, 2),
+            0
         );
 
-        return Utilities.CartesianToIso(newDirection);
+        return Utilities.IsoToWorld(newIsoDirection);
     }
 }
