@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class InputSystem : MonoBehaviour
 {
+    private MapSystem mapSystem;
 
     private SelectionHandler selectionHandler;
 
 
     void Awake()
     {
+        mapSystem = GameObject.Find("Map").GetComponent<MapSystem>();
+
         selectionHandler = gameObject.AddComponent<SelectionHandler>();
         selectionHandler.BroadcastCellSelection = OnCellSelection;
     }
@@ -32,6 +35,9 @@ public class InputSystem : MonoBehaviour
 
     public void OnCellSelection(Vector3Int cellPosition)
     {
-        Debug.Log(cellPosition);
+        mapSystem.ClearSelection();
+
+
+        mapSystem.SelectCell(cellPosition);
     }
 }
