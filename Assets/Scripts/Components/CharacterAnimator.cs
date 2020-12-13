@@ -185,6 +185,6 @@ public class CharacterAnimator : MonoBehaviour
             random.Next(-1, 2), random.Next(-1, 2), 0
         );
 
-        return Utilities.CartesianToIso(newDirection);
+        return Utilities.IsoToWorld(newDirection);
     }
 }

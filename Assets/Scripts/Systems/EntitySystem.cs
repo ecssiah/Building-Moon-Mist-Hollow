@@ -49,10 +49,10 @@ public class EntitySystem : MonoBehaviour
 
     private void GenerateCitizen(Vector3 position)
     {
-        Vector3 screenPosition = Utilities.CartesianToIso(position * 0.5f);
+        Vector3 worldPosition = Utilities.IsoToWorld(position);
 
         GameObject newCharacterObject = Instantiate(
-            citizenPrefab, screenPosition, Quaternion.identity
+            citizenPrefab, worldPosition, Quaternion.identity
         );
 
         newCharacterObject.transform.parent = this.transform;
