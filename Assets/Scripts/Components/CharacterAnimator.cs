@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class CharacterAnimator : MonoBehaviour
 {
-    public Sprite[] idleUpFrames;
-    public Sprite[] idleDownFrames;
-    public Sprite[] idleLeftFrames;
-    public Sprite[] idleRightFrames;
-    public Sprite[] walkUpFrames;
-    public Sprite[] walkDownFrames;
-    public Sprite[] walkLeftFrames;
-    public Sprite[] walkRightFrames;
+    private Sprite[] idleUpFrames;
+    private Sprite[] idleDownFrames;
+    private Sprite[] idleLeftFrames;
+    private Sprite[] idleRightFrames;
+
+    private Sprite[] walkUpFrames;
+    private Sprite[] walkDownFrames;
+    private Sprite[] walkLeftFrames;
+    private Sprite[] walkRightFrames;
 
     private Sprite[] currentFrames;
 
@@ -23,7 +24,21 @@ public class CharacterAnimator : MonoBehaviour
 
     private CharacterAnimationType currentAnimationType;
 
-    // Start is called before the first frame update
+
+    void Awake()
+    {
+        idleUpFrames = Resources.LoadAll<Sprite>("Citizen/Idle/Up");
+        idleDownFrames = Resources.LoadAll<Sprite>("Citizen/Idle/Down");
+        idleLeftFrames = Resources.LoadAll<Sprite>("Citizen/Idle/Left");
+        idleRightFrames = Resources.LoadAll<Sprite>("Citizen/Idle/Right");
+
+        walkUpFrames = Resources.LoadAll<Sprite>("Citizen/Walk/Up");
+        walkDownFrames = Resources.LoadAll<Sprite>("Citizen/Walk/Down");
+        walkLeftFrames = Resources.LoadAll<Sprite>("Citizen/Walk/Left");
+        walkRightFrames = Resources.LoadAll<Sprite>("Citizen/Walk/Right");
+    }
+
+
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -32,7 +47,6 @@ public class CharacterAnimator : MonoBehaviour
     }
 
 
-    // Update is called once per frame
     void Update()
     {
         UpdateFrame();
