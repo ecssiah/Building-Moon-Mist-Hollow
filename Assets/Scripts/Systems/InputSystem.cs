@@ -5,9 +5,13 @@ using UnityEngine;
 public class InputSystem : MonoBehaviour
 {
 
+    private SelectionHandler selectionHandler;
+
+
     void Awake()
     {
-
+        selectionHandler = gameObject.AddComponent<SelectionHandler>();
+        selectionHandler.BroadcastCellSelection = OnCellSelection;
     }
 
 
@@ -19,6 +23,15 @@ public class InputSystem : MonoBehaviour
 
     void Update()
     {
-        
+        if (Input.GetMouseButtonDown(0))
+        {
+            selectionHandler.Select();
+        }
+    }
+
+
+    public void OnCellSelection(Vector3Int cellPosition)
+    {
+        Debug.Log(cellPosition);
     }
 }
