@@ -38,6 +38,7 @@ public class CharacterMovement : MonoBehaviour
             decisionTimer = 0;
 
             direction = GetDirection();
+
             animator.SetAnimationDirection(direction);
         }
     }
@@ -52,8 +53,8 @@ public class CharacterMovement : MonoBehaviour
     private Vector2 GetDirection()
     {
         Vector3 newIsoDirection = new Vector3(
-            Random.Range(-2, 2),
-            Random.Range(-2, 2),
+            Random.Range(-1, 1),
+            Random.Range(-1, 1),
             0
         );
 
