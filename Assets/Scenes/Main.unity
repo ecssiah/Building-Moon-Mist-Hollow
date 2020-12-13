@@ -811,8 +811,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 674658492}
-  - component: {fileID: 674658491}
-  - component: {fileID: 674658493}
   m_Layer: 0
   m_Name: World
   m_TagString: Untagged
@@ -820,19 +818,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &674658491
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 674658490}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25f91111fc3a844a292baeb1841abb13, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  selectedCell: {x: 0, y: 0, z: 0}
 --- !u!4 &674658492
 Transform:
   m_ObjectHideFlags: 0
@@ -849,18 +834,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &674658493
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 674658490}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0462df5faa01b49f6834f80261bddbe7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1056356438
 GameObject:
   m_ObjectHideFlags: 0
@@ -21233,10 +21206,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1991481325}
   - component: {fileID: 1991481324}
-  - component: {fileID: 1991481323}
-  - component: {fileID: 1991481327}
   - component: {fileID: 1991481326}
   - component: {fileID: 1991481328}
+  - component: {fileID: 1991481323}
+  - component: {fileID: 1991481327}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -21256,42 +21229,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61c5aadfbf74c4193b38869348a771f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  idleUpFrames:
-  - {fileID: 21300000, guid: 2853c338e7ccd4e22814132c6a5e2994, type: 3}
-  - {fileID: 21300000, guid: 5818afcb649dd4897859b159bfc9a585, type: 3}
-  - {fileID: 21300000, guid: 66a7dec3bb1ed4787b7b71df308bc3d7, type: 3}
-  idleDownFrames:
-  - {fileID: 21300000, guid: 69073272af24945a9a21d014bdbe8ece, type: 3}
-  - {fileID: 21300000, guid: cc3841ac133ab4453b41f3687904686e, type: 3}
-  - {fileID: 21300000, guid: 3fff76c2009af4cdea606b92bb7c2378, type: 3}
-  idleLeftFrames:
-  - {fileID: 21300000, guid: 9eb97c8befba140b9909bb69cd6cc524, type: 3}
-  - {fileID: 21300000, guid: a2dd072f009964cf08e002cf4ebac2d6, type: 3}
-  - {fileID: 21300000, guid: 90b96c8160dbb41729163c4aa076b339, type: 3}
-  idleRightFrames:
-  - {fileID: 21300000, guid: 326dd5afb10644e09bf0ab0230e9bfa6, type: 3}
-  - {fileID: 21300000, guid: f67a130a0e35b443181e272b37eedcca, type: 3}
-  - {fileID: 21300000, guid: 6390b9ea3b34b47f091cc93581c12d15, type: 3}
-  walkUpFrames:
-  - {fileID: 21300000, guid: 095327254c5b847809c7ee1a92193110, type: 3}
-  - {fileID: 21300000, guid: 9818802ca43904557b77542a8e681782, type: 3}
-  - {fileID: 21300000, guid: e5965cdd847254a81952167c01f1cbe0, type: 3}
-  - {fileID: 21300000, guid: ab5ccfcefb2a54709a53e22a436890fc, type: 3}
-  walkDownFrames:
-  - {fileID: 21300000, guid: d4023a748430941ddabba34ac57cc20c, type: 3}
-  - {fileID: 21300000, guid: 5b20d6503bdbd485b847d00fcba259b9, type: 3}
-  - {fileID: 21300000, guid: 62d6434198d284ec284d72626674f202, type: 3}
-  - {fileID: 21300000, guid: e373bee22ae0b40d0b083d430e0a9d54, type: 3}
-  walkLeftFrames:
-  - {fileID: 21300000, guid: 56cecf59d4d434774acc1c3bb3ead386, type: 3}
-  - {fileID: 21300000, guid: e01fbd688be534b1ca593ee4d36ffd9b, type: 3}
-  - {fileID: 21300000, guid: 855cca642e8e3447e8ca26cd1a37db8e, type: 3}
-  - {fileID: 21300000, guid: 02f0b0d5ccd7742439cd3fb5e4ae8a23, type: 3}
-  walkRightFrames:
-  - {fileID: 21300000, guid: b6da8ea5f2d894d6783287218e157243, type: 3}
-  - {fileID: 21300000, guid: 7d289c040c7b24b17877e667ed205c4f, type: 3}
-  - {fileID: 21300000, guid: e1c6b10daf5b840c2974673debc9fe00, type: 3}
-  - {fileID: 21300000, guid: 5dfb887fc86674766ba7b88c6e8a9d75, type: 3}
+  idleUpFrames: []
+  idleDownFrames: []
+  idleLeftFrames: []
+  idleRightFrames: []
+  walkUpFrames: []
+  walkDownFrames: []
+  walkLeftFrames: []
+  walkRightFrames: []
 --- !u!212 &1991481324
 SpriteRenderer:
   m_ObjectHideFlags: 0
