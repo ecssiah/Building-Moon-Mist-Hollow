@@ -1,10 +1,12 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CharacterAnimator : MonoBehaviour
 {
+    private Rigidbody2D rigidBody;
+    private SpriteRenderer spriteRenderer;
+
+    private Sprite[] currentFrames;
+
     private Sprite[] idleUpFrames;
     private Sprite[] idleDownFrames;
     private Sprite[] idleLeftFrames;
@@ -15,30 +17,33 @@ public class CharacterAnimator : MonoBehaviour
     private Sprite[] walkLeftFrames;
     private Sprite[] walkRightFrames;
 
-    private Sprite[] currentFrames;
+    private AnimationType animationType;
 
-    private SpriteRenderer spriteRenderer;
+    private float speed;
+    private Vector2 direction;
 
-    private float timer = 0f;
-    private int frameNumber = 0;
-    private readonly float frameRate = 1 / 10f;
+    private float timer;
+    private int frameNumber;
+    private float frameRate;
 
-    private AnimationType currentAnimationType;
-
-    private float decisionTimer = 0;
-    private readonly float decisionDeadline = 4f;
-
-    private float speed = 82f;
-
-    private Vector2 direction = Vector2.zero;
-
-    private Rigidbody2D rigidBody;
+    private float decisionTimer;
+    private float decisionDeadline;
 
 
-    void Start()
+    void Awake()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
         rigidBody = GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+
+        speed = 82f;
+        direction = Vector2.zero;
+
+        timer = 0f;
+        frameNumber = 0;
+        frameRate = 1 / 10f;
+
+        decisionTimer = 0;
+        decisionDeadline = 4f;
 
         idleUpFrames = Resources.LoadAll<Sprite>("Character/Idle/Up");
         idleDownFrames = Resources.LoadAll<Sprite>("Character/Idle/Down");
@@ -56,14 +61,33 @@ public class CharacterAnimator : MonoBehaviour
 
     void Update()
     {
-        UpdateFrame();
-
-        Tick();
+        Decide();
         Move();
+        Tick();
+    }
+
+    
+    private void Decide()
+    {
+        decisionTimer += Time.deltaTime;
+
+        if (decisionTimer >= decisionDeadline)
+        {
+            decisionTimer = 0;
+
+            direction = GetRandomIsoDirection();
+            SetAnimationDirection(direction);
+        }
     }
 
 
-    private void UpdateFrame()
+    private void Move()
+    {
+        rigidBody.velocity = Time.deltaTime * speed * direction;
+    }
+
+
+    private void Tick()
     {
         timer += Time.deltaTime;
 
@@ -75,8 +99,8 @@ public class CharacterAnimator : MonoBehaviour
 
             spriteRenderer.sprite = currentFrames[frameNumber];
         }
-
     }
+
 
 
     private void PlayAnimation(AnimationType animationType)
@@ -84,7 +108,7 @@ public class CharacterAnimator : MonoBehaviour
         timer = 0;
         frameNumber = 0;
 
-        currentAnimationType = animationType;
+        this.animationType = animationType;
 
         switch (animationType)
         {
@@ -121,19 +145,19 @@ public class CharacterAnimator : MonoBehaviour
     {
         if (direction.x == 0 && direction.y == 0)
         {
-            if (currentAnimationType == AnimationType.WalkUp)
+            if (animationType == AnimationType.WalkUp)
             {
                 PlayAnimation(AnimationType.IdleUp);
             }
-            else if (currentAnimationType == AnimationType.WalkDown)
+            else if (animationType == AnimationType.WalkDown)
             {
                 PlayAnimation(AnimationType.IdleDown);
             }
-            else if (currentAnimationType == AnimationType.WalkLeft)
+            else if (animationType == AnimationType.WalkLeft)
             {
                 PlayAnimation(AnimationType.IdleLeft);
             }
-            else if (currentAnimationType == AnimationType.WalkRight)
+            else if (animationType == AnimationType.WalkRight)
             {
                 PlayAnimation(AnimationType.IdleRight);
             }
@@ -157,32 +181,13 @@ public class CharacterAnimator : MonoBehaviour
     }
 
 
-    private void Tick()
+
+    private Vector2 GetRandomIsoDirection()
     {
-        decisionTimer += Time.deltaTime;
-
-        if (decisionTimer >= decisionDeadline)
-        {
-            decisionTimer = 0;
-
-            direction = GetDirection();
-            SetAnimationDirection(direction);
-        }
-    }
-
-
-    private void Move()
-    {
-        rigidBody.velocity = Time.deltaTime * speed * direction;
-    }
-
-
-    private Vector2 GetDirection()
-    {
-        System.Random random = new System.Random(Guid.NewGuid().GetHashCode());
-
-        Vector3 newDirection = new Vector3(
-            random.Next(-1, 2), random.Next(-1, 2), 0
+        var newDirection = new Vector3(
+            Random.Range(-1, 1),
+            Random.Range(-1, 1),
+            0
         );
 
         return MapUtil.IsoToWorld(newDirection);
