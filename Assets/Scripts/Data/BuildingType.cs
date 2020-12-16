@@ -1,5 +1,4 @@
-﻿using System;
-public enum BuildingType
+﻿public enum BuildingType
 {
     None,
     WoodWall,

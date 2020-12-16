@@ -5,24 +5,16 @@ using UnityEngine.Tilemaps;
 
 public class MapSystem: MonoBehaviour
 {
-    private const int MapSize = 100;
-    private const int MapWidth = 2 * MapSize + 1;
-
     private MapData mapData;
 
-    private Dictionary<string, Tile> tiles;
-    private Dictionary<string, Tilemap> tilemaps;
+    private Dictionary<string, Tile> tiles = new Dictionary<string, Tile>();
+    private Dictionary<string, Tilemap> tilemaps = new Dictionary<string, Tilemap>();
 
-    private Vector3Int selectedCell;
-
-    private Dictionary<CellType, string> cellTileNames;
-    private Dictionary<BuildingType, string> buildingTileNames;
+    private Vector3Int selectedCell = new Vector3Int();
 
 
     void Awake()
     {
-        selectedCell = new Vector3Int();
-
         InitTiles();
         InitTilemaps();
 
@@ -45,35 +37,15 @@ public class MapSystem: MonoBehaviour
 
     private void InitTiles()
     {
-        tiles = new Dictionary<string, Tile>();
-
-        Tile[] tilesArray = Resources.LoadAll<Tile>("Tiles");
-
-        foreach (Tile tile in tilesArray)
+        foreach (Tile tile in Resources.LoadAll<Tile>("Tiles"))
         {
             tiles[tile.name] = tile;
         }
-
-        cellTileNames = new Dictionary<CellType, string>
-        {
-            [CellType.Grass] = "Dirt_Grass_C",
-            [CellType.Stone] = "Stone_A",
-            [CellType.Water] = "Water"
-        };
-
-        buildingTileNames = new Dictionary<BuildingType, string>
-        {
-            [BuildingType.StoneWall] = "Brick_C",
-            [BuildingType.WoodWall] = "Wood_A",
-        };
-
     }
 
 
     private void InitTilemaps()
     {
-        tilemaps = new Dictionary<string, Tilemap>();
-
         Tilemap[] tilemapsArray = GameObject.Find("Map").GetComponentsInChildren<Tilemap>();
 
         foreach (Tilemap tilemap in tilemapsArray)
@@ -105,11 +77,6 @@ public class MapSystem: MonoBehaviour
 
     private void InitMap()
     {
-        mapData = new MapData
-        {
-            cells = new CellData[(int)Mathf.Pow(MapWidth, 2)]
-        };
-
         InitCells();
         InitGround();
         InitBuildings();
@@ -118,40 +85,33 @@ public class MapSystem: MonoBehaviour
 
     private void InitCells()
     {
-        for (int i = 0; i < mapData.cells.Length; i++)
+        mapData = new MapData
         {
-            mapData.cells[i] = new CellData();
-        }
+            cells = new CellData[(int)Mathf.Pow(MapInfo.MapWidth, 2)]
+        };
     }
 
 
     private void InitGround()
     {
-        for (int x = -MapSize; x <= MapSize; x++)
+        for (int x = -MapInfo.MapSize; x <= MapInfo.MapSize; x++)
         {
-            for (int y = -MapSize; y <= MapSize; y++)
+            for (int y = -MapInfo.MapSize; y <= MapInfo.MapSize; y++)
             {
-                mapData.cells[CoordsToIndex(x, y)].cellType = CellType.Grass;
+                SetupCell(x, y, CellType.Grass);
             }
         }
 
-        mapData.cells[CoordsToIndex(0, 0)].cellType = CellType.Water;
+        SetupCell(0, 0, CellType.Water);
     }
 
 
     private void InitBuildings()
     {
-        //for (int x = -4; x <= 4; x++)
-        //{
-        //    for (int y = -4; y <= 4; y++)
-        //    {
-        //        if (x == -4 || x == 4 || y == -4 || y == 4)
-        //        {
-        //            mapData.cells[CoordsToIndex(x, y)].buildingType = BuildingType.StoneWall;
-        //        }
-        //    }
-        //}
-        mapData.cells[CoordsToIndex(2, 2)].buildingType = BuildingType.StoneWall;
+        SetupBuilding(4, 4, BuildingType.StoneWall);
+        SetupBuilding(-4, 4, BuildingType.StoneWall);
+        SetupBuilding(4, -4, BuildingType.StoneWall);
+        SetupBuilding(-4, -4, BuildingType.StoneWall);
     }
 
 
@@ -177,46 +137,75 @@ public class MapSystem: MonoBehaviour
 
             if (cellData.cellType != CellType.None)
             {
-                SetCell(position, cellData.cellType);
+                ConstructCell(position, cellData.cellType);
             }
 
             if(cellData.buildingType != BuildingType.None)
             {
-                Debug.Log(position);
-                SetBuilding(position, cellData.buildingType);
+                ConstructBuilding(position, cellData.buildingType);
             }
         }
     }
 
 
+    private int CoordsToIndex(Vector2Int position)
+    {
+        return CoordsToIndex(position.x, position.y);
+    }
+
+
     private int CoordsToIndex(int x, int y)
     {
-        return (x + MapSize) + MapWidth * (y + MapSize);
+        return (x + MapInfo.MapSize) + MapInfo.MapWidth * (y + MapInfo.MapSize);
     }
 
 
     private Vector2Int IndexToCoords(int i)
     {
         return new Vector2Int(
-            (i % MapWidth) - MapSize, (i / MapWidth) - MapSize
+            (i % MapInfo.MapWidth) - MapInfo.MapSize, (i / MapInfo.MapWidth) - MapInfo.MapSize
         );
     }
 
 
-    private void SetBuilding(Vector2Int position, BuildingType buildingType)
+    private void SetupCell(int x, int y, CellType cellType)
+    {
+        SetupCell(new Vector2Int(x, y), cellType);
+    }
+
+
+    private void SetupCell(Vector2Int position, CellType cellType)
+    {
+        mapData.cells[CoordsToIndex(position)].cellType = cellType;
+    }
+
+
+    private void SetupBuilding(int x, int y, BuildingType buildingType)
+    {
+        SetupBuilding(new Vector2Int(x, y), buildingType);
+    }
+
+
+    private void SetupBuilding(Vector2Int position, BuildingType buildingType)
+    {
+        mapData.cells[CoordsToIndex(position)].buildingType = buildingType;
+    }
+
+
+    private void ConstructBuilding(Vector2Int position, BuildingType buildingType)
     {
         tilemaps["Buildings"].SetTile(
             new Vector3Int(position.x, position.y, 3),
-            tiles[buildingTileNames[buildingType]]
+            tiles[TileInfo.buildingTileNames[buildingType]]
         );
     }
 
 
-    private void SetCell(Vector2Int position, CellType cellType)
+    private void ConstructCell(Vector2Int position, CellType cellType)
     {
         tilemaps["Ground"].SetTile(
             new Vector3Int(position.x, position.y, 0),
-            tiles[cellTileNames[cellType]]
+            tiles[TileInfo.cellTileNames[cellType]]
         );
     }
 }
