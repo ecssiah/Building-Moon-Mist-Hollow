@@ -114,23 +114,10 @@ public class MapSystem: MonoBehaviour
         {
             for (int y = -MapSize; y <= MapSize; y++)
             {
-                CellData newCellData = new CellData();
-
-                int roll = Random.Range(0, 3);
-
-                switch (roll)
+                CellData newCellData = new CellData
                 {
-                    case 0:
-                        newCellData.cellType = CellType.Grass;
-                        break;
-                    case 1:
-                        newCellData.cellType = CellType.Stone;
-                        newCellData.solid = true;
-                        break;
-                    case 2:
-                        newCellData.cellType = CellType.Water;
-                        break;
-                }
+                    cellType = CellType.Grass
+                };
 
                 mapData.cells[CoordsToIndex(x, y)] = newCellData;
             }
