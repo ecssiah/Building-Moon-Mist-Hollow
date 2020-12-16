@@ -13,4 +13,3 @@ countries.
 - Pink
 - Purple
 - Teal
-
