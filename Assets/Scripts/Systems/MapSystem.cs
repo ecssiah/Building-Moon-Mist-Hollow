@@ -60,7 +60,7 @@ public class MapSystem: MonoBehaviour
             tilemaps[tilemap.name] = tilemap;
         }
 
-        tilemaps["Collision"].enabled = mapData.showCollision;
+        tilemaps["Collision"].GetComponent<TilemapRenderer>().enabled = mapData.showCollision;
     }
 
 
