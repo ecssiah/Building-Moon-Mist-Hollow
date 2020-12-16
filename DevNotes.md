@@ -6,6 +6,7 @@ with the Unity tutorial series.
 ## Planned Features
 
 1. Three Peoples
+
 Moon Mist Hollow will receive prospective immigrants from three different
 countries.
 
