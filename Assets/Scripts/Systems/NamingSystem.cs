@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class NamingSystem : MonoBehaviour
 {
@@ -8,20 +6,20 @@ public class NamingSystem : MonoBehaviour
 
     private int currentNameIndex;
 
-    private string[] initialElements = { "La", "At", "Se", "Dea", "Tel", "Ce", "Re", "Til" };
-    private string[] middleElements = { "ekah", "tere", "ede", "she", "rin", "e", "il", "ci" };
-    private string[] finalElements = { "cale", "si", "slt", "treh", "ehta", "ta", "lit", "ca" };
+    private readonly string[] initialElements = {
+        "La", "At", "Se", "Dea", "Tel", "Ce", "Re", "Til"
+    };
+    private readonly string[] middleElements = {
+        "ekah", "tere", "ede", "she", "rin", "e", "il", "ci"
+    };
+    private readonly string[] finalElements = {
+        "cale", "si", "slt", "treh", "ehta", "ta", "lit", "ca"
+    };
 
 
-    void Start()
+    void Awake()
     {
         GenerateNames();
-    }
-
-
-    void Update()
-    {
-        
     }
 
 

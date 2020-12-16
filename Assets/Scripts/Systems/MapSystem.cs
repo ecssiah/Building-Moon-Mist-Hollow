@@ -60,7 +60,10 @@ public class MapSystem: MonoBehaviour
             tilemaps[tilemap.name] = tilemap;
         }
 
-        tilemaps["Collision"].GetComponent<TilemapRenderer>().enabled = mapData.showCollision;
+        TilemapRenderer collisionRenderer = tilemaps["Collision"]
+            .GetComponent<TilemapRenderer>();
+
+        collisionRenderer.enabled = mapData.showCollision;
     }
 
 
@@ -137,14 +140,16 @@ public class MapSystem: MonoBehaviour
     }
 
 
-    private void SetupBuilding(int x, int y, BuildingType buildingType, bool solid = true)
-    {
+    private void SetupBuilding(
+        int x, int y, BuildingType buildingType, bool solid = true
+    ) {
         SetupBuilding(new Vector2Int(x, y), buildingType, solid);
     }
 
 
-    private void SetupBuilding(Vector2Int position, BuildingType buildingType, bool solid = true)
-    {
+    private void SetupBuilding(
+        Vector2Int position, BuildingType buildingType, bool solid = true
+    ) {
         var cellIndex = MapUtil.CoordsToIndex(position);
 
         mapData.cells[cellIndex].solid = solid;

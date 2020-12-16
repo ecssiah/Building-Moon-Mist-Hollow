@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class InputSystem : MonoBehaviour
 {
@@ -39,10 +38,8 @@ public class InputSystem : MonoBehaviour
     {
         uiSystem.ClearSelection();
         mapSystem.ClearSelection();
-        entitySystem.ClearSelection();
 
         uiSystem.SelectEntity(entity);
-        entitySystem.SelectEntity(entity);
     }
 
 
@@ -50,7 +47,6 @@ public class InputSystem : MonoBehaviour
     {
         uiSystem.ClearSelection();
         mapSystem.ClearSelection();
-        entitySystem.ClearSelection();
 
         uiSystem.SelectCell(cellPosition);
         mapSystem.SelectCell(cellPosition);

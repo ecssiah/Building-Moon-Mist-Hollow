@@ -1,36 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
 public class UISystem : MonoBehaviour
 {
-    private EntitySystem entitySystem;
-    private MapSystem mapSystem;
-
     private EntityLabeler entityLabeler;
     private InfoPanel infoPanel;
 
 
     void Awake()
     {
-        entitySystem = GameObject.Find("Entities").GetComponent<EntitySystem>();
-        mapSystem = GameObject.Find("Map").GetComponent<MapSystem>();
-
-        entityLabeler = this.gameObject.AddComponent<EntityLabeler>();
-        infoPanel = this.gameObject.AddComponent<InfoPanel>();
-    }
-
-
-    void Start()
-    {
-    }
-
-
-    void Update()
-    {
-        
+        entityLabeler = gameObject.AddComponent<EntityLabeler>();
+        infoPanel = gameObject.AddComponent<InfoPanel>();
     }
 
 
