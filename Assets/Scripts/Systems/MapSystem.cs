@@ -14,12 +14,25 @@ public class MapSystem: MonoBehaviour
 
     void Awake()
     {
+        InitData();
         InitTiles();
         InitTilemaps();
 
-        InitMap();
+        SetupMap();
 
         ConstructMap();
+    }
+
+
+    private void InitData()
+    {
+        selectedCell = new Vector3Int();
+
+        mapData = new MapData
+        {
+            showCollision = false,
+            cells = new CellData[(int)Mathf.Pow(MapInfo.MapWidth, 2)]
+        };
     }
 
 
@@ -46,29 +59,20 @@ public class MapSystem: MonoBehaviour
         {
             tilemaps[tilemap.name] = tilemap;
         }
+
+        tilemaps["Collision"].enabled = mapData.showCollision;
     }
 
 
-    private void InitMap()
+    private void SetupMap()
     {
-        InitCells();
-        InitGround();
-        InitBuildings();
+        SetupGroundLayer();
+        SetupBuildingsLayer();
+        SetupOverlayLayer();
     }
+    
 
-
-    private void InitCells()
-    {
-        selectedCell = new Vector3Int();
-
-        mapData = new MapData
-        {
-            cells = new CellData[(int)Mathf.Pow(MapInfo.MapWidth, 2)]
-        };
-    }
-
-
-    private void InitGround()
+    private void SetupGroundLayer()
     {
         for (int x = -MapInfo.MapSize; x <= MapInfo.MapSize; x++)
         {
@@ -82,7 +86,7 @@ public class MapSystem: MonoBehaviour
     }
 
 
-    private void InitBuildings()
+    private void SetupBuildingsLayer()
     {
         SetupBuilding(4, 4, BuildingType.StoneWall);
         SetupBuilding(-4, 4, BuildingType.StoneWall);
@@ -91,13 +95,7 @@ public class MapSystem: MonoBehaviour
     }
 
 
-    private void InitOverlay()
-    {
-
-    }
-
-
-    private void InitCollision()
+    private void SetupOverlayLayer()
     {
 
     }
