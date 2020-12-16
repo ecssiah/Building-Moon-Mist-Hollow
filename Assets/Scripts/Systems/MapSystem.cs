@@ -134,6 +134,8 @@ public class MapSystem: MonoBehaviour
                 mapData.cells[CoordsToIndex(x, y)].cellType = CellType.Grass;
             }
         }
+
+        mapData.cells[CoordsToIndex(0, 0)].cellType = CellType.Water;
     }
 
 
@@ -149,7 +151,6 @@ public class MapSystem: MonoBehaviour
         //        }
         //    }
         //}
-
         mapData.cells[CoordsToIndex(2, 2)].buildingType = BuildingType.StoneWall;
     }
 
@@ -173,6 +174,7 @@ public class MapSystem: MonoBehaviour
             CellData cellData = mapData.cells[i];
             Vector2Int position = IndexToCoords(i);
 
+
             if (cellData.cellType != CellType.None)
             {
                 SetCell(position, cellData.cellType);
@@ -180,6 +182,7 @@ public class MapSystem: MonoBehaviour
 
             if(cellData.buildingType != BuildingType.None)
             {
+                Debug.Log(position);
                 SetBuilding(position, cellData.buildingType);
             }
         }
@@ -203,7 +206,7 @@ public class MapSystem: MonoBehaviour
     private void SetBuilding(Vector2Int position, BuildingType buildingType)
     {
         tilemaps["Buildings"].SetTile(
-            new Vector3Int(position.x, position.y, -3),
+            new Vector3Int(position.x, position.y, 3),
             tiles[buildingTileNames[buildingType]]
         );
     }
