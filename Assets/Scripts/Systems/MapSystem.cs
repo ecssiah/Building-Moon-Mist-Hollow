@@ -5,6 +5,9 @@ using UnityEngine.Tilemaps;
 
 public class MapSystem : MonoBehaviour
 {
+    private const int MapSize = 100;
+    private const int MapWidth = 2 * MapSize + 1;
+
     private MapData mapData;
 
     private Dictionary<string, Tile> tiles;
@@ -25,7 +28,7 @@ public class MapSystem : MonoBehaviour
 
         InitMap();
 
-
+        ConstructMap();
     }
 
 
@@ -98,6 +101,66 @@ public class MapSystem : MonoBehaviour
 
     private void InitMap()
     {
+        mapData = new MapData
+        {
+            cells = new CellData[(int)Mathf.Pow(MapWidth, 2)]
+        };
 
+        for (int x = -MapSize; x <= MapSize; x++)
+        {
+            for (int y = -MapSize; y <= MapSize; y++)
+            {
+                CellData newCellData = new CellData();
+
+                int roll = Random.Range(0, 3);
+
+                switch (roll)
+                {
+                    case 0:
+                        newCellData.cellType = CellType.Grass;
+                        break;
+                    case 1:
+                        newCellData.cellType = CellType.Stone;
+                        break;
+                    case 2:
+                        newCellData.cellType = CellType.Water;
+                        break;
+                }
+
+                mapData.cells[CoordsToIndex(x, y)] = newCellData;
+            }
+        }
+    }
+
+
+    private void ConstructMap()
+    {
+        for (int i = 0; i < mapData.cells.Length; i++)
+        {
+            SetCell(IndexToCoords(i), mapData.cells[i].cellType);
+        }
+    }
+
+
+    private void SetCell(Vector2Int position, CellType cellType)
+    {
+        tilemaps["Tiles"].SetTile(
+            new Vector3Int(position.x, position.y, 0),
+            tiles[cellTileNames[cellType]]
+        );
+    }
+
+
+    private int CoordsToIndex(int x, int y)
+    {
+        return (x + MapSize) + MapWidth * (y + MapSize);
+    }
+
+
+    private Vector2Int IndexToCoords(int i)
+    {
+        return new Vector2Int(
+            (i % MapWidth) - MapSize, (i / MapWidth) - MapSize
+        );
     }
 }
