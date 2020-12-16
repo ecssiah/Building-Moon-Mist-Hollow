@@ -4,6 +4,7 @@ using UnityEngine;
 public class SelectionHandler : MonoBehaviour
 {
     public Action<Vector3Int> BroadcastCellSelection;
+    public Action<GameObject> BroadcastEntitySelection;
 
 
     public void Select()
@@ -13,7 +14,7 @@ public class SelectionHandler : MonoBehaviour
 
         if (hit.collider != null)
         {
-
+            BroadcastEntitySelection(hit.transform.parent.gameObject);
         }
         else
         {

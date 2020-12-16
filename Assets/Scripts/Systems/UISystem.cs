@@ -8,6 +8,7 @@ public class UISystem : MonoBehaviour
     private MapSystem mapSystem;
 
     private InfoPanel infoPanel;
+    private EntityLabeler entityLabeler;
 
 
     void Awake()
@@ -16,6 +17,7 @@ public class UISystem : MonoBehaviour
         mapSystem = GameObject.Find("Map").GetComponent<MapSystem>();
 
         infoPanel = this.gameObject.AddComponent<InfoPanel>();
+        entityLabeler = this.gameObject.AddComponent<EntityLabeler>();
     }
 
 
@@ -28,5 +30,36 @@ public class UISystem : MonoBehaviour
     void Update()
     {
         
+    }
+
+
+    public void SelectEntity(GameObject entity)
+    {
+        EntityData entityData = new EntityData
+        {
+            name = entity.name
+        };
+
+        infoPanel.ActivateEntityMode(entityData);
+
+        entityLabeler.SelectEntity(entity);
+    }
+
+
+    public void SelectCell(Vector3Int cellPosition)
+    {
+        CellData cellData = new CellData
+        {
+            position = cellPosition
+        };
+
+        infoPanel.ActivateCellMode(cellData);
+    }
+
+
+    public void ClearSelection()
+    {
+        infoPanel.Deactivate();
+        entityLabeler.ClearSelection();
     }
 }

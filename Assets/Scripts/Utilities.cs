@@ -45,4 +45,12 @@ public static class Utilities
 
         return Utilities.WorldToIsoGrid(worldPosition);
     }
+
+
+    public static Vector3 WorldToScreen(Vector3 worldPosition)
+    {
+        return RectTransformUtility.WorldToScreenPoint(
+            Camera.main, worldPosition
+        );
+    }
 }

@@ -8,24 +8,14 @@ public class InfoPanel : MonoBehaviour
     private GameObject entityTab;
     private GameObject cellTab;
 
-    private InfoMode mode;
-    
     private EntityData entityData;
-    private CellData cellData;
-
-    public InfoMode Mode
-    {
-        get => mode;
-
-        set
-        {
-            mode = value;
-            UpdateMode();
-        }
-    }
-
     public EntityData EntityData { get => entityData; set => entityData = value; }
+
+    private CellData cellData;
     public CellData CellData { get => cellData; set => cellData = value; }
+
+    private InfoMode mode;
+    public InfoMode Mode { get => mode; }
 
     private TextMeshProUGUI entityNameText;
     private TextMeshProUGUI cellPositionText;
@@ -57,15 +47,14 @@ public class InfoPanel : MonoBehaviour
 
         entityNameLabel.text = "Name: ";
         cellPositionLabel.text = "Position: ";
-
-        Mode = InfoMode.None;
     }
 
 
     void Start()
     {
-        
+        Deactivate();
     }
+
 
     void Update()
     {
@@ -73,28 +62,10 @@ public class InfoPanel : MonoBehaviour
     }
 
 
-    private void UpdateMode()
+    public void ActivateEntityMode(EntityData entityData)
     {
-        switch (mode)
-        {
-            case InfoMode.None:
-                Deactivate();
-                break;
-            case InfoMode.Entity:
-                ActivateEntityMode();
-                break;
-            case InfoMode.Cell:
-                ActivateCellMode();
-                break;
-            default:
-                Deactivate();
-                break;
-        }
-    }
+        mode = InfoMode.Entity;
 
-
-    private void ActivateEntityMode()
-    {
         entityTab.SetActive(true);
         cellTab.SetActive(false);
 
@@ -102,8 +73,10 @@ public class InfoPanel : MonoBehaviour
     }
 
 
-    private void ActivateCellMode()
+    public void ActivateCellMode(CellData cellData)
     {
+        mode = InfoMode.Cell;
+
         entityTab.SetActive(false);
         cellTab.SetActive(true);
 
@@ -111,8 +84,10 @@ public class InfoPanel : MonoBehaviour
     }
 
 
-    private void Deactivate()
+    public void Deactivate()
     {
+        mode = InfoMode.None;
+
         entityTab.SetActive(false);
         cellTab.SetActive(false);
     }
