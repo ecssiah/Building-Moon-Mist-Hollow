@@ -158,16 +158,7 @@ public class MapSystem: MonoBehaviour
 
     private void InitCollision()
     {
-        for (int i = 0; i < mapData.cells.Length; i++)
-        {
-            if (mapData.cells[i].solid)
-            {
-                tilemaps["Collision"].SetTile(
-                    new Vector3Int(IndexToCoords(i).x, IndexToCoords(i).y, 0),
-                    tiles["Collision_1"]
-                );
-            }
-        }
+
     }
 
 
@@ -175,7 +166,7 @@ public class MapSystem: MonoBehaviour
     {
         for (int i = 0; i < mapData.cells.Length; i++)
         {
-            SetTile(IndexToCoords(i), mapData.cells[i].cellType);
+            SetCell(IndexToCoords(i), mapData.cells[i].cellType);
         }
     }
 
@@ -194,15 +185,14 @@ public class MapSystem: MonoBehaviour
     }
 
 
-    private void SetTile(int x, int y, CellType cellType)
+    private void SetCell(int x, int y, CellType cellType)
     {
         tilemaps["Ground"].SetTile(new Vector3Int(x, y, 0), tiles[cellTileNames[cellType]]);
     }
 
 
-    private void SetTile(Vector2Int position, CellType cellType)
+    private void SetCell(Vector2Int position, CellType cellType)
     {
-        SetTile(position.x, position.y, cellType);
+        SetCell(position.x, position.y, cellType);
     }
-
 }
