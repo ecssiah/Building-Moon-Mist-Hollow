@@ -23,7 +23,7 @@ public class CharacterAnimator : MonoBehaviour
     private int frameNumber = 0;
     private readonly float frameRate = 1 / 10f;
 
-    private CharacterAnimationType currentAnimationType;
+    private AnimationType currentAnimationType;
 
     private float decisionTimer = 0;
     private readonly float decisionDeadline = 4f;
@@ -50,7 +50,7 @@ public class CharacterAnimator : MonoBehaviour
         walkLeftFrames = Resources.LoadAll<Sprite>("Character/Walk/Left");
         walkRightFrames = Resources.LoadAll<Sprite>("Character/Walk/Right");
 
-        PlayAnimation(CharacterAnimationType.WalkDown);
+        PlayAnimation(AnimationType.WalkDown);
     }
 
 
@@ -79,7 +79,7 @@ public class CharacterAnimator : MonoBehaviour
     }
 
 
-    private void PlayAnimation(CharacterAnimationType animationType)
+    private void PlayAnimation(AnimationType animationType)
     {
         timer = 0;
         frameNumber = 0;
@@ -88,28 +88,28 @@ public class CharacterAnimator : MonoBehaviour
 
         switch (animationType)
         {
-            case CharacterAnimationType.IdleUp:
+            case AnimationType.IdleUp:
                 currentFrames = idleUpFrames;
                 break;
-            case CharacterAnimationType.IdleDown:
+            case AnimationType.IdleDown:
                 currentFrames = idleDownFrames;
                 break;
-            case CharacterAnimationType.IdleLeft:
+            case AnimationType.IdleLeft:
                 currentFrames = idleLeftFrames;
                 break;
-            case CharacterAnimationType.IdleRight:
+            case AnimationType.IdleRight:
                 currentFrames = idleRightFrames;
                 break;
-            case CharacterAnimationType.WalkUp:
+            case AnimationType.WalkUp:
                 currentFrames = walkUpFrames;
                 break;
-            case CharacterAnimationType.WalkDown:
+            case AnimationType.WalkDown:
                 currentFrames = walkDownFrames;
                 break;
-            case CharacterAnimationType.WalkLeft:
+            case AnimationType.WalkLeft:
                 currentFrames = walkLeftFrames;
                 break;
-            case CharacterAnimationType.WalkRight:
+            case AnimationType.WalkRight:
                 currentFrames = walkRightFrames;
                 break;
 
@@ -121,38 +121,38 @@ public class CharacterAnimator : MonoBehaviour
     {
         if (direction.x == 0 && direction.y == 0)
         {
-            if (currentAnimationType == CharacterAnimationType.WalkUp)
+            if (currentAnimationType == AnimationType.WalkUp)
             {
-                PlayAnimation(CharacterAnimationType.IdleUp);
+                PlayAnimation(AnimationType.IdleUp);
             }
-            else if (currentAnimationType == CharacterAnimationType.WalkDown)
+            else if (currentAnimationType == AnimationType.WalkDown)
             {
-                PlayAnimation(CharacterAnimationType.IdleDown);
+                PlayAnimation(AnimationType.IdleDown);
             }
-            else if (currentAnimationType == CharacterAnimationType.WalkLeft)
+            else if (currentAnimationType == AnimationType.WalkLeft)
             {
-                PlayAnimation(CharacterAnimationType.IdleLeft);
+                PlayAnimation(AnimationType.IdleLeft);
             }
-            else if (currentAnimationType == CharacterAnimationType.WalkRight)
+            else if (currentAnimationType == AnimationType.WalkRight)
             {
-                PlayAnimation(CharacterAnimationType.IdleRight);
+                PlayAnimation(AnimationType.IdleRight);
             }
         }
         else if (direction.x > 0)
         {
-            PlayAnimation(CharacterAnimationType.WalkRight);
+            PlayAnimation(AnimationType.WalkRight);
         }
         else if (direction.x < 0)
         {
-            PlayAnimation(CharacterAnimationType.WalkLeft);
+            PlayAnimation(AnimationType.WalkLeft);
         }
         else if (direction.y > 0)
         {
-            PlayAnimation(CharacterAnimationType.WalkUp);
+            PlayAnimation(AnimationType.WalkUp);
         }
         else if (direction.y < 0)
         {
-            PlayAnimation(CharacterAnimationType.WalkDown);
+            PlayAnimation(AnimationType.WalkDown);
         }
     }
 
@@ -185,6 +185,6 @@ public class CharacterAnimator : MonoBehaviour
             random.Next(-1, 2), random.Next(-1, 2), 0
         );
 
-        return Utilities.IsoToWorld(newDirection);
+        return MapUtil.IsoToWorld(newDirection);
     }
 }

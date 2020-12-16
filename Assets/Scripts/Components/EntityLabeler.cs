@@ -41,7 +41,7 @@ public class EntityLabeler : MonoBehaviour
 
         for (int index = 0; index < entities.Length; index++)
         {
-            Vector3 labelPosition = Utilities.WorldToScreen(entities[index].transform.position);
+            Vector3 labelPosition = MapUtil.WorldToScreen(entities[index].transform.position);
             labelPosition.y += LabelYOffset * cameraSizeRatio;
 
             labels[index].transform.position = labelPosition;
@@ -51,7 +51,7 @@ public class EntityLabeler : MonoBehaviour
 
     private GameObject CreateLabel(GameObject entity)
     {
-        Vector3 screenPosition = Utilities.WorldToScreen(entity.transform.position);
+        Vector3 screenPosition = MapUtil.WorldToScreen(entity.transform.position);
 
         GameObject newLabel = Instantiate(
             entityLabelPrefab, screenPosition, Quaternion.identity

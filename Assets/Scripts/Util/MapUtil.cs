@@ -1,9 +1,28 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public static class Utilities
+public struct MapUtil
 {
+    public static int CoordsToIndex(Vector2Int position)
+    {
+        return CoordsToIndex(position.x, position.y);
+    }
+
+
+    public static int CoordsToIndex(int x, int y)
+    {
+        return (x + MapInfo.MapSize) + MapInfo.MapWidth * (y + MapInfo.MapSize);
+    }
+
+
+    public static Vector2Int IndexToCoords(int i)
+    {
+        return new Vector2Int(
+            (i % MapInfo.MapWidth) - MapInfo.MapSize,
+            (i / MapInfo.MapWidth) - MapInfo.MapSize
+        );
+    }
+
+
     public static Vector3 WorldToIso(Vector3 worldPosition)
     {
         return new Vector3(
@@ -25,7 +44,7 @@ public static class Utilities
         );
     }
 
-    
+
     public static Vector3 WorldToScreen(Vector3 worldPosition)
     {
         return RectTransformUtility.WorldToScreenPoint(
@@ -39,7 +58,7 @@ public static class Utilities
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(screenPosition);
         worldPosition.y += 0.25f;
 
-        return Utilities.WorldToIsoGrid(worldPosition);
+        return WorldToIsoGrid(worldPosition);
     }
 
 

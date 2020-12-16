@@ -12,12 +12,12 @@ public class InfoPanel : MonoBehaviour
     private EntityData entityData;
     private CellData cellData;
 
-    private InfoMode mode;
+    private InfoType mode;
 
     private TextMeshProUGUI entityNameText;
     private TextMeshProUGUI cellPositionText;
 
-    public InfoMode Mode
+    public InfoType Mode
     {
         get => mode;
 
@@ -53,7 +53,7 @@ public class InfoPanel : MonoBehaviour
 
     void Start()
     {
-        Mode = InfoMode.None;
+        Mode = InfoType.None;
     }
 
 
@@ -67,13 +67,13 @@ public class InfoPanel : MonoBehaviour
     {
         switch (mode)
         {
-            case InfoMode.None:
+            case InfoType.None:
                 Deactivate();
                 break;
-            case InfoMode.Entity:
+            case InfoType.Entity:
                 ActivateEntityMode();
                 break;
-            case InfoMode.Cell:
+            case InfoType.Cell:
                 ActivateCellMode();
                 break;
             default:

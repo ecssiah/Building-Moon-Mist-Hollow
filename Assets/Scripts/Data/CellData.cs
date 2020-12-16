@@ -10,4 +10,5 @@ public struct CellData
 
     public CellType cellType;                     
     public BuildingType buildingType;
+    public OverlayType overlayType;
 }

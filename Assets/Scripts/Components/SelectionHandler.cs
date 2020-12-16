@@ -19,7 +19,7 @@ public class SelectionHandler : MonoBehaviour
         }
         else
         {
-            BroadcastCellSelection(Utilities.ScreenToIsoGrid(Input.mousePosition));
+            BroadcastCellSelection(MapUtil.ScreenToIsoGrid(Input.mousePosition));
         }
     }
 }

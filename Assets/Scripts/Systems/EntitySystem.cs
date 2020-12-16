@@ -49,7 +49,7 @@ public class EntitySystem : MonoBehaviour
 
     private void GenerateCitizen(Vector3 position)
     {
-        Vector3 worldPosition = Utilities.IsoToWorld(position);
+        Vector3 worldPosition = MapUtil.IsoToWorld(position);
 
         GameObject newCharacterObject = Instantiate(
             citizenPrefab, worldPosition, Quaternion.identity

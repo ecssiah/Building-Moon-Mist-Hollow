@@ -1,4 +1,4 @@
-﻿public enum CharacterAnimationType
+﻿public enum AnimationType
 {
     IdleUp,
     IdleDown,
