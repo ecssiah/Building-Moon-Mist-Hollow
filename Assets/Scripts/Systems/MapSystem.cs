@@ -110,30 +110,47 @@ public class MapSystem: MonoBehaviour
             cells = new CellData[(int)Mathf.Pow(MapWidth, 2)]
         };
 
-        for (int x = -MapSize; x <= MapSize; x++)
-        {
-            for (int y = -MapSize; y <= MapSize; y++)
-            {
-                CellData newCellData = new CellData
-                {
-                    cellType = CellType.Grass
-                };
+        InitCells();
+        InitGround();
+        InitBuildings();
+    }
 
-                mapData.cells[CoordsToIndex(x, y)] = newCellData;
-            }
+
+    private void InitCells()
+    {
+        for (int i = 0; i < mapData.cells.Length; i++)
+        {
+            mapData.cells[i] = new CellData();
         }
     }
 
 
     private void InitGround()
     {
-
+        for (int x = -MapSize; x <= MapSize; x++)
+        {
+            for (int y = -MapSize; y <= MapSize; y++)
+            {
+                mapData.cells[CoordsToIndex(x, y)].cellType = CellType.Grass;
+            }
+        }
     }
 
 
     private void InitBuildings()
     {
+        //for (int x = -4; x <= 4; x++)
+        //{
+        //    for (int y = -4; y <= 4; y++)
+        //    {
+        //        if (x == -4 || x == 4 || y == -4 || y == 4)
+        //        {
+        //            mapData.cells[CoordsToIndex(x, y)].buildingType = BuildingType.StoneWall;
+        //        }
+        //    }
+        //}
 
+        mapData.cells[CoordsToIndex(2, 2)].buildingType = BuildingType.StoneWall;
     }
 
 
@@ -153,7 +170,18 @@ public class MapSystem: MonoBehaviour
     {
         for (int i = 0; i < mapData.cells.Length; i++)
         {
-            SetCell(IndexToCoords(i), mapData.cells[i].cellType);
+            CellData cellData = mapData.cells[i];
+            Vector2Int position = IndexToCoords(i);
+
+            if (cellData.cellType != CellType.None)
+            {
+                SetCell(position, cellData.cellType);
+            }
+
+            if(cellData.buildingType != BuildingType.None)
+            {
+                SetBuilding(position, cellData.buildingType);
+            }
         }
     }
 
@@ -172,14 +200,20 @@ public class MapSystem: MonoBehaviour
     }
 
 
-    private void SetCell(int x, int y, CellType cellType)
+    private void SetBuilding(Vector2Int position, BuildingType buildingType)
     {
-        tilemaps["Ground"].SetTile(new Vector3Int(x, y, 0), tiles[cellTileNames[cellType]]);
+        tilemaps["Buildings"].SetTile(
+            new Vector3Int(position.x, position.y, -3),
+            tiles[buildingTileNames[buildingType]]
+        );
     }
 
 
     private void SetCell(Vector2Int position, CellType cellType)
     {
-        SetCell(position.x, position.y, cellType);
+        tilemaps["Ground"].SetTile(
+            new Vector3Int(position.x, position.y, 0),
+            tiles[cellTileNames[cellType]]
+        );
     }
 }
