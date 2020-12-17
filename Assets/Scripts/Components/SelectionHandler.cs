@@ -23,7 +23,17 @@ public class SelectionHandler : MonoBehaviour
         }
         else
         {
-            BroadcastCellSelection(MapUtil.ScreenToIsoGrid(Input.mousePosition));
+            Vector3Int isoGridPosition = MapUtil.ScreenToIsoGrid(Input.mousePosition);
+
+            bool inVerticalBounds = Math.Abs(isoGridPosition.x) <= MapInfo.MapSize;
+            bool inHorizontalBounds = Math.Abs(isoGridPosition.y) <= MapInfo.MapSize;
+
+            bool onMap = inVerticalBounds && inHorizontalBounds;
+
+            if (onMap)
+            {
+                BroadcastCellSelection(isoGridPosition);
+            }
         }
     }
 }
