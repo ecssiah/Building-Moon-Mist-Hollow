@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public struct MapData
+﻿public struct MapData
 {
+    public bool showCollision;
+
     public CellData[] cells;
 }

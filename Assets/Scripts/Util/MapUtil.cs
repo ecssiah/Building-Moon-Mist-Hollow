@@ -48,4 +48,28 @@ public static class MapUtil
             Camera.main, new Vector3(worldPosition.x, worldPosition.y, 0)
         );
     }
+
+
+    public static int CoordsToIndex(int x, int y)
+    {
+        return CoordsToIndex(new Vector2Int(x, y));
+    }
+
+
+    public static int CoordsToIndex(Vector2Int position)
+    {
+        return (
+            (position.x + MapInfo.MapSize) +
+            MapInfo.MapWidth * (position.y + MapInfo.MapSize)
+        );
+    }
+
+
+    public static Vector2Int IndexToCoords(int i)
+    {
+        return new Vector2Int(
+            (i % MapInfo.MapWidth) - MapInfo.MapSize,
+            (i / MapInfo.MapWidth) - MapInfo.MapSize
+        );
+    }
 }

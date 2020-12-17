@@ -33,7 +33,7 @@ public class CitizenMovement : MonoBehaviour
 
     private void Decide()
     {
-        OnDirectionChange(GetRandomIsoDirection());    
+        OnDirectionChange(GetRandomIsoDirection());
     }
 
 

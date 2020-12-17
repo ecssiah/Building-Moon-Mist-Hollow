@@ -124,8 +124,8 @@ public class CitizenAnimator : MonoBehaviour
 
     public void OnDirectionChange(Vector2 direction)
     {
-        this.direction = direction;
         speed = GetRandomSpeed();
+        this.direction = direction;
 
         if (direction.x == 0 && direction.y == 0)
         {
