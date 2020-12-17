@@ -4,10 +4,10 @@ public class EntitySystem : MonoBehaviour
 {
     private NamingSystem namingSystem;
 
-    private GameObject[] entities;
-
     private GameObject citizenPrefab;
 
+    private GameObject[] entities;
+    public GameObject[] Entities { get => entities; }
 
     void Awake()
     {
@@ -21,10 +21,10 @@ public class EntitySystem : MonoBehaviour
             true
         );
 
-        GenerateCitizen(new Vector3( 2, 2, 0));
-        GenerateCitizen(new Vector3(-2, 2, 0));
-        GenerateCitizen(new Vector3( 2, -2, 0));
-        GenerateCitizen(new Vector3(-2, -2, 0));
+        GenerateCitizen(new Vector2( 2, 2));
+        GenerateCitizen(new Vector2(-2, 2));
+        GenerateCitizen(new Vector2( 2, -2));
+        GenerateCitizen(new Vector2(-2, -2));
 
         entities = new GameObject[transform.childCount];
 
@@ -36,12 +36,14 @@ public class EntitySystem : MonoBehaviour
     }
 
 
-    private void GenerateCitizen(Vector3 position)
+    private void GenerateCitizen(Vector2 position)
     {
-        Vector3 worldPosition = MapUtil.IsoToWorld(position);
+        Vector2 worldPosition = MapUtil.IsoToWorld(position);
 
         GameObject newCharacterObject = Instantiate(
-            citizenPrefab, worldPosition, Quaternion.identity
+            citizenPrefab,
+            new Vector3(worldPosition.x, worldPosition.y, 0),
+            Quaternion.identity
         );
 
         newCharacterObject.transform.parent = transform;
