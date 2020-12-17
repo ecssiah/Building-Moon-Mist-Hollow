@@ -28,7 +28,6 @@ public class EntitySystem : MonoBehaviour
         GenerateCitizen(new Vector2(-2, 2));
         GenerateCitizen(new Vector2( 2, -2));
         GenerateCitizen(new Vector2(-2, -2));
-
     }
 
 
