@@ -14,8 +14,8 @@ public class InfoPanel : MonoBehaviour
     private CellData cellData;
     public CellData CellData { get => cellData; set => cellData = value; }
 
-    private InfoMode mode;
-    public InfoMode Mode { get => mode; }
+    private InfoType mode;
+    public InfoType Mode { get => mode; }
 
     private TextMeshProUGUI entityNameText;
     private TextMeshProUGUI cellPositionText;
@@ -64,7 +64,7 @@ public class InfoPanel : MonoBehaviour
 
     public void ActivateEntityMode(EntityData entityData)
     {
-        mode = InfoMode.Entity;
+        mode = InfoType.Entity;
 
         entityTab.SetActive(true);
         cellTab.SetActive(false);
@@ -75,7 +75,7 @@ public class InfoPanel : MonoBehaviour
 
     public void ActivateCellMode(CellData cellData)
     {
-        mode = InfoMode.Cell;
+        mode = InfoType.Cell;
 
         entityTab.SetActive(false);
         cellTab.SetActive(true);
@@ -86,7 +86,7 @@ public class InfoPanel : MonoBehaviour
 
     public void Deactivate()
     {
-        mode = InfoMode.None;
+        mode = InfoType.None;
 
         entityTab.SetActive(false);
         cellTab.SetActive(false);

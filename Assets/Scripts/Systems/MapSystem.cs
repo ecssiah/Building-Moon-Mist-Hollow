@@ -1,22 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class MapSystem : MonoBehaviour
 {
-    private const int MapSize = 100;
-    private const int MapWidth = 2 * MapSize + 1;
-
     private MapData mapData;
 
     private Dictionary<string, Tile> tiles;
     private Dictionary<string, Tilemap> tilemaps;
 
     private Vector3Int selectedCell;
-
-    private Dictionary<CellType, string> cellTileNames;
-    private Dictionary<BuildingType, string> buildingTileNames;
 
 
     void Awake()
@@ -29,18 +22,6 @@ public class MapSystem : MonoBehaviour
         InitMap();
 
         ConstructMap();
-    }
-
-
-    void Start()
-    {
-        
-    }
-
-
-    void Update()
-    {
-        
     }
 
 
@@ -68,19 +49,6 @@ public class MapSystem : MonoBehaviour
         {
             tiles[tile.name] = tile;
         }
-
-        cellTileNames = new Dictionary<CellType, string>
-        {
-            [CellType.Grass] = "Dirt_Grass_C",
-            [CellType.Stone] = "Stone_A",
-            [CellType.Water] = "Water",
-        };
-
-        buildingTileNames = new Dictionary<BuildingType, string>
-        {
-            [BuildingType.StoneWall] = "Brick_C",
-            [BuildingType.WoodWall] = "Wood_A",
-        };
     }
 
 
@@ -103,12 +71,12 @@ public class MapSystem : MonoBehaviour
     {
         mapData = new MapData
         {
-            cells = new CellData[(int)Mathf.Pow(MapWidth, 2)]
+            cells = new CellData[(int)Mathf.Pow(MapInfo.MapWidth, 2)]
         };
 
-        for (int x = -MapSize; x <= MapSize; x++)
+        for (int x = -MapInfo.MapSize; x <= MapInfo.MapSize; x++)
         {
-            for (int y = -MapSize; y <= MapSize; y++)
+            for (int y = -MapInfo.MapSize; y <= MapInfo.MapSize; y++)
             {
                 CellData newCellData = new CellData();
 
@@ -146,21 +114,21 @@ public class MapSystem : MonoBehaviour
     {
         tilemaps["Tiles"].SetTile(
             new Vector3Int(position.x, position.y, 0),
-            tiles[cellTileNames[cellType]]
+            tiles[TileInfo.cellTileNames[cellType]]
         );
     }
 
 
     private int CoordsToIndex(int x, int y)
     {
-        return (x + MapSize) + MapWidth * (y + MapSize);
+        return (x + MapInfo.MapSize) + MapInfo.MapWidth * (y + MapInfo.MapSize);
     }
 
 
     private Vector2Int IndexToCoords(int i)
     {
         return new Vector2Int(
-            (i % MapWidth) - MapSize, (i / MapWidth) - MapSize
+            (i % MapInfo.MapWidth) - MapInfo.MapSize, (i / MapInfo.MapWidth) - MapInfo.MapSize
         );
     }
 }

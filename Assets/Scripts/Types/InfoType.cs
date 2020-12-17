@@ -1,4 +1,4 @@
-﻿public enum InfoMode
+﻿public enum InfoType
 {
     None,
     Entity,

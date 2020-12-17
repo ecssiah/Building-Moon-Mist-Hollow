@@ -1,5 +1,4 @@
-﻿
-public enum CellType
+﻿public enum CellType
 {
     None,
     Grass,
