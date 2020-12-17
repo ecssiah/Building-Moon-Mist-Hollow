@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using TMPro;
+using System;
 
 public class InfoPanel : MonoBehaviour
 {
@@ -7,7 +8,10 @@ public class InfoPanel : MonoBehaviour
     private GameObject cellTab;
 
     private TextMeshProUGUI entityNameText;
+
     private TextMeshProUGUI cellPositionText;
+    private TextMeshProUGUI cellTypeText;
+    private TextMeshProUGUI cellBuildingTypeText;
 
     private InfoType mode;
     public InfoType Mode { get => mode; }
@@ -21,26 +25,38 @@ public class InfoPanel : MonoBehaviour
 
     void Awake()
     {
+        SetupEntityTab();
+        SetupCellTab();
+
+        mode = InfoType.None;
+    }
+
+
+    private void SetupEntityTab()
+    {
         entityTab = GameObject.Find("Entity Tab");
+        entityTab.SetActive(false);
+
+        entityNameText = UIUtil.SetLabel(
+            "Name", entityTab.transform.Find("Name")
+        );
+    }
+
+
+    private void SetupCellTab()
+    {
         cellTab = GameObject.Find("Cell Tab");
+        cellTab.SetActive(false);
 
-        Transform entityNameTransform = entityTab.transform.Find("Name");
-        Transform cellPositionTransform = cellTab.transform.Find("Position");
-
-        entityNameText = entityNameTransform
-            .Find("Data").GetComponent<TextMeshProUGUI>();
-        cellPositionText = cellPositionTransform
-            .Find("Data").GetComponent<TextMeshProUGUI>();
-
-        TextMeshProUGUI entityNameLabel = entityNameTransform
-            .Find("Label").GetComponent<TextMeshProUGUI>();
-        TextMeshProUGUI cellPositionLabel = cellPositionTransform
-            .Find("Label").GetComponent<TextMeshProUGUI>();
-
-        entityNameLabel.text = "Name: ";
-        cellPositionLabel.text = "Position: ";
-
-        Deactivate();
+        cellPositionText = UIUtil.SetLabel(
+            "Position", cellTab.transform.Find("Position")
+        );
+        cellTypeText = UIUtil.SetLabel(
+            "Cell", cellTab.transform.Find("Cell Type")
+        );
+        cellBuildingTypeText = UIUtil.SetLabel(
+            "Building", cellTab.transform.Find("Building Type")
+        );
     }
 
 
@@ -63,6 +79,8 @@ public class InfoPanel : MonoBehaviour
         cellTab.SetActive(true);
 
         cellPositionText.text = $"{cellData.position}";
+        cellTypeText.text = $"{Enum.GetName(typeof(CellType), cellData.cellType)}";
+        cellBuildingTypeText.text = $"{Enum.GetName(typeof(BuildingType), cellData.buildingType)}";
     }
 
 

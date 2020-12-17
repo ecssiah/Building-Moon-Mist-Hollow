@@ -3,16 +3,16 @@ using UnityEngine;
 
 public class CitizenAnimator : MonoBehaviour
 {
+    private CitizenMovement citizenMovement;
+
+    private AnimationType animationType;
+
     private Rigidbody2D rigidBody;
     private SpriteRenderer spriteRenderer;
 
     private Sprite[] currentFrames;
 
     private Dictionary<AnimationType, Sprite[]> frames;
-
-    private AnimationType animationType;
-
-    private CitizenMovement citizenMovement;
 
     private float speed;
     private Vector2 direction;
@@ -31,6 +31,7 @@ public class CitizenAnimator : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         speed = 82f;
+        direction = new Vector2();
 
         timer = 0f;
         frameNumber = 0;

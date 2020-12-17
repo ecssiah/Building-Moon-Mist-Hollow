@@ -8,8 +8,6 @@ public class CitizenMovement : MonoBehaviour
     private float decisionTimer;
     private float decisionDeadline;
 
-    private Vector2 direction;
-
 
     void Awake()
     {

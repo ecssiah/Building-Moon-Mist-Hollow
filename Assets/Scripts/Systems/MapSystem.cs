@@ -33,6 +33,17 @@ public class MapSystem: MonoBehaviour
             showCollision = false,
             cells = new CellData[(int)Mathf.Pow(MapInfo.MapWidth, 2)]
         };
+
+        for (int x = -MapInfo.MapSize; x <= MapInfo.MapSize; x++)
+        {
+            for (int y = -MapInfo.MapSize; y <= MapInfo.MapSize; y++)
+            {
+                CellData cellData = mapData.cells[MapUtil.CoordsToIndex(x, y)];
+                cellData.position = new Vector3Int(x, y, 0);
+
+                mapData.cells[MapUtil.CoordsToIndex(x, y)] = cellData;
+            }
+        }
     }
 
 

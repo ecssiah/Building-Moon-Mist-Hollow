@@ -2,12 +2,16 @@
 
 public class UISystem : MonoBehaviour
 {
+    private MapSystem mapSystem;
+
     private EntityLabeler entityLabeler;
     private InfoPanel infoPanel;
 
 
     void Awake()
     {
+        mapSystem = GameObject.Find("Map").GetComponent<MapSystem>();
+
         entityLabeler = gameObject.AddComponent<EntityLabeler>();
         infoPanel = gameObject.AddComponent<InfoPanel>();
     }
@@ -29,10 +33,7 @@ public class UISystem : MonoBehaviour
 
     public void SelectCell(Vector3Int cellPosition)
     {
-        CellData cellData = new CellData
-        {
-            position = cellPosition
-        };
+        CellData cellData = mapSystem.GetCellData(cellPosition.x, cellPosition.y);
 
         infoPanel.ActivateCellMode(cellData);
     }

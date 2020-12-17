@@ -21,15 +21,15 @@ public class EntitySystem : MonoBehaviour
             true
         );
 
+        GenerateCitizen(new Vector3( 2, 2, 0));
         GenerateCitizen(new Vector3(-2, 2, 0));
+        GenerateCitizen(new Vector3( 2, -2, 0));
         GenerateCitizen(new Vector3(-2, -2, 0));
-        GenerateCitizen(new Vector3(2, -2, 0));
-        GenerateCitizen(new Vector3(2, 2, 0));
 
-        entities = new GameObject[this.transform.childCount];
+        entities = new GameObject[transform.childCount];
 
         int i = 0;
-        foreach (Transform transform in this.transform)
+        foreach (Transform transform in transform)
         {
             entities[i++] = transform.gameObject;
         }
@@ -44,7 +44,7 @@ public class EntitySystem : MonoBehaviour
             citizenPrefab, worldPosition, Quaternion.identity
         );
 
-        newCharacterObject.transform.parent = this.transform;
+        newCharacterObject.transform.parent = transform;
 
         newCharacterObject.name = namingSystem.GetName();
         newCharacterObject.layer = LayerMask.NameToLayer("Citizens");
