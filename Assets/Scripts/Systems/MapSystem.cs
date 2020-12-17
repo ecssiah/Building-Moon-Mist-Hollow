@@ -39,7 +39,7 @@ public class MapSystem: MonoBehaviour
             for (int y = -MapInfo.MapSize; y <= MapInfo.MapSize; y++)
             {
                 CellData cellData = mapData.cells[MapUtil.CoordsToIndex(x, y)];
-                cellData.position = new Vector3Int(x, y, 0);
+                cellData.position = new Vector2Int(x, y);
 
                 mapData.cells[MapUtil.CoordsToIndex(x, y)] = cellData;
             }

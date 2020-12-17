@@ -12,7 +12,7 @@ public class CitizenMovement : MonoBehaviour
     void Awake()
     {
         decisionTimer = 0;
-        decisionDeadline = 4f;
+        decisionDeadline = UnityEngine.Random.Range(2f, 6f);
     }
 
 
@@ -22,7 +22,8 @@ public class CitizenMovement : MonoBehaviour
 
         if (decisionTimer >= decisionDeadline)
         {
-            decisionTimer = 0;
+            decisionTimer -= decisionDeadline;
+            decisionDeadline = UnityEngine.Random.Range(2f, 6f);
 
             Decide();
         }
