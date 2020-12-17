@@ -39,7 +39,7 @@ public class InputSystem : MonoBehaviour
     }
 
 
-    public void OnCellSelection(Vector3Int cellPosition)
+    public void OnCellSelection(Vector2Int cellPosition)
     {
         uiSystem.ClearSelection();
         mapSystem.ClearSelection();

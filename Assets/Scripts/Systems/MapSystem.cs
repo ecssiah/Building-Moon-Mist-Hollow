@@ -9,7 +9,7 @@ public class MapSystem: MonoBehaviour
     private Dictionary<string, Tile> tiles;
     private Dictionary<string, Tilemap> tilemaps;
 
-    private Vector3Int selectedCell = new Vector3Int();
+    private Vector2Int selectedCell;
 
 
     void Awake()
@@ -26,7 +26,7 @@ public class MapSystem: MonoBehaviour
 
     private void InitData()
     {
-        selectedCell = new Vector3Int();
+        selectedCell = new Vector2Int();
 
         mapData = new MapData
         {
@@ -126,7 +126,7 @@ public class MapSystem: MonoBehaviour
     }
 
 
-    public void SelectCell(Vector3Int position)
+    public void SelectCell(Vector2Int position)
     {
         selectedCell = position;
 
@@ -138,7 +138,7 @@ public class MapSystem: MonoBehaviour
 
     public void ClearSelection()
     {
-        tilemaps["Overlay"].SetTile(selectedCell, null);
+        tilemaps["Overlay"].SetTile(new Vector3Int(selectedCell.x, selectedCell.y, 0), null);
     }
 
 

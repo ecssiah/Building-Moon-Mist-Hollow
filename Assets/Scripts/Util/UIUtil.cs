@@ -5,7 +5,6 @@ public struct UIUtil
 {
     public static TextMeshProUGUI SetLabel(string label, Transform transform)
     {
-
         TextMeshProUGUI textMesh = transform
             .Find("Data").GetComponent<TextMeshProUGUI>();
 
