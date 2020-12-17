@@ -1,6 +1,8 @@
-﻿using System;
-
-public struct ItemData
+﻿public struct ItemData
 {
+    public string name;
+
     public float value;
+    public float condition;
+    public float weight;
 }

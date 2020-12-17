@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class EntitySystem : MonoBehaviour
 {
@@ -6,8 +7,8 @@ public class EntitySystem : MonoBehaviour
 
     private GameObject citizenPrefab;
 
-    private GameObject[] entities;
-    public GameObject[] Entities { get => entities; }
+    private List<EntityData> entityDataList;
+
 
     void Awake()
     {
@@ -21,18 +22,13 @@ public class EntitySystem : MonoBehaviour
             true
         );
 
+        entityDataList = new List<EntityData>();
+
         GenerateCitizen(new Vector2( 2, 2));
         GenerateCitizen(new Vector2(-2, 2));
         GenerateCitizen(new Vector2( 2, -2));
         GenerateCitizen(new Vector2(-2, -2));
 
-        entities = new GameObject[transform.childCount];
-
-        int i = 0;
-        foreach (Transform transform in transform)
-        {
-            entities[i++] = transform.gameObject;
-        }
     }
 
 
@@ -53,5 +49,19 @@ public class EntitySystem : MonoBehaviour
 
         newCharacterObject.AddComponent<CitizenMovement>();
         newCharacterObject.AddComponent<CitizenAnimator>();
+
+        EntityData entityData = new EntityData()
+        {
+            entity = newCharacterObject,
+            name = newCharacterObject.name,
+        };
+
+        entityDataList.Add(entityData);
+    }
+
+
+    public EntityData GetEntityData(GameObject entity)
+    {
+        return entityDataList.Find(entityData => entityData.entity == entity);
     }
 }

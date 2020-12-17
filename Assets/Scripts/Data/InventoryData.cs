@@ -1,5 +1,4 @@
-﻿using System;
-public struct InventoryData
+﻿public struct InventoryData
 {
-
+    public ItemData[] items;
 }
