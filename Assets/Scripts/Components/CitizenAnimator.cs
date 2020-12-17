@@ -32,7 +32,7 @@ public class CitizenAnimator : MonoBehaviour
     void Awake()
     {
         citizenMovement = GetComponent<CitizenMovement>();
-        citizenMovement.OnDecision = SetAnimationDirection;
+        citizenMovement.OnDirectionChange = OnDirectionChange;
 
         rigidBody = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -88,7 +88,6 @@ public class CitizenAnimator : MonoBehaviour
     }
 
 
-
     private void PlayAnimation(AnimationType animationType)
     {
         timer = 0;
@@ -129,7 +128,7 @@ public class CitizenAnimator : MonoBehaviour
     }
 
 
-    public void SetAnimationDirection(Vector2 direction)
+    public void OnDirectionChange(Vector2 direction)
     {
         this.direction = direction;
 

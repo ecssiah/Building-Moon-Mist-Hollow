@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class CitizenMovement : MonoBehaviour
 {
-    public Action<Vector2> OnDecision;
+    public Action<Vector2> OnDirectionChange;
 
     private float decisionTimer;
     private float decisionDeadline;
@@ -33,9 +33,7 @@ public class CitizenMovement : MonoBehaviour
 
     private void Decide()
     {
-        direction = GetRandomIsoDirection();
-
-        OnDecision(direction);
+        OnDirectionChange(GetRandomIsoDirection());
     }
 
 
