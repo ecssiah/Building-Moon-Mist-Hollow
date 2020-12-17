@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class SelectionHandler : MonoBehaviour
 {
-    public Action<Vector3Int> BroadcastCellSelection;
+    public Action<Vector2Int> BroadcastCellSelection;
     public Action<GameObject> BroadcastEntitySelection;
 
 
@@ -18,8 +18,7 @@ public class SelectionHandler : MonoBehaviour
         }
         else
         {
-            BroadcastCellSelection(Utilities.ScreenToIsoGrid(Input.mousePosition));
+            BroadcastCellSelection(MapUtil.ScreenToIsoGrid(Input.mousePosition));
         }
     }
-
 }

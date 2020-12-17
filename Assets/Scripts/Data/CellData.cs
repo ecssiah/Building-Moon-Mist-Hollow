@@ -4,7 +4,7 @@ using UnityEngine;
 
 public struct CellData
 {
-    public Vector3Int position;
+    public Vector2Int position;
 
     public bool solid;
 

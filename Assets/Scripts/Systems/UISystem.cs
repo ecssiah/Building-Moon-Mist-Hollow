@@ -46,7 +46,7 @@ public class UISystem : MonoBehaviour
     }
 
 
-    public void SelectCell(Vector3Int cellPosition)
+    public void SelectCell(Vector2Int cellPosition)
     {
         CellData cellData = new CellData
         {

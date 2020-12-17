@@ -9,12 +9,12 @@ public class MapSystem : MonoBehaviour
     private Dictionary<string, Tile> tiles;
     private Dictionary<string, Tilemap> tilemaps;
 
-    private Vector3Int selectedCell;
+    private Vector2Int selectedCell;
 
 
     void Awake()
     {
-        selectedCell = new Vector3Int();
+        selectedCell = new Vector2Int();
 
         InitTiles();
         InitTilemaps();
@@ -25,17 +25,23 @@ public class MapSystem : MonoBehaviour
     }
 
 
-    public void SelectCell(Vector3Int position)
+    public void SelectCell(Vector2Int position)
     {
         selectedCell = position;
 
-        tilemaps["Overlay"].SetTile(position, tiles["Selection_1"]);
+        tilemaps["Overlay"].SetTile(
+            new Vector3Int(position.x, position.y, 0),
+            tiles["Selection_1"]
+        );
     }
 
 
     public void ClearSelection()
     {
-        tilemaps["Overlay"].SetTile(selectedCell, null);
+        tilemaps["Overlay"].SetTile(
+            new Vector3Int(selectedCell.x, selectedCell.y, 0),
+            null
+        );
     }
 
 
@@ -98,6 +104,8 @@ public class MapSystem : MonoBehaviour
                 mapData.cells[CoordsToIndex(x, y)] = newCellData;
             }
         }
+
+        tilemaps["Collision"].GetComponent<TilemapRenderer>().enabled = false;
     }
 
 

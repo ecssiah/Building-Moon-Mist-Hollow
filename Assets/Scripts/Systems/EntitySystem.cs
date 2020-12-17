@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class EntitySystem : MonoBehaviour
@@ -7,6 +6,8 @@ public class EntitySystem : MonoBehaviour
     private NamingSystem namingSystem;
 
     private GameObject citizenPrefab;
+
+    private List<EntityData> entityDataList;
 
 
     void Awake()
@@ -21,36 +22,45 @@ public class EntitySystem : MonoBehaviour
 
         citizenPrefab = Resources.Load<GameObject>("Prefabs/Citizen");
 
-        GenerateCitizen(new Vector3Int(-2, 2, 0));
-        GenerateCitizen(new Vector3Int(2, -2, 0));
-        GenerateCitizen(new Vector3Int(2, 2, 0));
-        GenerateCitizen(new Vector3Int(-2, -2, 0));
+        entityDataList = new List<EntityData>();
+
+        GenerateCitizen(new Vector2Int(-2, 2));
+        GenerateCitizen(new Vector2Int(2, -2));
+        GenerateCitizen(new Vector2Int(2, 2));
+        GenerateCitizen(new Vector2Int(-2, -2));
     }
 
 
-    void Start()
+    private void GenerateCitizen(Vector2Int cellPosition)
     {
-        
-    }
-
-
-    void Update()
-    {
-        
-    }
-
-
-
-    private void GenerateCitizen(Vector3Int cellPosition)
-    {
-        Vector3 worldPosition = Utilities.IsoToWorld(cellPosition);
+        Vector3 worldPosition = MapUtil.IsoToWorld(cellPosition);
 
         GameObject newCitizenObject = Instantiate(
-            citizenPrefab, worldPosition, Quaternion.identity
+            citizenPrefab,
+            new Vector3(worldPosition.x, worldPosition.y, 0),
+            Quaternion.identity
         );
 
-        newCitizenObject.transform.parent = this.transform;
+        newCitizenObject.transform.parent = transform;
+
         newCitizenObject.name = namingSystem.GetName();
         newCitizenObject.layer = LayerMask.NameToLayer("Citizens");
+
+        newCitizenObject.AddComponent<CitizenMovement>();
+        newCitizenObject.AddComponent<CitizenAnimator>();
+
+        EntityData entityData = new EntityData()
+        {
+            entity = newCitizenObject,
+            name = newCitizenObject.name,
+        };
+
+        entityDataList.Add(entityData);
+    }
+
+
+    public EntityData GetEntityData(GameObject entity)
+    {
+        return entityDataList.Find(entityData => entityData.entity == entity);
     }
 }

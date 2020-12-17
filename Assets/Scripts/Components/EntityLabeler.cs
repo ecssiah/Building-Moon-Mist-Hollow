@@ -1,19 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 
 public class EntityLabeler : MonoBehaviour
 {
+    private GameObject[] labels;
     private GameObject labelsObject;
     private GameObject labelPrefab;
 
-    private GameObject[] labels;
-
     private GameObject[] entities;
-
-    private const float LabelYOffset = 64;
-    private const int DefaultOrthographicSize = 4;
 
 
     void Awake()
@@ -27,20 +21,17 @@ public class EntityLabeler : MonoBehaviour
     }
 
 
-    void Start()
-    {
-        
-    }
-
-
     void Update()
     {
-        float cameraSizeRatio = DefaultOrthographicSize / Camera.main.orthographicSize;
+        float cameraSizeRatio =
+            ViewInfo.DefaultOrthographicSize / Camera.main.orthographicSize;
 
         for (int i = 0; i < entities.Length; i++)
         {
-            Vector3 labelPosition = Utilities.WorldToScreen(entities[i].transform.position);
-            labelPosition.y += LabelYOffset * cameraSizeRatio;
+            Vector2 labelPosition = MapUtil.WorldToScreen(
+                entities[i].transform.position
+            );
+            labelPosition.y += cameraSizeRatio * UIInfo.LabelOffset;
 
             labels[i].transform.position = labelPosition;
         }
@@ -49,7 +40,7 @@ public class EntityLabeler : MonoBehaviour
 
     private GameObject CreateLabel(GameObject entity)
     {
-        Vector3 screenPosition = Utilities.WorldToScreen(entity.transform.position);
+        Vector3 screenPosition = MapUtil.WorldToScreen(entity.transform.position);
 
         GameObject newLabel = Instantiate(
             labelPrefab, screenPosition, Quaternion.identity
