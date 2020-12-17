@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class CitizenAnimator : MonoBehaviour
 {
@@ -7,15 +8,7 @@ public class CitizenAnimator : MonoBehaviour
 
     private Sprite[] currentFrames;
 
-    private Sprite[] idleUpFrames;
-    private Sprite[] idleDownFrames;
-    private Sprite[] idleLeftFrames;
-    private Sprite[] idleRightFrames;
-
-    private Sprite[] walkUpFrames;
-    private Sprite[] walkDownFrames;
-    private Sprite[] walkLeftFrames;
-    private Sprite[] walkRightFrames;
+    private Dictionary<AnimationType, Sprite[]> frames;
 
     private AnimationType animationType;
 
@@ -43,15 +36,18 @@ public class CitizenAnimator : MonoBehaviour
         frameNumber = 0;
         frameRate = 1 / 10f;
 
-        idleUpFrames = Resources.LoadAll<Sprite>("Character/Idle/Up");
-        idleDownFrames = Resources.LoadAll<Sprite>("Character/Idle/Down");
-        idleLeftFrames = Resources.LoadAll<Sprite>("Character/Idle/Left");
-        idleRightFrames = Resources.LoadAll<Sprite>("Character/Idle/Right");
+        frames = new Dictionary<AnimationType, Sprite[]>
+        {
+            [AnimationType.IdleUp] = Resources.LoadAll<Sprite>("Citizen/Idle/Up"),
+            [AnimationType.IdleDown] = Resources.LoadAll<Sprite>("Citizen/Idle/Down"),
+            [AnimationType.IdleLeft] = Resources.LoadAll<Sprite>("Citizen/Idle/Left"),
+            [AnimationType.IdleRight] = Resources.LoadAll<Sprite>("Citizen/Idle/Right"),
 
-        walkUpFrames = Resources.LoadAll<Sprite>("Character/Walk/Up");
-        walkDownFrames = Resources.LoadAll<Sprite>("Character/Walk/Down");
-        walkLeftFrames = Resources.LoadAll<Sprite>("Character/Walk/Left");
-        walkRightFrames = Resources.LoadAll<Sprite>("Character/Walk/Right");
+            [AnimationType.WalkUp] = Resources.LoadAll<Sprite>("Citizen/Walk/Up"),
+            [AnimationType.WalkDown] = Resources.LoadAll<Sprite>("Citizen/Walk/Down"),
+            [AnimationType.WalkLeft] = Resources.LoadAll<Sprite>("Citizen/Walk/Left"),
+            [AnimationType.WalkRight] = Resources.LoadAll<Sprite>("Citizen/Walk/Right")
+        };
 
         PlayAnimation(AnimationType.WalkDown);
     }
@@ -98,31 +94,31 @@ public class CitizenAnimator : MonoBehaviour
         switch (animationType)
         {
             case AnimationType.IdleUp:
-                currentFrames = idleUpFrames;
+                currentFrames = frames[AnimationType.IdleUp];
                 break;
             case AnimationType.IdleDown:
-                currentFrames = idleDownFrames;
+                currentFrames = frames[AnimationType.IdleDown];
                 break;
             case AnimationType.IdleLeft:
-                currentFrames = idleLeftFrames;
+                currentFrames = frames[AnimationType.IdleLeft];
                 break;
             case AnimationType.IdleRight:
-                currentFrames = idleRightFrames;
+                currentFrames = frames[AnimationType.IdleRight];
                 break;
             case AnimationType.WalkUp:
-                currentFrames = walkUpFrames;
+                currentFrames = frames[AnimationType.WalkUp];
                 break;
             case AnimationType.WalkDown:
-                currentFrames = walkDownFrames;
+                currentFrames = frames[AnimationType.WalkDown];
                 break;
             case AnimationType.WalkLeft:
-                currentFrames = walkLeftFrames;
+                currentFrames = frames[AnimationType.WalkRight];
                 break;
             case AnimationType.WalkRight:
-                currentFrames = walkRightFrames;
+                currentFrames = frames[AnimationType.WalkRight];
                 break;
             default:
-                currentFrames = idleDownFrames;
+                currentFrames = frames[AnimationType.IdleDown];
                 break;
         }
     }
