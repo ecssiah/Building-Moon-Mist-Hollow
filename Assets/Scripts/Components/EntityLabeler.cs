@@ -1,48 +1,34 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 
 public class EntityLabeler : MonoBehaviour
 {
-    private GameObject entitiesObject;
-
-    private const float LabelYOffset = 64;
-
     private GameObject labelsObject;
-    private GameObject entityLabelPrefab;
+    private GameObject labelPrefab;
 
     private GameObject[] labels;
-    private GameObject[] entities;
 
-    private const int DefaultOrthographicSize = 4;
+    private GameObject[] entities;
 
 
     void Awake()
     {
-        entityLabelPrefab = Resources.Load<GameObject>("Prefabs/Label");
-
-        entities = new GameObject[0];
-        entitiesObject = GameObject.Find("Entities");
-
         labels = new GameObject[0];
         labelsObject = GameObject.Find("Labels");
-    }
+        labelPrefab = Resources.Load<GameObject>("Prefabs/Label");
 
-
-    void Start()
-    {
+        entities = new GameObject[0];
     }
 
 
     void Update()
     {
-        float cameraSizeRatio = DefaultOrthographicSize / Camera.main.orthographicSize;
+        float cameraSizeRatio = ViewInfo.DefaultOrthographicSize / Camera.main.orthographicSize;
 
         for (int index = 0; index < entities.Length; index++)
         {
             Vector3 labelPosition = MapUtil.WorldToScreen(entities[index].transform.position);
-            labelPosition.y += LabelYOffset * cameraSizeRatio;
+            labelPosition.y += UIInfo.LabelYOffset * cameraSizeRatio;
 
             labels[index].transform.position = labelPosition;
         }
@@ -54,7 +40,7 @@ public class EntityLabeler : MonoBehaviour
         Vector3 screenPosition = MapUtil.WorldToScreen(entity.transform.position);
 
         GameObject newLabel = Instantiate(
-            entityLabelPrefab, screenPosition, Quaternion.identity
+            labelPrefab, screenPosition, Quaternion.identity
         );
 
         TextMeshProUGUI textMesh = newLabel.GetComponent<TextMeshProUGUI>();

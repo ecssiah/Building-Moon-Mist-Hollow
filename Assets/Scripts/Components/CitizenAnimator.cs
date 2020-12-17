@@ -112,7 +112,7 @@ public class CitizenAnimator : MonoBehaviour
                 currentFrames = frames[AnimationType.WalkDown];
                 break;
             case AnimationType.WalkLeft:
-                currentFrames = frames[AnimationType.WalkRight];
+                currentFrames = frames[AnimationType.WalkLeft];
                 break;
             case AnimationType.WalkRight:
                 currentFrames = frames[AnimationType.WalkRight];
