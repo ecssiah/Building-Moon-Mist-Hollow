@@ -45,7 +45,11 @@ public class EntitySystem : MonoBehaviour
         );
 
         newCharacterObject.transform.parent = this.transform;
+
         newCharacterObject.name = namingSystem.GetName();
         newCharacterObject.layer = LayerMask.NameToLayer("Citizens");
+
+        newCharacterObject.AddComponent<CitizenMovement>();
+        newCharacterObject.AddComponent<CitizenAnimator>();
     }
 }

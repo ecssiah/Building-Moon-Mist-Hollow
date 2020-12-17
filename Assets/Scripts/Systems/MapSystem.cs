@@ -95,6 +95,11 @@ public class MapSystem: MonoBehaviour
         SetupBuilding(-4, 4, BuildingType.StoneWall);
         SetupBuilding(4, -4, BuildingType.StoneWall);
         SetupBuilding(-4, -4, BuildingType.StoneWall);
+
+        SetupBuilding(-6, 0, BuildingType.StoneWall);
+        SetupBuilding(0, 6, BuildingType.StoneWall);
+        SetupBuilding(6, 0, BuildingType.StoneWall);
+        SetupBuilding(0, -6, BuildingType.StoneWall);
     }
 
 

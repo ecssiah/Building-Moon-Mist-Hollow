@@ -8,12 +8,6 @@ public class CameraController : MonoBehaviour
     public float zoomSpeed = 10f;
 
 
-    void Start()
-    {
-        
-    }
-
-
     void Update()
     {
         float dx = panSpeed * Time.deltaTime * Input.GetAxis("Horizontal");

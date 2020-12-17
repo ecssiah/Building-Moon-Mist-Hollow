@@ -17,10 +17,10 @@ public class UISystem : MonoBehaviour
     {
         EntityData entityData = new EntityData
         {
+            entity = entity,
             name = entity.name
         };
 
-        infoPanel.Mode = InfoType.Entity;
         infoPanel.ActivateEntityMode(entityData);
 
         entityLabeler.SelectEntity(entity);
@@ -34,7 +34,6 @@ public class UISystem : MonoBehaviour
             position = cellPosition
         };
 
-        infoPanel.Mode = InfoType.Cell;
         infoPanel.ActivateCellMode(cellData);
     }
 

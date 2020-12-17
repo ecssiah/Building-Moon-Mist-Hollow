@@ -1,7 +1,6 @@
 ﻿using System;
 using UnityEngine;
 
-
 public class SelectionHandler : MonoBehaviour
 {
     public Action<GameObject> BroadcastEntitySelection;
@@ -13,9 +12,14 @@ public class SelectionHandler : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
 
-        if (hit.collider != null && hit.collider.gameObject.CompareTag("Target"))
+        if (hit.collider != null)
         {
-            BroadcastEntitySelection(hit.transform.parent.gameObject);
+            bool isTarget = hit.collider.gameObject.CompareTag("Target");
+
+            if (isTarget)
+            {
+                BroadcastEntitySelection(hit.transform.parent.gameObject);
+            }
         }
         else
         {

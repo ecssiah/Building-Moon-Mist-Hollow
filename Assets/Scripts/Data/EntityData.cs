@@ -1,8 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public struct EntityData
 {
+    public GameObject entity;
+
     public string name;
 }
