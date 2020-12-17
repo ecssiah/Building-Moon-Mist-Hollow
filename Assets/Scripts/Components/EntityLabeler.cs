@@ -23,14 +23,17 @@ public class EntityLabeler : MonoBehaviour
 
     void Update()
     {
-        float cameraSizeRatio = ViewInfo.DefaultOrthographicSize / Camera.main.orthographicSize;
+        float cameraSizeRatio =
+            ViewInfo.DefaultOrthographicSize / Camera.main.orthographicSize;
 
-        for (int index = 0; index < entities.Length; index++)
+        for (int i = 0; i < entities.Length; i++)
         {
-            Vector3 labelPosition = MapUtil.WorldToScreen(entities[index].transform.position);
+            Vector3 worldPosition = entities[i].transform.position;
+
+            Vector3 labelPosition = MapUtil.WorldToScreen(worldPosition);
             labelPosition.y += UIInfo.LabelYOffset * cameraSizeRatio;
 
-            labels[index].transform.position = labelPosition;
+            labels[i].transform.position = labelPosition;
         }
     }
 
