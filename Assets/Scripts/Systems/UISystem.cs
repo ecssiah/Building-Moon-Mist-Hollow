@@ -2,6 +2,7 @@
 
 public class UISystem : MonoBehaviour
 {
+    private EntitySystem entitySystem;
     private MapSystem mapSystem;
 
     private EntityLabeler entityLabeler;
@@ -10,6 +11,7 @@ public class UISystem : MonoBehaviour
 
     void Awake()
     {
+        entitySystem = GameObject.Find("Entities").GetComponent<EntitySystem>();
         mapSystem = GameObject.Find("Map").GetComponent<MapSystem>();
 
         entityLabeler = gameObject.AddComponent<EntityLabeler>();
@@ -19,11 +21,7 @@ public class UISystem : MonoBehaviour
 
     public void SelectEntity(GameObject entity)
     {
-        EntityData entityData = new EntityData
-        {
-            entity = entity,
-            name = entity.name
-        };
+        EntityData entityData = entitySystem.GetEntityData(entity);
 
         infoPanel.ActivateEntityMode(entityData);
 
