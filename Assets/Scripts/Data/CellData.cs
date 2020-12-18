@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public struct CellData
 {
@@ -10,4 +8,5 @@ public struct CellData
 
     public CellType cellType;
     public BuildingType buildingType;
+    public OverlayType overlayType;
 }

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using TMPro;
 using UnityEngine;
 
@@ -8,57 +7,54 @@ public class InfoPanel : MonoBehaviour
     private GameObject entityTab;
     private GameObject cellTab;
 
-    private EntityData entityData;
-    public EntityData EntityData { get => entityData; set => entityData = value; }
+    private TextMeshProUGUI entityNameTextMesh;
 
-    private CellData cellData;
-    public CellData CellData { get => cellData; set => cellData = value; }
+    private TextMeshProUGUI cellPositionTextMesh;
+    private TextMeshProUGUI cellCellTypeTextMesh;
+    private TextMeshProUGUI cellBuildingTypeTextMesh;
 
     private InfoType mode;
     public InfoType Mode { get => mode; }
-
-    private TextMeshProUGUI entityNameText;
-    private TextMeshProUGUI cellPositionText;
     
 
     void Awake()
     {
+        SetupEntityTab();
+        SetupCellTab();
+
+        mode = InfoType.None;
+    }
+
+
+
+    private void SetupEntityTab()
+    {
         entityTab = GameObject.Find("Entity Tab");
+        entityTab.SetActive(false);
+
+        entityNameTextMesh = UIUtil.SetLabel(
+            "Name", entityTab.transform.Find("Name")
+        );
+
+    }
+
+
+    private void SetupCellTab()
+    {
         cellTab = GameObject.Find("Cell Tab");
+        cellTab.SetActive(false);
 
-        Transform entityNameTransform = entityTab.transform.Find("Name");
-        Transform cellPositionTransform = cellTab.transform.Find("Position");
+        cellPositionTextMesh = UIUtil.SetLabel(
+            "Position", cellTab.transform.Find("Position")
+        );
 
-        entityNameText = entityNameTransform
-            .Find("Data")
-            .GetComponent<TextMeshProUGUI>();
+        cellCellTypeTextMesh = UIUtil.SetLabel(
+            "Cell", cellTab.transform.Find("Cell Type")
+        );
 
-        cellPositionText = cellPositionTransform
-            .Find("Data")
-            .GetComponent<TextMeshProUGUI>();
-
-        TextMeshProUGUI entityNameLabel = entityNameTransform
-            .Find("Label")
-            .GetComponent<TextMeshProUGUI>();
-
-        TextMeshProUGUI cellPositionLabel = cellPositionTransform
-            .Find("Label")
-            .GetComponent<TextMeshProUGUI>();
-
-        entityNameLabel.text = "Name: ";
-        cellPositionLabel.text = "Position: ";
-    }
-
-
-    void Start()
-    {
-        Deactivate();
-    }
-
-
-    void Update()
-    {
-        
+        cellBuildingTypeTextMesh = UIUtil.SetLabel(
+            "Building", cellTab.transform.Find("Building Type")
+        );
     }
 
 
@@ -69,7 +65,7 @@ public class InfoPanel : MonoBehaviour
         entityTab.SetActive(true);
         cellTab.SetActive(false);
 
-        entityNameText.text = entityData.name;
+        entityNameTextMesh.text = entityData.name;
     }
 
 
@@ -80,7 +76,9 @@ public class InfoPanel : MonoBehaviour
         entityTab.SetActive(false);
         cellTab.SetActive(true);
 
-        cellPositionText.text = $"{cellData.position}";
+        cellPositionTextMesh.text = $"{cellData.position}";
+        cellCellTypeTextMesh.text = $"{Enum.GetName(typeof(CellType), cellData.cellType)}";
+        cellBuildingTypeTextMesh.text = $"{Enum.GetName(typeof(BuildingType), cellData.buildingType)}";
     }
 
 

@@ -81,13 +81,13 @@ public class MapSystem : MonoBehaviour
 
     private void SetupMap()
     {
-        SetupGround();
-        SetupBuildings();
-        SetupOverlay();
+        SetupGroundMap();
+        SetupBuildingsMap();
+        SetupOverlayMap();
     }
 
 
-    private void SetupGround()
+    private void SetupGroundMap()
     {
         for (int x = -MapInfo.MapSize; x <= MapInfo.MapSize; x++)
         {
@@ -101,13 +101,21 @@ public class MapSystem : MonoBehaviour
     }
 
 
-    private void SetupBuildings()
+    private void SetupBuildingsMap()
     {
+        SetupBuilding(4, 4, BuildingType.StoneWall);
+        SetupBuilding(-4, 4, BuildingType.StoneWall);
+        SetupBuilding(4, -4, BuildingType.StoneWall);
+        SetupBuilding(-4, -4, BuildingType.StoneWall);
 
+        SetupBuilding(-6, 0, BuildingType.WoodWall);
+        SetupBuilding(0, 6, BuildingType.WoodWall);
+        SetupBuilding(6, 0, BuildingType.WoodWall);
+        SetupBuilding(0, -6, BuildingType.WoodWall);
     }
 
 
-    private void SetupOverlay()
+    private void SetupOverlayMap()
     {
 
     }
@@ -125,6 +133,39 @@ public class MapSystem : MonoBehaviour
     }
 
 
+    private void SetupBuilding(
+        int x, int y, BuildingType buildingType, bool solid = true
+    ) {
+        SetupBuilding(new Vector2Int(x, y), buildingType, solid);
+    }
+
+
+    private void SetupBuilding(
+        Vector2Int position, BuildingType buildingType, bool solid = true
+    ) {
+        int cellIndex = MapUtil.CoordsToIndex(position);
+
+        CellData cellData = mapData.cells[cellIndex];
+
+        cellData.solid = solid;
+        cellData.buildingType = buildingType;
+
+        mapData.cells[cellIndex] = cellData;
+    }
+
+
+    private void SetupOverlay(int x, int y, OverlayType overlayType)
+    {
+        SetupOverlay(new Vector2Int(x, y), overlayType);
+    }
+
+
+    private void SetupOverlay(Vector2Int position, OverlayType overlayType)
+    {
+        mapData.cells[MapUtil.CoordsToIndex(position)].overlayType = overlayType;
+    }
+
+
 
     // Construction Methods
 
@@ -132,7 +173,28 @@ public class MapSystem : MonoBehaviour
     {
         for (int i = 0; i < mapData.cells.Length; i++)
         {
-            ConstructCell(MapUtil.IndexToCoords(i), mapData.cells[i].cellType);
+            CellData cellData = mapData.cells[i];
+            Vector2Int position = MapUtil.IndexToCoords(i);
+
+            if (cellData.cellType != CellType.None)
+            {
+                ConstructCell(position, cellData.cellType);
+            }
+
+            if (cellData.buildingType != BuildingType.None)
+            {
+                ConstructBuilding(position, cellData.buildingType);
+            }
+
+            if (cellData.overlayType != OverlayType.None)
+            {
+                ConstructOverlay(position, cellData.overlayType);
+            }
+
+            if (cellData.solid)
+            {
+                ConstructSolid(position);
+            }
         }
     }
 
@@ -146,6 +208,33 @@ public class MapSystem : MonoBehaviour
     }
 
 
+    private void ConstructBuilding(Vector2Int position, BuildingType buildingType)
+    {
+        tilemaps["Buildings"].SetTile(
+            new Vector3Int(position.x, position.y, 3),
+            tiles[TileInfo.buildingTileNames[buildingType]]
+        );
+    }
+
+
+    private void ConstructOverlay(Vector2Int position, OverlayType overlayType)
+    {
+        tilemaps["Overlay"].SetTile(
+            new Vector3Int(position.x, position.y, 0),
+            tiles[TileInfo.overlayTileNames[overlayType]]
+        );
+    }
+
+
+    private void ConstructSolid(Vector2Int position)
+    {
+        tilemaps["Collision"].SetTile(
+            new Vector3Int(position.x, position.y, 0),
+            tiles[TileInfo.overlayTileNames[OverlayType.Collision]]
+        );
+    }
+
+
 
     // Helper Methods
 
@@ -153,10 +242,7 @@ public class MapSystem : MonoBehaviour
     {
         selectedCell = position;
 
-        tilemaps["Overlay"].SetTile(
-            new Vector3Int(position.x, position.y, 0),
-            tiles["Selection_1"]
-        );
+        ConstructOverlay(selectedCell, OverlayType.Selection);
     }
 
 
@@ -166,5 +252,11 @@ public class MapSystem : MonoBehaviour
             new Vector3Int(selectedCell.x, selectedCell.y, 0),
             null
         );
+    }
+
+
+    public CellData GetCellData(int x, int y)
+    {
+        return mapData.cells[MapUtil.CoordsToIndex(x, y)];
     }
 }

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class UISystem : MonoBehaviour
 {
@@ -16,29 +14,14 @@ public class UISystem : MonoBehaviour
         entitySystem = GameObject.Find("Entities").GetComponent<EntitySystem>();
         mapSystem = GameObject.Find("Map").GetComponent<MapSystem>();
 
-        infoPanel = this.gameObject.AddComponent<InfoPanel>();
-        entityLabeler = this.gameObject.AddComponent<EntityLabeler>();
-    }
-
-
-    void Start()
-    {
-        
-    }
-
-
-    void Update()
-    {
-        
+        infoPanel = gameObject.AddComponent<InfoPanel>();
+        entityLabeler = gameObject.AddComponent<EntityLabeler>();
     }
 
 
     public void SelectEntity(GameObject entity)
     {
-        EntityData entityData = new EntityData
-        {
-            name = entity.name
-        };
+        EntityData entityData = entitySystem.GetEntityData(entity);
 
         infoPanel.ActivateEntityMode(entityData);
 
@@ -48,10 +31,7 @@ public class UISystem : MonoBehaviour
 
     public void SelectCell(Vector2Int cellPosition)
     {
-        CellData cellData = new CellData
-        {
-            position = cellPosition
-        };
+        CellData cellData = mapSystem.GetCellData(cellPosition.x, cellPosition.y);
 
         infoPanel.ActivateCellMode(cellData);
     }
