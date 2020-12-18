@@ -24,7 +24,7 @@ public class CameraController : MonoBehaviour
         float dz = zoomSpeed * Time.deltaTime * Input.GetAxis("Zoom");
 
         Camera.main.orthographicSize = Mathf.Clamp(
-            Camera.main.orthographicSize + dz, 2f, 20f
+            Camera.main.orthographicSize + dz, 1f, 32f
         );
     }
 }
