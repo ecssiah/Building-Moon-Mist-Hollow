@@ -24,12 +24,14 @@ public static class MapUtil
 
     public static Vector2 IsoToWorld(Vector2 isoVector)
     {
-        var matrixProduct = new Vector2(
+        float scalar = 1 / 4f; 
+
+        Vector2 matrixProduct = new Vector2(
             2 * isoVector.x - 2 * isoVector.y,
             1 * isoVector.x + 1 * isoVector.y
         );
 
-        return (1 / 4f) * matrixProduct;
+        return scalar * matrixProduct;
     }
 
 
