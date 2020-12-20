@@ -79,7 +79,7 @@ public class InfoPanel : MonoBehaviour
         cellTab.SetActive(true);
 
         cellPositionText.text = $"{cellData.position}";
-        cellTypeText.text = $"{Enum.GetName(typeof(CellType), cellData.cellType)}";
+        cellTypeText.text = $"{Enum.GetName(typeof(GroundType), cellData.groundType)}";
         cellBuildingTypeText.text = $"{Enum.GetName(typeof(BuildingType), cellData.buildingType)}";
     }
 

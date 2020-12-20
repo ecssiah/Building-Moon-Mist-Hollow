@@ -1,12 +1,14 @@
 ﻿using UnityEngine;
 
-public struct CellData
+public struct RoomData
 {
-    public Vector2Int position;
+    public RectInt bounds;
 
-    public bool solid;
+    public bool fill;
 
     public GroundType groundType;
     public BuildingType buildingType;
     public OverlayType overlayType;
+
+    public Vector2Int[] entrancePositions;
 }

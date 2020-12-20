@@ -1,5 +1,4 @@
-﻿using System;
-public enum CellType
+﻿public enum GroundType
 {
     None,
     Grass,

@@ -2,18 +2,18 @@
 
 public struct TileInfo
 {
-    public static readonly Dictionary<CellType, string> cellTileNames;
+    public static readonly Dictionary<GroundType, string> cellTileNames;
     public static readonly Dictionary<BuildingType, string> buildingTileNames;
     public static readonly Dictionary<OverlayType, string> overlayTileNames;
 
 
     static TileInfo()
     {
-        cellTileNames = new Dictionary<CellType, string>
+        cellTileNames = new Dictionary<GroundType, string>
         {
-            [CellType.Grass] = "Dirt_Grass_C",
-            [CellType.Stone] = "Stone_A",
-            [CellType.Water] = "Water"
+            [GroundType.Grass] = "Dirt_Grass_C",
+            [GroundType.Stone] = "Stone_A",
+            [GroundType.Water] = "Water"
         };
 
         buildingTileNames = new Dictionary<BuildingType, string>

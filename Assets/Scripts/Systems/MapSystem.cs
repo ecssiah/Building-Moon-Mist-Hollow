@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using Random = UnityEngine.Random;
 
 public class MapSystem: MonoBehaviour
 {
@@ -15,6 +17,7 @@ public class MapSystem: MonoBehaviour
     void Awake()
     {
         InitData();
+
         InitTiles();
         InitTilemaps();
 
@@ -92,11 +95,11 @@ public class MapSystem: MonoBehaviour
         {
             for (int y = -MapInfo.MapSize; y <= MapInfo.MapSize; y++)
             {
-                SetupCell(x, y, CellType.Grass);
+                SetupGround(x, y, GroundType.Grass);
             }
         }
 
-        SetupCell(0, 0, CellType.Water);
+        SetupGround(0, 0, GroundType.Water);
     }
 
 
@@ -111,6 +114,42 @@ public class MapSystem: MonoBehaviour
         SetupBuilding(0, 6, BuildingType.StoneWall);
         SetupBuilding(6, 0, BuildingType.StoneWall);
         SetupBuilding(0, -6, BuildingType.StoneWall);
+
+
+        for (int i = 0; i < 24; i++)
+        {
+            Vector2Int position = new Vector2Int(
+                Random.Range(-MapInfo.MapSize, MapInfo.MapSize),
+                Random.Range(-MapInfo.MapSize, MapInfo.MapSize)
+            );
+
+            Vector2Int size = new Vector2Int(
+                Random.Range(8, 24),
+                Random.Range(6, 12)
+            );
+
+            Vector2Int[] entrancePositions = new Vector2Int[]
+            {
+                new Vector2Int(
+                    Random.Range(position.x + 1, position.x + size.x - 1),
+                    position.y
+                ),
+                new Vector2Int(
+                    position.x,
+                    Random.Range(position.y + 1, position.y + size.y - 1)
+                ),
+            };
+
+            RoomData testRoom = new RoomData
+            {
+                bounds = new RectInt(position, size),
+                entrancePositions = entrancePositions,
+                groundType = GroundType.Stone,
+                buildingType = BuildingType.WoodWall,
+            };
+
+            SetupRoom(testRoom);
+        }
     }
 
 
@@ -120,59 +159,57 @@ public class MapSystem: MonoBehaviour
     }
 
 
-    public CellData GetCellData(int x, int y)
-    {
-        return mapData.cells[MapUtil.CoordsToIndex(x, y)];
-    }
-
-
-    public void SelectCell(Vector2Int position)
-    {
-        selectedCell = position;
-
-        var selectedPosition = new Vector2Int(position.x, position.y);
-
-        ConstructOverlay(selectedPosition, OverlayType.Selection);
-    }
-
-
-    public void ClearSelection()
-    {
-        tilemaps["Overlay"].SetTile(new Vector3Int(selectedCell.x, selectedCell.y, 0), null);
-    }
-
-
+    
     // Setup Methods
 
-    private void SetupCell(int x, int y, CellType cellType)
+
+    private void SetCellSolid(int x, int y, bool solid = true)
     {
-        SetupCell(new Vector2Int(x, y), cellType);
+        SetCellSolid(new Vector2Int(x, y), solid);
     }
 
 
-    private void SetupCell(Vector2Int position, CellType cellType)
+    private void SetCellSolid(Vector2Int position, bool solid = true)
     {
-        mapData.cells[MapUtil.CoordsToIndex(position)].cellType = cellType;
+        if (MapUtil.OnMap(position))
+        {
+            mapData.cells[MapUtil.CoordsToIndex(position)].solid = solid;
+        }
     }
 
 
-    private void SetupBuilding(
-        int x, int y, BuildingType buildingType, bool solid = true
-    ) {
-        SetupBuilding(new Vector2Int(x, y), buildingType, solid);
+    private void SetupGround(int x, int y, GroundType groundType)
+    {
+        SetupGround(new Vector2Int(x, y), groundType);
     }
 
 
-    private void SetupBuilding(
-        Vector2Int position, BuildingType buildingType, bool solid = true
-    ) {
-        var cellIndex = MapUtil.CoordsToIndex(position);
-
-        mapData.cells[cellIndex].solid = solid;
-        mapData.cells[cellIndex].buildingType = buildingType;
+    private void SetupGround(Vector2Int position, GroundType groundType)
+    {
+        if (MapUtil.OnMap(position))
+        {
+            mapData.cells[MapUtil.CoordsToIndex(position)].groundType = groundType;
+        }
     }
 
 
+    private void SetupBuilding(int x, int y, BuildingType buildingType) {
+        SetupBuilding(new Vector2Int(x, y), buildingType);
+    }
+
+
+    private void SetupBuilding(Vector2Int position, BuildingType buildingType)
+    {
+        if (MapUtil.OnMap(position))
+        {
+            int cellIndex = MapUtil.CoordsToIndex(position);
+
+            mapData.cells[cellIndex].solid = true;
+            mapData.cells[cellIndex].buildingType = buildingType;
+        }
+    }
+
+    
     private void SetupOverlay(int x, int y, OverlayType overlayType)
     {
         SetupOverlay(new Vector2Int(x, y), overlayType);
@@ -181,8 +218,44 @@ public class MapSystem: MonoBehaviour
 
     private void SetupOverlay(Vector2Int position, OverlayType overlayType)
     {
-        mapData.cells[MapUtil.CoordsToIndex(position)].overlayType = overlayType;
+        if (MapUtil.OnMap(position))
+        {
+            mapData.cells[MapUtil.CoordsToIndex(position)].overlayType = overlayType;
+        }
     }
+
+
+
+    // Higher Level Setup Methods
+
+    private void SetupRoom(RoomData roomData)
+    {
+        for (int x = roomData.bounds.xMin; x <= roomData.bounds.xMax; x++)
+        {
+            for (int y = roomData.bounds.yMin; y <= roomData.bounds.yMax; y++)
+            {
+                SetupGround(new Vector2Int(x, y), roomData.groundType);
+
+                if (!EntranceExistsAt(x, y, roomData))
+                {
+                    if (roomData.fill)
+                    {
+                        SetupBuilding(new Vector2Int(x, y), roomData.buildingType);
+                    }
+                    else
+                    {
+                        if (MapUtil.OnRectBoundary(x, y, roomData.bounds))
+                        {
+                            SetupBuilding(new Vector2Int(x, y), roomData.buildingType);
+                        }
+                    }
+                }
+
+                SetupOverlay(new Vector2Int(x, y), roomData.overlayType);
+            }
+        }
+    }
+
 
 
     // Construction Methods
@@ -199,9 +272,9 @@ public class MapSystem: MonoBehaviour
                 ConstructSolid(position);
             }
 
-            if (cellData.cellType != CellType.None)
+            if (cellData.groundType != GroundType.None)
             {
-                ConstructCell(position, cellData.cellType);
+                ConstructGround(position, cellData.groundType);
             }
 
             if (cellData.buildingType != BuildingType.None)
@@ -235,7 +308,7 @@ public class MapSystem: MonoBehaviour
     }
 
 
-    private void ConstructCell(Vector2Int position, CellType cellType)
+    private void ConstructGround(Vector2Int position, GroundType cellType)
     {
         tilemaps["Ground"].SetTile(
             new Vector3Int(position.x, position.y, 0),
@@ -250,5 +323,38 @@ public class MapSystem: MonoBehaviour
             new Vector3Int(position.x, position.y, 0),
             tiles[TileInfo.overlayTileNames[overlayType]]
         );
+    }
+
+
+    // Helper Functions
+
+
+    private bool EntranceExistsAt(int x, int y, RoomData roomData)
+    {
+        return Array.Exists(
+            roomData.entrancePositions, entrancePosition => (entrancePosition.x == x) && (entrancePosition.y == y)
+        );
+    }
+
+
+    public CellData GetCellData(int x, int y)
+    {
+        return mapData.cells[MapUtil.CoordsToIndex(x, y)];
+    }
+
+
+    public void SelectCell(Vector2Int position)
+    {
+        selectedCell = position;
+
+        var selectedPosition = new Vector2Int(position.x, position.y);
+
+        ConstructOverlay(selectedPosition, OverlayType.Selection);
+    }
+
+
+    public void ClearSelection()
+    {
+        tilemaps["Overlay"].SetTile(new Vector3Int(selectedCell.x, selectedCell.y, 0), null);
     }
 }

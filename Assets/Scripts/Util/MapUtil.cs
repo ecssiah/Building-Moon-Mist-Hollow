@@ -69,4 +69,35 @@ public struct MapUtil
 
         return (1 / 4f) * matrixProduct;
     }
+
+
+    public static bool OnRectBoundary(int x, int y, RectInt rect)
+    {
+        bool topEdge = y == rect.yMax;
+        bool bottomEdge = y == rect.yMin;
+        bool leftEdge = x == rect.xMin;
+        bool rightEdge = x == rect.xMax;
+
+        return topEdge || bottomEdge || leftEdge || rightEdge;
+    }
+
+
+    public static bool OnMap(int x, int y)
+    {
+        return OnMap(new Vector2Int(x, y));
+    }
+
+
+    public static bool OnMap(Vector2Int position)
+    {
+        RectInt mapBoundary = new RectInt
+        {
+            x = -MapInfo.MapSize,
+            y = -MapInfo.MapSize,
+            width = MapInfo.MapWidth,
+            height = MapInfo.MapWidth,
+        };
+
+        return mapBoundary.Contains(position);
+    }
 }
