@@ -35,7 +35,8 @@ public class MapSystem: MonoBehaviour
         {
             showCollision = false,
             cells = new CellData[(int)Mathf.Pow(MapInfo.MapWidth, 2)],
-            rooms = new List<RoomData>(MapInfo.NumberOfSeedRooms)
+            rooms = new List<RoomData>(MapInfo.NumberOfSeedRooms),
+            placeholders = new List<RectInt>()
         };
 
         for (int x = -MapInfo.MapSize; x <= MapInfo.MapSize; x++)
@@ -105,7 +106,7 @@ public class MapSystem: MonoBehaviour
 
     private void SetupWallsLayer()
     {
-        SetPlaceholders();
+        SetPlaceholdersForWalls();
 
         SeedRooms();
         ExpandRooms();
@@ -113,9 +114,24 @@ public class MapSystem: MonoBehaviour
     }
 
 
-    private void SetPlaceholders()
+    private void SetPlaceholdersForWalls()
     {
+        int roadWidth = 8;
 
+        RectInt eastWestRoadPlaceholder = new RectInt(
+            -MapInfo.MapSize, roadWidth / 2,
+            MapInfo.MapWidth, roadWidth
+        );
+        RectInt northSouthRoadPlaceholder = new RectInt(
+            -roadWidth / 2, -MapInfo.MapSize,
+            roadWidth, MapInfo.MapWidth
+        );
+
+        mapData.placeholders.Add(eastWestRoadPlaceholder);
+        mapData.placeholders.Add(northSouthRoadPlaceholder);
+
+        SetupGround(eastWestRoadPlaceholder, GroundType.Stone);
+        SetupGround(northSouthRoadPlaceholder, GroundType.Stone);
     }
 
 
@@ -174,13 +190,21 @@ public class MapSystem: MonoBehaviour
                 }
             }
 
+            foreach (RectInt placeholder in mapData.placeholders)
+            {
+                if (roomBounds.Overlaps(placeholder))
+                {
+                    collision = true;
+                }
+            }
+
             if (collision == false)
             {
                 return roomBounds;
             }
         }
 
-        return new RectInt(-1, 0, 0, 0);
+        return new RectInt(0, 0, 0, 0);
     }
 
 
@@ -261,6 +285,21 @@ public class MapSystem: MonoBehaviour
     }
 
 
+    private void SetupGround(RectInt bounds, GroundType groundType, bool fill = true)
+    {
+        for (int x = bounds.xMin; x <= bounds.xMax; x++)
+        {
+            for (int y = bounds.yMin; y <= bounds.yMax; y++)
+            {
+                if (fill || MapUtil.OnRectBoundary(x, y, bounds))
+                {
+                    SetupGround(x, y, groundType);
+                }
+            }
+        }
+    }
+
+
     private void SetupWall(int x, int y, WallType wallType) {
         SetupWall(new Vector2Int(x, y), wallType);
     }
@@ -308,16 +347,9 @@ public class MapSystem: MonoBehaviour
 
                 if (MapUtil.EntranceExistsAt(x, y, roomData) == false)
                 {
-                    if (roomData.fill)
+                    if (roomData.fill || MapUtil.OnRectBoundary(x, y, roomData.bounds))
                     {
                         SetupWall(cellPosition, roomData.wallType);
-                    }
-                    else
-                    {
-                        if (MapUtil.OnRectBoundary(x, y, roomData.bounds))
-                        {
-                            SetupWall(cellPosition, roomData.wallType);
-                        }
                     }
                 }
 
