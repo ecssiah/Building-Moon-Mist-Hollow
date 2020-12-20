@@ -119,7 +119,7 @@ public class MapSystem: MonoBehaviour
         int roadWidth = 8;
 
         RectInt eastWestRoadPlaceholder = new RectInt(
-            -MapInfo.MapSize, roadWidth / 2,
+            -MapInfo.MapSize, -roadWidth / 2,
             MapInfo.MapWidth, roadWidth
         );
         RectInt northSouthRoadPlaceholder = new RectInt(
@@ -196,6 +196,11 @@ public class MapSystem: MonoBehaviour
                 {
                     collision = true;
                 }
+            }
+
+            if (MapUtil.OnMap(roomBounds) == false)
+            {
+                collision = true;
             }
 
             if (collision == false)

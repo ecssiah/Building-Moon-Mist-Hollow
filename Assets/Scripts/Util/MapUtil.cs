@@ -104,6 +104,12 @@ public struct MapUtil
     }
 
 
+    public static bool OnMap(RectInt bounds)
+    {
+        return OnMap(bounds.xMin, bounds.yMin) && OnMap(bounds.xMax, bounds.yMax);
+    }
+
+
     public static bool EntranceExistsAt(int x, int y, RoomData roomData)
     {
         return EntranceExistsAt(new Vector2Int(x, y), roomData);
