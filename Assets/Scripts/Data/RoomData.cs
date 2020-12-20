@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public struct RoomData
 {
@@ -10,5 +11,5 @@ public struct RoomData
     public WallType wallType;
     public OverlayType overlayType;
 
-    public EntranceData[] entrances;
+    public List<EntranceData> entrances;
 }

@@ -106,9 +106,18 @@ public struct MapUtil
 
     public static bool EntranceExistsAt(int x, int y, RoomData roomData)
     {
+        return EntranceExistsAt(new Vector2Int(x, y), roomData);
+    }
+
+
+    public static bool EntranceExistsAt(Vector2Int position, RoomData roomData)
+    {
         foreach (EntranceData entranceData in roomData.entrances)
         {
-            if (entranceData.bounds.Contains(new Vector2Int(x, y))) return true;
+            if (entranceData.bounds.Contains(position))
+            {
+                return true;
+            }
         }
 
         return false;

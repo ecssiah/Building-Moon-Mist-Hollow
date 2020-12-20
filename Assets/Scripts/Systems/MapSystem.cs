@@ -35,7 +35,7 @@ public class MapSystem: MonoBehaviour
         {
             showCollision = false,
             cells = new CellData[(int)Mathf.Pow(MapInfo.MapWidth, 2)],
-            rooms = new RoomData[MapInfo.NumberOfSeedRooms]
+            rooms = new List<RoomData>(MapInfo.NumberOfSeedRooms)
         };
 
         for (int x = -MapInfo.MapSize; x <= MapInfo.MapSize; x++)
@@ -86,8 +86,6 @@ public class MapSystem: MonoBehaviour
         SetupGroundLayer();
         SetupWallsLayer();
         SetupOverlayLayer();
-
-        SetupGround(0, 0, GroundType.Water);
     }
 
 
@@ -100,14 +98,24 @@ public class MapSystem: MonoBehaviour
                 SetupGround(x, y, GroundType.Grass);
             }
         }
+
+        SetupGround(0, 0, GroundType.None);
     }
 
 
     private void SetupWallsLayer()
     {
+        SetPlaceholders();
+
         SeedRooms();
         ExpandRooms();
         FinalizeRooms();
+    }
+
+
+    private void SetPlaceholders()
+    {
+
     }
 
 
@@ -124,7 +132,7 @@ public class MapSystem: MonoBehaviour
                wallType = WallType.StoneWall,
             };
 
-            mapData.rooms[i] = roomData;
+            mapData.rooms.Add(roomData);
         }
     }
 
@@ -137,9 +145,12 @@ public class MapSystem: MonoBehaviour
 
     private void FinalizeRooms()
     {
-        for (int i = 0; i < mapData.rooms.Length; i++)
+        for (int i = 0; i < mapData.rooms.Count; i++)
         {
-            mapData.rooms[i].entrances = GenerateEntrances(mapData.rooms[i].bounds);
+            RoomData roomData = mapData.rooms[i];
+            roomData.entrances = GenerateEntrances(mapData.rooms[i].bounds);
+
+            mapData.rooms[i] = roomData;
 
             SetupRoom(mapData.rooms[i]);
         }
@@ -173,9 +184,9 @@ public class MapSystem: MonoBehaviour
     }
 
 
-    private EntranceData[] GenerateEntrances(RectInt bounds, int number = 2)
+    private List<EntranceData> GenerateEntrances(RectInt bounds, int number = 2)
     {
-        EntranceData[] entrances = new EntranceData[number];
+        List<EntranceData> entrances = new List<EntranceData>(number);
 
         for (int i = 0; i < number; i++)
         {
@@ -203,7 +214,7 @@ public class MapSystem: MonoBehaviour
                 bounds = entranceBounds,
             };
 
-            entrances[i] = entranceData;
+            entrances.Add(entranceData);
         }
 
         return entrances;
@@ -291,24 +302,26 @@ public class MapSystem: MonoBehaviour
         {
             for (int y = roomData.bounds.yMin; y <= roomData.bounds.yMax; y++)
             {
-                SetupGround(new Vector2Int(x, y), roomData.groundType);
+                Vector2Int cellPosition = new Vector2Int(x, y);
+
+                SetupGround(cellPosition, roomData.groundType);
 
                 if (MapUtil.EntranceExistsAt(x, y, roomData) == false)
                 {
                     if (roomData.fill)
                     {
-                        SetupWall(new Vector2Int(x, y), roomData.wallType);
+                        SetupWall(cellPosition, roomData.wallType);
                     }
                     else
                     {
                         if (MapUtil.OnRectBoundary(x, y, roomData.bounds))
                         {
-                            SetupWall(new Vector2Int(x, y), roomData.wallType);
+                            SetupWall(cellPosition, roomData.wallType);
                         }
                     }
                 }
 
-                SetupOverlay(new Vector2Int(x, y), roomData.overlayType);
+                SetupOverlay(cellPosition, roomData.overlayType);
             }
         }
     }
