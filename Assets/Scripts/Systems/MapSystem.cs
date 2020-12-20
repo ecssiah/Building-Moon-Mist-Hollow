@@ -100,6 +100,7 @@ public class MapSystem: MonoBehaviour
         }
 
         SetupGround(0, 0, GroundType.Water);
+        SetCellSolid(0, 0);
     }
 
 
@@ -128,22 +129,37 @@ public class MapSystem: MonoBehaviour
                 Random.Range(6, 12)
             );
 
-            Vector2Int[] entrancePositions = new Vector2Int[]
+            EntranceData[] entrances = new EntranceData[2];
+
+            int entrance0XPosition = Random.Range(position.x + 1, position.x + size.x - 1);
+
+            entrances[0] = new EntranceData
             {
-                new Vector2Int(
-                    Random.Range(position.x + 1, position.x + size.x - 1),
-                    position.y
-                ),
-                new Vector2Int(
-                    position.x,
-                    Random.Range(position.y + 1, position.y + size.y - 1)
+                bounds = new RectInt(
+                    entrance0XPosition,
+                    position.y,
+                    Math.Min(4, position.x + size.x - 1 - entrance0XPosition),
+                    1
                 ),
             };
+
+            int entrance1YPosition = Random.Range(position.y + 1, position.y + size.y - 1);
+
+            entrances[1] = new EntranceData
+            {
+                bounds = new RectInt(
+                   position.x,
+                   entrance1YPosition,
+                   1,
+                   Math.Min(4, position.y + size.y - 1 - entrance1YPosition)
+                ),
+            };
+
 
             RoomData testRoom = new RoomData
             {
                 bounds = new RectInt(position, size),
-                entrancePositions = entrancePositions,
+                entrances = entrances,
                 groundType = GroundType.Stone,
                 buildingType = BuildingType.WoodWall,
             };
@@ -236,7 +252,7 @@ public class MapSystem: MonoBehaviour
             {
                 SetupGround(new Vector2Int(x, y), roomData.groundType);
 
-                if (!EntranceExistsAt(x, y, roomData))
+                if (MapUtil.EntranceExistsAt(x, y, roomData) == false)
                 {
                     if (roomData.fill)
                     {
@@ -326,16 +342,8 @@ public class MapSystem: MonoBehaviour
     }
 
 
+
     // Helper Functions
-
-
-    private bool EntranceExistsAt(int x, int y, RoomData roomData)
-    {
-        return Array.Exists(
-            roomData.entrancePositions, entrancePosition => (entrancePosition.x == x) && (entrancePosition.y == y)
-        );
-    }
-
 
     public CellData GetCellData(int x, int y)
     {

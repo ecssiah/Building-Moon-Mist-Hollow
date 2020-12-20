@@ -10,5 +10,5 @@ public struct RoomData
     public BuildingType buildingType;
     public OverlayType overlayType;
 
-    public Vector2Int[] entrancePositions;
+    public EntranceData[] entrances;
 }

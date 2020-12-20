@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public struct MapUtil
 {
@@ -99,5 +100,16 @@ public struct MapUtil
         };
 
         return mapBoundary.Contains(position);
+    }
+
+
+    public static bool EntranceExistsAt(int x, int y, RoomData roomData)
+    {
+        foreach (EntranceData entranceData in roomData.entrances)
+        {
+            if (entranceData.bounds.Contains(new Vector2Int(x, y))) return true;
+        }
+
+        return false;
     }
 }

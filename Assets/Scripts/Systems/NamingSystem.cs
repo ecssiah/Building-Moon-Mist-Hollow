@@ -7,7 +7,7 @@ public class NamingSystem : MonoBehaviour
     private int currentNameIndex;
 
     private readonly string[] initialElements = {
-        "La", "At", "Se", "Dea", "Tel", "Ce", "Re", "Til"
+        "La", "At", "Se", "Il", "Elq", "Ce", "Re", "Til"
     };
     private readonly string[] middleElements = {
         "ekah", "tere", "ede", "she", "rin", "e", "il", "ci"
