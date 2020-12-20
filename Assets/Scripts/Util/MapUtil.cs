@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public struct MapUtil
 {
@@ -111,5 +112,54 @@ public struct MapUtil
         }
 
         return false;
+    }
+
+
+    public static Vector2Int GetRandomMapPosition()
+    {
+        return new Vector2Int(
+            Random.Range(-MapInfo.MapSize, MapInfo.MapSize),
+            Random.Range(-MapInfo.MapSize, MapInfo.MapSize)
+        );
+    }
+
+
+    public static Vector2Int GetRandomBorderPosition(RectInt bounds, bool includeCorners = false)
+    {
+        int cornerModifier = includeCorners ? 0 : 1;
+
+        switch (Random.Range(0, 4))
+        {
+            case 0:
+                Vector2Int topWallPosition = new Vector2Int(
+                    Random.Range(bounds.xMin + cornerModifier, bounds.xMax - cornerModifier),
+                    bounds.yMax
+                );
+
+                return topWallPosition;
+            case 1:
+                Vector2Int bottomWallPosition = new Vector2Int(
+                    Random.Range(bounds.xMin + cornerModifier, bounds.xMax - cornerModifier),
+                    bounds.yMin
+                );
+
+                return bottomWallPosition;
+            case 2:
+                Vector2Int leftWallPosition = new Vector2Int(
+                    bounds.xMin,
+                    Random.Range(bounds.yMin + cornerModifier, bounds.yMax - cornerModifier)
+                );
+
+                return leftWallPosition;
+            case 3:
+                Vector2Int rightWallPosition = new Vector2Int(
+                    bounds.xMax,
+                    Random.Range(bounds.yMin + cornerModifier, bounds.yMax - cornerModifier)
+                );
+
+                return rightWallPosition;
+            default:
+                return new Vector2Int(bounds.xMin + 1, bounds.yMin);
+        }
     }
 }

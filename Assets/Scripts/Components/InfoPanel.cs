@@ -10,7 +10,7 @@ public class InfoPanel : MonoBehaviour
     private TextMeshProUGUI entityNameText;
 
     private TextMeshProUGUI cellPositionText;
-    private TextMeshProUGUI cellTypeText;
+    private TextMeshProUGUI cellGroundTypeText;
     private TextMeshProUGUI cellBuildingTypeText;
 
     private InfoType mode;
@@ -51,11 +51,11 @@ public class InfoPanel : MonoBehaviour
         cellPositionText = UIUtil.SetLabel(
             "Position", cellTab.transform.Find("Position")
         );
-        cellTypeText = UIUtil.SetLabel(
-            "Cell", cellTab.transform.Find("Cell Type")
+        cellGroundTypeText = UIUtil.SetLabel(
+            "Ground", cellTab.transform.Find("Ground Type")
         );
         cellBuildingTypeText = UIUtil.SetLabel(
-            "Building", cellTab.transform.Find("Building Type")
+            "Wall", cellTab.transform.Find("Wall Type")
         );
     }
 
@@ -79,8 +79,8 @@ public class InfoPanel : MonoBehaviour
         cellTab.SetActive(true);
 
         cellPositionText.text = $"{cellData.position}";
-        cellTypeText.text = $"{Enum.GetName(typeof(GroundType), cellData.groundType)}";
-        cellBuildingTypeText.text = $"{Enum.GetName(typeof(BuildingType), cellData.buildingType)}";
+        cellGroundTypeText.text = $"{Enum.GetName(typeof(GroundType), cellData.groundType)}";
+        cellBuildingTypeText.text = $"{Enum.GetName(typeof(WallType), cellData.wallType)}";
     }
 
 

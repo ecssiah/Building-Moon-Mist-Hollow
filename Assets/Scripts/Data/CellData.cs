@@ -7,6 +7,6 @@ public struct CellData
     public bool solid;
 
     public GroundType groundType;
-    public BuildingType buildingType;
+    public WallType wallType;
     public OverlayType overlayType;
 }

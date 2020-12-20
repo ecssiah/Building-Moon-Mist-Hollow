@@ -2,24 +2,24 @@
 
 public struct TileInfo
 {
-    public static readonly Dictionary<GroundType, string> cellTileNames;
-    public static readonly Dictionary<BuildingType, string> buildingTileNames;
+    public static readonly Dictionary<GroundType, string> groundTileNames;
+    public static readonly Dictionary<WallType, string> wallTileNames;
     public static readonly Dictionary<OverlayType, string> overlayTileNames;
 
 
     static TileInfo()
     {
-        cellTileNames = new Dictionary<GroundType, string>
+        groundTileNames = new Dictionary<GroundType, string>
         {
             [GroundType.Grass] = "Dirt_Grass_C",
             [GroundType.Stone] = "Stone_A",
             [GroundType.Water] = "Water"
         };
 
-        buildingTileNames = new Dictionary<BuildingType, string>
+        wallTileNames = new Dictionary<WallType, string>
         {
-            [BuildingType.StoneWall] = "Brick_C",
-            [BuildingType.WoodWall] = "Wood_A",
+            [WallType.StoneWall] = "Brick_C",
+            [WallType.WoodWall] = "Wood_A",
         };
 
         overlayTileNames = new Dictionary<OverlayType, string>

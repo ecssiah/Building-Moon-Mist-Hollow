@@ -7,7 +7,7 @@ public struct RoomData
     public bool fill;
 
     public GroundType groundType;
-    public BuildingType buildingType;
+    public WallType wallType;
     public OverlayType overlayType;
 
     public EntranceData[] entrances;
