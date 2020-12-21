@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
@@ -101,37 +100,65 @@ public class MapSystem: MonoBehaviour
         }
 
         SetupGround(0, 0, GroundType.None);
+
+        SetupRoads();
     }
 
 
     private void SetupWallsLayer()
     {
-        SetPlaceholdersForWalls();
-
         SeedRooms();
         ExpandRooms();
         FinalizeRooms();
     }
 
 
-    private void SetPlaceholdersForWalls()
+    private void SetupRoads()
     {
         int roadWidth = 8;
 
-        RectInt eastWestRoadPlaceholder = new RectInt(
+        RectInt mainEastWestRoad = new RectInt(
             -MapInfo.MapSize, -roadWidth / 2,
             MapInfo.MapWidth, roadWidth
         );
-        RectInt northSouthRoadPlaceholder = new RectInt(
+        RectInt mainNorthSouthRoad = new RectInt(
             -roadWidth / 2, -MapInfo.MapSize,
             roadWidth, MapInfo.MapWidth
         );
 
-        mapData.placeholders.Add(eastWestRoadPlaceholder);
-        mapData.placeholders.Add(northSouthRoadPlaceholder);
+        RectInt north1st = new RectInt(
+            -MapInfo.MapSize, MapInfo.MapSize / 2,
+            MapInfo.MapWidth, roadWidth / 2
+        );
+        RectInt south1st = new RectInt(
+            -MapInfo.MapSize, -MapInfo.MapSize / 2 - roadWidth / 2,
+            MapInfo.MapWidth, roadWidth / 2
+        );
 
-        SetupGround(eastWestRoadPlaceholder, GroundType.Stone);
-        SetupGround(northSouthRoadPlaceholder, GroundType.Stone);
+        RectInt west1st = new RectInt(
+            -MapInfo.MapSize / 2 - roadWidth / 2, -MapInfo.MapSize,
+            roadWidth / 2, MapInfo.MapWidth
+        );
+        RectInt east1st = new RectInt(
+            MapInfo.MapSize / 2, -MapInfo.MapSize,
+            roadWidth / 2, MapInfo.MapWidth
+        );
+
+        mapData.placeholders.Add(mainEastWestRoad);
+        mapData.placeholders.Add(mainNorthSouthRoad);
+
+        mapData.placeholders.Add(north1st);
+        mapData.placeholders.Add(south1st);
+        mapData.placeholders.Add(west1st);
+        mapData.placeholders.Add(east1st);
+
+        SetupGround(north1st, GroundType.Stone);
+        SetupGround(south1st, GroundType.Stone);
+        SetupGround(west1st, GroundType.Stone);
+        SetupGround(east1st, GroundType.Stone);
+
+        SetupGround(mainEastWestRoad, GroundType.Stone);
+        SetupGround(mainNorthSouthRoad, GroundType.Stone);
     }
 
 
@@ -144,7 +171,7 @@ public class MapSystem: MonoBehaviour
             RoomData roomData = new RoomData
             {
                bounds = bounds,
-               groundType = GroundType.Stone,
+               groundType = GroundType.Wood,
                wallType = WallType.StoneWall,
             };
 
@@ -155,7 +182,93 @@ public class MapSystem: MonoBehaviour
 
     private void ExpandRooms()
     {
+        for (int expansionRound = 0; expansionRound < 200; expansionRound++)
+        {
+            for (int roomNumber = 0; roomNumber < mapData.rooms.Count; roomNumber++) 
+            {
+                mapData.rooms[roomNumber] = ExpandRoom(mapData.rooms[roomNumber]);
+            }
+        }
+    }
 
+
+    private RoomData ExpandRoom(RoomData roomData)
+    {
+        bool expanded = false;
+
+        RoomData expandedRoomData = roomData;
+
+        List<int> directions = new List<int>(new int[] { 0, 1, 2, 3 });
+
+        while (!expanded && directions.Count > 0)
+        {
+            int directionIndex = Random.Range(0, directions.Count - 1);
+            int direction = directions[directionIndex];
+
+            directions.RemoveAt(directionIndex);
+
+            switch (direction)
+            {
+                case 0:
+                    expandedRoomData.bounds.xMin -= 1;
+                    break;
+                case 1:
+                    expandedRoomData.bounds.xMax += 1;
+                    break;
+                case 2:
+                    expandedRoomData.bounds.yMin -= 1;
+                    break;
+                case 3:
+                    expandedRoomData.bounds.yMax += 1;
+                    break;
+                default:
+                    break;
+            }
+
+            bool roomCollision = false;
+
+            if (MapUtil.OnMap(expandedRoomData.bounds) == false)
+            {
+                roomCollision = true;
+            }
+            else
+            {
+                foreach (RoomData testRoomData in mapData.rooms)
+                {
+                    if (testRoomData.Equals(roomData))
+                    {
+                        continue;
+                    }
+
+                    if (testRoomData.bounds.Overlaps(expandedRoomData.bounds))
+                    {
+                        roomCollision = true;
+                    }
+                }
+
+                foreach(RectInt bounds in mapData.placeholders)
+                {
+                    if (bounds.Overlaps(expandedRoomData.bounds))
+                    {
+                        roomCollision = true;
+                    }
+                }
+            }
+
+            if (!roomCollision)
+            {
+                expanded = true;
+            }
+        }
+
+        if (expanded)
+        {
+            return expandedRoomData;
+        }
+        else
+        {
+            return roomData;
+        }
     }
 
 

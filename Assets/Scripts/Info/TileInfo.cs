@@ -13,7 +13,8 @@ public struct TileInfo
         {
             [GroundType.Grass] = "Dirt_Grass_C",
             [GroundType.Stone] = "Stone_A",
-            [GroundType.Water] = "Water"
+            [GroundType.Water] = "Water",
+            [GroundType.Wood] = "Wood_A"
         };
 
         wallTileNames = new Dictionary<WallType, string>

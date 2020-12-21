@@ -3,5 +3,6 @@
     None,
     Grass,
     Stone,
+    Wood,
     Water,
 }

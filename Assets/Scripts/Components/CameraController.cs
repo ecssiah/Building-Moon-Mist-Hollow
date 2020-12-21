@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
@@ -18,7 +16,9 @@ public class CameraController : MonoBehaviour
         float dz = zoomSpeed * Time.deltaTime * Input.GetAxis("Zoom");
 
         Camera.main.orthographicSize = Mathf.Clamp(
-            Camera.main.orthographicSize + dz, 2f, 20f
+            Camera.main.orthographicSize + dz,
+            ViewInfo.MinimumOrthographicSize,
+            ViewInfo.MaximumOrthographicSize
         );
     }
 }
