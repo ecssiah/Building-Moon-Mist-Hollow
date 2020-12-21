@@ -366,16 +366,16 @@ public class MapSystem: MonoBehaviour
 
     private void SetupBoundaries()
     {
-        RectInt worldBounds = new RectInt(
-            -MapInfo.MapSize, -MapInfo.MapSize,
-            MapInfo.MapWidth, MapInfo.MapWidth
+        RectInt worldBoundary = new RectInt(
+            -MapInfo.MapSize - 1, -MapInfo.MapSize - 1,
+            MapInfo.MapWidth + 1, MapInfo.MapWidth + 1
         );
 
-        for (int x = worldBounds.xMin - 1; x <= worldBounds.xMax + 2; x++)
+        for (int x = worldBoundary.xMin; x <= worldBoundary.xMax; x++)
         {
-            for (int y = worldBounds.yMin - 1; y <= worldBounds.yMax + 2; y++)
+            for (int y = worldBoundary.yMin; y <= worldBoundary.yMax; y++)
             {
-                if (MapUtil.OnRectBoundary(x, y, worldBounds))
+                if (MapUtil.OnRectBoundary(x, y, worldBoundary))
                 {
                     tilemaps["Collision"].SetTile(new Vector3Int(x, y, 0), tiles["Collision_1"]);
                 }

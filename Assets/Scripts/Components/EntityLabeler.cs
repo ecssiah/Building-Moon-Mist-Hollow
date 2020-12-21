@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class EntityLabeler : MonoBehaviour
@@ -6,24 +7,23 @@ public class EntityLabeler : MonoBehaviour
     private GameObject labelsObject;
     private GameObject labelPrefab;
 
-    private GameObject[] labels;
-
-    private GameObject[] entities;
+    private List<GameObject> labels;
+    private List<GameObject> entities;
 
 
     void Awake()
     {
-        labels = new GameObject[0];
+        labels = new List<GameObject>();
         labelsObject = GameObject.Find("Labels");
         labelPrefab = Resources.Load<GameObject>("Prefabs/Label");
 
-        entities = new GameObject[0];
+        entities = new List<GameObject>();
     }
 
 
     void Update()
     {
-        for (int i = 0; i < entities.Length; i++)
+        for (int i = 0; i < entities.Count; i++)
         {
             labels[i].transform.position = GetLabelPosition(entities[i].transform.position);
         }
@@ -40,7 +40,7 @@ public class EntityLabeler : MonoBehaviour
 
         TextMeshProUGUI textMesh = newLabel.GetComponent<TextMeshProUGUI>();
         textMesh.text = entity.name;
-        textMesh.fontSize = 18;
+        textMesh.fontSize = 22;
 
         newLabel.transform.SetParent(labelsObject.transform, true);
 
@@ -51,7 +51,7 @@ public class EntityLabeler : MonoBehaviour
     private Vector3 GetLabelPosition(Vector3 entityPosition)
     {
         Vector3 screenPosition = MapUtil.WorldToScreen(entityPosition);
-        screenPosition.y += UIInfo.LabelYOffset * UIUtil.CameraZoomRatio();
+        screenPosition.y += UIInfo.LabelYOffset * ViewUtil.GetCameraZoomRatio();
 
         return screenPosition;
     }
@@ -61,15 +61,15 @@ public class EntityLabeler : MonoBehaviour
     {
         Clear();
 
-        entities = new GameObject[] { entity };
-        labels = new GameObject[] { CreateLabel(entity) };
+        entities = new List<GameObject>() { entity };
+        labels = new List<GameObject>() { CreateLabel(entity) };
     }
 
 
     public void Clear()
     {
-        entities = new GameObject[0];
-        labels = new GameObject[0];
+        entities = new List<GameObject>();
+        labels = new List<GameObject>();
 
         foreach (Transform child in labelsObject.transform)
         {

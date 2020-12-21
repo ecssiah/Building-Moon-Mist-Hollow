@@ -4,7 +4,6 @@ public class InputSystem : MonoBehaviour
 {
     private UISystem uiSystem;
     private MapSystem mapSystem;
-    private EntitySystem entitySystem;
 
     private SelectionHandler selectionHandler;
 
@@ -13,7 +12,6 @@ public class InputSystem : MonoBehaviour
     {
         uiSystem = GameObject.Find("UI").GetComponent<UISystem>();
         mapSystem = GameObject.Find("Map").GetComponent<MapSystem>();
-        entitySystem = GameObject.Find("Entities").GetComponent<EntitySystem>();
 
         selectionHandler = gameObject.AddComponent<SelectionHandler>();
         selectionHandler.BroadcastEntitySelection = OnEntitySelection;

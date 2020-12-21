@@ -13,12 +13,6 @@ public struct UIUtil
 
         labelMesh.text = label;
 
-        return transform.Find("Data").GetComponent<TextMeshProUGUI>();
-    }
-
-
-    public static float CameraZoomRatio()
-    {
-        return ViewInfo.DefaultOrthographicSize / Camera.main.orthographicSize;
+        return textMesh;
     }
 }
