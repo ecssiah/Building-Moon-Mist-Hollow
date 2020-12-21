@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class EntitySystem : MonoBehaviour
 {
+    private MapSystem mapSystem;
     private NamingSystem namingSystem;
 
     private EntityData entityData;
@@ -14,6 +15,8 @@ public class EntitySystem : MonoBehaviour
 
     void Awake()
     {
+        mapSystem = GameObject.Find("Map").GetComponent<MapSystem>();
+
         namingSystem = GetComponent<NamingSystem>();
 
         citizenPrefab = Resources.Load<GameObject>("Prefabs/Citizen");
@@ -25,11 +28,21 @@ public class EntitySystem : MonoBehaviour
         );
 
         entityDataList = new List<CitizenData>();
+    }
 
 
+    void Start()
+    {
         for (int i = 0; i < 10; i++)
         {
-            GenerateCitizen(MapUtil.GetRandomMapPosition());
+            Vector2Int position = MapUtil.GetRandomMapPosition();
+
+            while (mapSystem.GetCellData(position).solid)
+            {
+                position = MapUtil.GetRandomMapPosition();
+            }
+
+            GenerateCitizen(position);
         }
     }
 

@@ -99,9 +99,9 @@ public class MapSystem: MonoBehaviour
             }
         }
 
-        SetupGround(0, 0, GroundType.None);
-
         SetupRoads();
+
+        SetupGround(0, 0, GroundType.None);
     }
 
 
@@ -182,7 +182,7 @@ public class MapSystem: MonoBehaviour
 
     private void ExpandRooms()
     {
-        for (int expansionRound = 0; expansionRound < 200; expansionRound++)
+        for (int expansionRound = 0; expansionRound < 400; expansionRound++)
         {
             for (int roomNumber = 0; roomNumber < mapData.rooms.Count; roomNumber++) 
             {
@@ -261,14 +261,7 @@ public class MapSystem: MonoBehaviour
             }
         }
 
-        if (expanded)
-        {
-            return expandedRoomData;
-        }
-        else
-        {
-            return roomData;
-        }
+        return expanded ? expandedRoomData : roomData; 
     }
 
 
@@ -326,7 +319,7 @@ public class MapSystem: MonoBehaviour
     }
 
 
-    private List<EntranceData> GenerateEntrances(RectInt bounds, int number = 2)
+    private List<EntranceData> GenerateEntrances(RectInt bounds, int number = 4)
     {
         List<EntranceData> entrances = new List<EntranceData>(number);
 
@@ -552,6 +545,12 @@ public class MapSystem: MonoBehaviour
     public CellData GetCellData(int x, int y)
     {
         return mapData.cells[MapUtil.CoordsToIndex(x, y)];
+    }
+
+
+    public CellData GetCellData(Vector2Int position)
+    {
+        return mapData.cells[MapUtil.CoordsToIndex(position)];
     }
 
 
