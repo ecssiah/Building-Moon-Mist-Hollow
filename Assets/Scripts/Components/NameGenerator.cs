@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class NamingSystem : MonoBehaviour
+public class NameGenerator : MonoBehaviour
 {
     public string[] names;
 

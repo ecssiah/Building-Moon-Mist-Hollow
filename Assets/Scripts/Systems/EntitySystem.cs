@@ -4,7 +4,7 @@ using UnityEngine;
 public class EntitySystem : MonoBehaviour
 {
     private MapSystem mapSystem;
-    private NamingSystem namingSystem;
+    private NameGenerator nameGenerator;
 
     private EntityData entityData;
 
@@ -17,7 +17,7 @@ public class EntitySystem : MonoBehaviour
     {
         mapSystem = GameObject.Find("Map").GetComponent<MapSystem>();
 
-        namingSystem = GetComponent<NamingSystem>();
+        nameGenerator = gameObject.AddComponent<NameGenerator>();
 
         citizenPrefab = Resources.Load<GameObject>("Prefabs/Citizen");
 
@@ -58,8 +58,7 @@ public class EntitySystem : MonoBehaviour
         );
 
         newCharacterObject.transform.parent = transform;
-
-        newCharacterObject.name = namingSystem.GetName();
+        newCharacterObject.name = nameGenerator.GetName();
         newCharacterObject.layer = LayerMask.NameToLayer("Citizens");
 
         newCharacterObject.AddComponent<CitizenMovement>();

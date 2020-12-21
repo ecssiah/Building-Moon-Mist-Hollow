@@ -86,6 +86,8 @@ public class MapSystem: MonoBehaviour
         SetupGroundLayer();
         SetupWallsLayer();
         SetupOverlayLayer();
+
+        SetupBoundaries();
     }
 
 
@@ -362,10 +364,26 @@ public class MapSystem: MonoBehaviour
     }
 
 
+    private void SetupBoundaries()
+    {
+        RectInt worldBounds = new RectInt(
+            -MapInfo.MapSize, -MapInfo.MapSize,
+            MapInfo.MapWidth, MapInfo.MapWidth
+        );
+
+        for (int x = worldBounds.xMin - 1; x <= worldBounds.xMax + 2; x++)
+        {
+            for (int y = worldBounds.yMin - 1; y <= worldBounds.yMax + 2; y++)
+            {
+                if (MapUtil.OnRectBoundary(x, y, worldBounds))
+                {
+                    tilemaps["Collision"].SetTile(new Vector3Int(x, y, 0), tiles["Collision_1"]);
+                }
+            }
+        }
+    }
+
     
-    // Setup Methods
-
-
     private void SetCellSolid(int x, int y, bool solid = true)
     {
         SetCellSolid(new Vector2Int(x, y), solid);
@@ -377,6 +395,21 @@ public class MapSystem: MonoBehaviour
         if (MapUtil.OnMap(position))
         {
             mapData.cells[MapUtil.CoordsToIndex(position)].solid = solid;
+        }
+    }
+
+
+    private void SetCellSolid(RectInt bounds, bool solid = true, bool fill = true)
+    {
+        for (int x = bounds.xMin; x <= bounds.xMax; x++)
+        {
+            for (int y = bounds.yMin; y <= bounds.yMax; y++)
+            {
+                if (fill || MapUtil.OnRectBoundary(x, y, bounds))
+                {
+                    SetCellSolid(x, y, solid);
+                }
+            }
         }
     }
 
