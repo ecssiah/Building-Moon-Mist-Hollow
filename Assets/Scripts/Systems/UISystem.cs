@@ -23,9 +23,9 @@ public class UISystem : MonoBehaviour
     {
         CitizenData entityData = entitySystem.GetEntityData(entity);
 
-        infoPanel.ActivateEntityMode(entityData);
-
         entityLabeler.SelectEntity(entity);
+
+        infoPanel.ActivateEntityMode(entityData);
     }
 
 
@@ -40,6 +40,7 @@ public class UISystem : MonoBehaviour
     public void ClearSelection()
     {
         entityLabeler.Clear();
+
         infoPanel.Deactivate();
     }
 }

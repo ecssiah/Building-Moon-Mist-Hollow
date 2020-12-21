@@ -6,16 +6,6 @@ public class NameGenerator : MonoBehaviour
 
     private int currentNameIndex;
 
-    private readonly string[] initialElements = {
-        "La", "At", "Se", "Il", "Elq", "Ce", "Re", "Til"
-    };
-    private readonly string[] middleElements = {
-        "ekah", "tere", "ede", "she", "rin", "e", "il", "ci"
-    };
-    private readonly string[] finalElements = {
-        "cale", "si", "slt", "treh", "ehta", "ta", "lit", "ca"
-    };
-
 
     void Awake()
     {
@@ -30,9 +20,13 @@ public class NameGenerator : MonoBehaviour
 
         for (int i = 0; i < names.Length; i++)
         {
-            string initial = initialElements[Random.Range(0, initialElements.Length)];
-            string middle = middleElements[Random.Range(0, middleElements.Length)];
-            string final = finalElements[Random.Range(0, finalElements.Length)];
+            int initialIndex = Random.Range(0, NameInfo.InitialElements.Length);
+            int middleIndex = Random.Range(0, NameInfo.MiddleElements.Length);
+            int finalIndex = Random.Range(0, NameInfo.FinalElements.Length);
+
+            string initial = NameInfo.InitialElements[initialIndex];
+            string middle = NameInfo.MiddleElements[middleIndex];
+            string final = NameInfo.FinalElements[finalIndex];
 
             string newName = $"{initial}{middle}{final}";
 

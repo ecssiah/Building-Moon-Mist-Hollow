@@ -15,4 +15,10 @@ public struct UIUtil
 
         return transform.Find("Data").GetComponent<TextMeshProUGUI>();
     }
+
+
+    public static float CameraZoomRatio()
+    {
+        return ViewInfo.DefaultOrthographicSize / Camera.main.orthographicSize;
+    }
 }

@@ -23,29 +23,19 @@ public class EntityLabeler : MonoBehaviour
 
     void Update()
     {
-        float cameraSizeRatio =
-            ViewInfo.DefaultOrthographicSize / Camera.main.orthographicSize;
-
-        float adjustedLabelOffset = UIInfo.LabelYOffset * cameraSizeRatio;
-
         for (int i = 0; i < entities.Length; i++)
         {
-            Vector3 worldPosition = entities[i].transform.position;
-
-            Vector3 labelPosition = MapUtil.WorldToScreen(worldPosition);
-            labelPosition.y += adjustedLabelOffset;
-
-            labels[i].transform.position = labelPosition;
+            labels[i].transform.position = GetLabelPosition(entities[i].transform.position);
         }
     }
 
 
     private GameObject CreateLabel(GameObject entity)
     {
-        Vector3 screenPosition = MapUtil.WorldToScreen(entity.transform.position);
-
         GameObject newLabel = Instantiate(
-            labelPrefab, screenPosition, Quaternion.identity
+            labelPrefab,
+            GetLabelPosition(entity.transform.position),
+            Quaternion.identity
         );
 
         TextMeshProUGUI textMesh = newLabel.GetComponent<TextMeshProUGUI>();
@@ -55,6 +45,15 @@ public class EntityLabeler : MonoBehaviour
         newLabel.transform.SetParent(labelsObject.transform, true);
 
         return newLabel;
+    }
+
+
+    private Vector3 GetLabelPosition(Vector3 entityPosition)
+    {
+        Vector3 screenPosition = MapUtil.WorldToScreen(entityPosition);
+        screenPosition.y += UIInfo.LabelYOffset * UIUtil.CameraZoomRatio();
+
+        return screenPosition;
     }
 
 
@@ -74,7 +73,7 @@ public class EntityLabeler : MonoBehaviour
 
         foreach (Transform child in labelsObject.transform)
         {
-            GameObject.Destroy(child.gameObject);
+            Destroy(child.gameObject);
         }
     }
 }
