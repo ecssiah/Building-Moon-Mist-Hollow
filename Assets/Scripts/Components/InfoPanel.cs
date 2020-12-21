@@ -16,8 +16,8 @@ public class InfoPanel : MonoBehaviour
     private InfoType mode;
     public InfoType Mode { get => mode; }
 
-    private EntityData entityData;
-    public EntityData EntityData { get => entityData; }
+    private CitizenData entityData;
+    public CitizenData EntityData { get => entityData; }
 
     private CellData cellData;
     public CellData CellData { get => cellData; }
@@ -60,7 +60,7 @@ public class InfoPanel : MonoBehaviour
     }
 
 
-    public void ActivateEntityMode(EntityData entityData)
+    public void ActivateEntityMode(CitizenData entityData)
     {
         mode = InfoType.Entity;
 

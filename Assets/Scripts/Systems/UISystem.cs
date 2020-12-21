@@ -21,7 +21,7 @@ public class UISystem : MonoBehaviour
 
     public void SelectEntity(GameObject entity)
     {
-        EntityData entityData = entitySystem.GetEntityData(entity);
+        CitizenData entityData = entitySystem.GetEntityData(entity);
 
         infoPanel.ActivateEntityMode(entityData);
 

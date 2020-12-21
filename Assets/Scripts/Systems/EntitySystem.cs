@@ -5,9 +5,11 @@ public class EntitySystem : MonoBehaviour
 {
     private NamingSystem namingSystem;
 
+    private EntityData entityData;
+
     private GameObject citizenPrefab;
 
-    private List<EntityData> entityDataList;
+    private List<CitizenData> entityDataList;
 
 
     void Awake()
@@ -22,12 +24,13 @@ public class EntitySystem : MonoBehaviour
             true
         );
 
-        entityDataList = new List<EntityData>();
+        entityDataList = new List<CitizenData>();
 
-        GenerateCitizen(new Vector2( 2, 2));
-        GenerateCitizen(new Vector2(-2, 2));
-        GenerateCitizen(new Vector2( 2, -2));
-        GenerateCitizen(new Vector2(-2, -2));
+
+        for (int i = 0; i < 10; i++)
+        {
+            GenerateCitizen(MapUtil.GetRandomMapPosition());
+        }
     }
 
 
@@ -49,17 +52,18 @@ public class EntitySystem : MonoBehaviour
         newCharacterObject.AddComponent<CitizenMovement>();
         newCharacterObject.AddComponent<CitizenAnimator>();
 
-        EntityData entityData = new EntityData()
+        CitizenData citizenData = new CitizenData()
         {
             entity = newCharacterObject,
             name = newCharacterObject.name,
+            citizenNumber = entityData.nextCitizenNumber++,
         };
 
-        entityDataList.Add(entityData);
+        entityDataList.Add(citizenData);
     }
 
 
-    public EntityData GetEntityData(GameObject entity)
+    public CitizenData GetEntityData(GameObject entity)
     {
         return entityDataList.Find(entityData => entityData.entity == entity);
     }
