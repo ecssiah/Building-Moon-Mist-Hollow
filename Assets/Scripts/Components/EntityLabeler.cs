@@ -50,7 +50,7 @@ public class EntityLabeler : MonoBehaviour
 
         TextMeshProUGUI textMesh = newLabel.GetComponent<TextMeshProUGUI>();
         textMesh.text = entity.name;
-        textMesh.fontSize = 14;
+        textMesh.fontSize = 18;
 
         newLabel.transform.SetParent(labelsObject.transform, true);
 

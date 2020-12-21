@@ -2,7 +2,7 @@
 
 public class NameGenerator : MonoBehaviour
 {
-    public string[] names;
+    private string[] names;
 
     private int currentNameIndex;
 

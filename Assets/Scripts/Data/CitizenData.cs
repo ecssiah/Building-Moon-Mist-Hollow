@@ -6,7 +6,6 @@ public struct CitizenData
 
     public InventoryData inventoryData;
 
-
     public int citizenNumber;
     public string name;
 }

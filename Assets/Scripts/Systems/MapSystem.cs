@@ -168,7 +168,7 @@ public class MapSystem: MonoBehaviour
     {
         for (int i = 0; i < MapInfo.NumberOfSeedRooms; i++)
         {
-            RectInt bounds = GetNewRoomLocation(8);
+            RectInt bounds = GetNewRoomLocation(4);
 
             RoomData roomData = new RoomData
             {

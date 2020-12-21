@@ -23,9 +23,15 @@ public class InputSystem : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             selectionHandler.Select();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            uiSystem.ClearSelection();
+            mapSystem.ClearSelection();
         }
     }
 
