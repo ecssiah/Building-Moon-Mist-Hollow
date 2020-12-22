@@ -119,15 +119,6 @@ public class MapSystem: MonoBehaviour
     {
         int roadWidth = 8;
 
-        RectInt mainEastWestRoad = new RectInt(
-            -MapInfo.MapSize, -roadWidth / 2,
-            MapInfo.MapWidth, roadWidth
-        );
-        RectInt mainNorthSouthRoad = new RectInt(
-            -roadWidth / 2, -MapInfo.MapSize,
-            roadWidth, MapInfo.MapWidth
-        );
-
         RectInt north1st = new RectInt(
             -MapInfo.MapSize, MapInfo.MapSize / 2,
             MapInfo.MapWidth, roadWidth / 2
@@ -146,19 +137,26 @@ public class MapSystem: MonoBehaviour
             roadWidth / 2, MapInfo.MapWidth
         );
 
-        mapData.placeholders.Add(mainEastWestRoad);
-        mapData.placeholders.Add(mainNorthSouthRoad);
+        RectInt mainEastWestRoad = new RectInt(
+            -MapInfo.MapSize, -roadWidth / 2,
+            MapInfo.MapWidth, roadWidth
+        );
+        RectInt mainNorthSouthRoad = new RectInt(
+            -roadWidth / 2, -MapInfo.MapSize,
+            roadWidth, MapInfo.MapWidth
+        );
 
         mapData.placeholders.Add(north1st);
         mapData.placeholders.Add(south1st);
         mapData.placeholders.Add(west1st);
         mapData.placeholders.Add(east1st);
+        mapData.placeholders.Add(mainEastWestRoad);
+        mapData.placeholders.Add(mainNorthSouthRoad);
 
         SetupGround(north1st, GroundType.Stone);
         SetupGround(south1st, GroundType.Stone);
         SetupGround(west1st, GroundType.Stone);
         SetupGround(east1st, GroundType.Stone);
-
         SetupGround(mainEastWestRoad, GroundType.Stone);
         SetupGround(mainNorthSouthRoad, GroundType.Stone);
     }
@@ -168,7 +166,7 @@ public class MapSystem: MonoBehaviour
     {
         for (int i = 0; i < MapInfo.NumberOfSeedRooms; i++)
         {
-            RectInt bounds = GetNewRoomLocation(4);
+            RectInt bounds = GetNewRoomLocation();
 
             RoomData roomData = new RoomData
             {
@@ -281,34 +279,40 @@ public class MapSystem: MonoBehaviour
     }
 
 
-    private RectInt GetNewRoomLocation(int size = 4)
+    private RectInt GetNewRoomLocation()
     {
         for (int i = 0; i < 10; i++)
         {
             Vector2Int randomMapPosition = MapUtil.GetRandomMapPosition();
-            RectInt roomBounds = new RectInt(randomMapPosition, new Vector2Int(size, size));
+
+            RectInt roomBounds = new RectInt(
+                randomMapPosition,
+                new Vector2Int(MapInfo.SeedRoomSize, MapInfo.SeedRoomSize)
+            );
 
             bool collision = false;
-
-            foreach (RoomData roomData in mapData.rooms)
-            {
-                if (roomBounds.Overlaps(roomData.bounds))
-                {
-                    collision = true;
-                }
-            }
-
-            foreach (RectInt placeholder in mapData.placeholders)
-            {
-                if (roomBounds.Overlaps(placeholder))
-                {
-                    collision = true;
-                }
-            }
 
             if (MapUtil.OnMap(roomBounds) == false)
             {
                 collision = true;
+            }
+            else
+            {
+                foreach (RoomData roomData in mapData.rooms)
+                {
+                    if (roomBounds.Overlaps(roomData.bounds))
+                    {
+                        collision = true;
+                    }
+                }
+
+                foreach (RectInt placeholder in mapData.placeholders)
+                {
+                    if (roomBounds.Overlaps(placeholder))
+                    {
+                        collision = true;
+                    }
+                }
             }
 
             if (collision == false)
