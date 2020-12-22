@@ -1,4 +1,4 @@
 ﻿public struct EntityInfo
 {
-    public static readonly int MaximumNumberOfEntities = 128;
+    public static readonly int NumberOfSeedCitizens = 200;
 }

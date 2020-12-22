@@ -4,14 +4,12 @@ using UnityEngine;
 public class EntitySystem : MonoBehaviour
 {
     private MapSystem mapSystem;
+
     private NameGenerator nameGenerator;
 
     private EntityData entityData;
 
     private GameObject citizenPrefab;
-
-    private List<CitizenData> entityDataList;
-
 
     void Awake()
     {
@@ -26,14 +24,12 @@ public class EntitySystem : MonoBehaviour
             LayerMask.NameToLayer("Citizens"),
             true
         );
-
-        entityDataList = new List<CitizenData>();
     }
 
 
     void Start()
     {
-        for (int i = 0; i < 24; i++)
+        for (int i = 0; i < EntityInfo.NumberOfSeedCitizens; i++)
         {
             Vector2Int position = MapUtil.GetRandomMapPosition();
 
@@ -51,32 +47,30 @@ public class EntitySystem : MonoBehaviour
     {
         Vector2 worldPosition = MapUtil.IsoToWorld(position);
 
-        GameObject newCharacterObject = Instantiate(
+        GameObject newCitizenObject = Instantiate(
             citizenPrefab,
             new Vector3(worldPosition.x, worldPosition.y, 0),
             Quaternion.identity
         );
 
-        newCharacterObject.transform.parent = transform;
-        newCharacterObject.name = nameGenerator.GetName();
-        newCharacterObject.layer = LayerMask.NameToLayer("Citizens");
+        newCitizenObject.transform.parent = transform;
+        newCitizenObject.name = nameGenerator.GetName();
+        newCitizenObject.layer = LayerMask.NameToLayer("Citizens");
 
-        newCharacterObject.AddComponent<CitizenMovement>();
-        newCharacterObject.AddComponent<CitizenAnimator>();
-
-        CitizenData citizenData = new CitizenData()
+        CitizenComponent newCitizen = newCitizenObject.AddComponent<CitizenComponent>();
+        newCitizen.CitizenData = new CitizenData()
         {
-            entity = newCharacterObject,
-            name = newCharacterObject.name,
+            name = newCitizenObject.name,
             citizenNumber = entityData.nextCitizenNumber++,
+            groupData = new GroupData { groupType = Util.RandomEnumValue<GroupType>() },
         };
-
-        entityDataList.Add(citizenData);
     }
 
 
-    public CitizenData GetEntityData(GameObject entity)
+    public CitizenData GetCitizenData(GameObject citizenObject)
     {
-        return entityDataList.Find(entityData => entityData.entity == entity);
+        CitizenComponent citizenComponent = citizenObject.GetComponent<CitizenComponent>();
+
+        return citizenComponent.CitizenData;
     }
 }

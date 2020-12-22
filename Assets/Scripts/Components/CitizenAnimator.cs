@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CitizenAnimator : MonoBehaviour
 {
+    private CitizenComponent citizenComponent;
     private CitizenMovement citizenMovement;
 
     private AnimationType animationType;
@@ -24,6 +26,8 @@ public class CitizenAnimator : MonoBehaviour
 
     void Awake()
     {
+        citizenComponent = GetComponent<CitizenComponent>();
+
         citizenMovement = GetComponent<CitizenMovement>();
         citizenMovement.OnDirectionChange = OnDirectionChange;
 
@@ -36,19 +40,34 @@ public class CitizenAnimator : MonoBehaviour
         timer = 0f;
         frameNumber = 0;
         frameRate = 1 / 10f;
+    }
+
+
+    void Start()
+    {
+        string groupType = Enum.GetName(
+            typeof(GroupType),
+            citizenComponent.CitizenData.groupData.groupType
+        );
 
         frames = new Dictionary<AnimationType, Sprite[]>
         {
-            [AnimationType.IdleUp] = Resources.LoadAll<Sprite>("Citizen/Idle/Up"),
-            [AnimationType.IdleDown] = Resources.LoadAll<Sprite>("Citizen/Idle/Down"),
-            [AnimationType.IdleLeft] = Resources.LoadAll<Sprite>("Citizen/Idle/Left"),
-            [AnimationType.IdleRight] = Resources.LoadAll<Sprite>("Citizen/Idle/Right"),
+            [AnimationType.IdleUp] = Resources.LoadAll<Sprite>($"Citizens/{groupType}/Back/Idle"),
+            [AnimationType.IdleDown] = Resources.LoadAll<Sprite>($"Citizens/{groupType}/Front/Idle"),
+            [AnimationType.IdleLeft] = Resources.LoadAll<Sprite>($"Citizens/{groupType}/Left/Idle"),
+            [AnimationType.IdleRight] = Resources.LoadAll<Sprite>($"Citizens/{groupType}/Right/Idle"),
 
-            [AnimationType.WalkUp] = Resources.LoadAll<Sprite>("Citizen/Walk/Up"),
-            [AnimationType.WalkDown] = Resources.LoadAll<Sprite>("Citizen/Walk/Down"),
-            [AnimationType.WalkLeft] = Resources.LoadAll<Sprite>("Citizen/Walk/Left"),
-            [AnimationType.WalkRight] = Resources.LoadAll<Sprite>("Citizen/Walk/Right")
+            [AnimationType.WalkUp] = Resources.LoadAll<Sprite>($"Citizens/{groupType}/Back/Walk"),
+            [AnimationType.WalkDown] = Resources.LoadAll<Sprite>($"Citizens/{groupType}/Front/Walk"),
+            [AnimationType.WalkLeft] = Resources.LoadAll<Sprite>($"Citizens/{groupType}/Left/Walk"),
+            [AnimationType.WalkRight] = Resources.LoadAll<Sprite>($"Citizens/{groupType}/Right/Walk")
         };
+
+
+        foreach (KeyValuePair<AnimationType, Sprite[]> keyValue in frames)
+        {
+            Debug.Log(keyValue.Value.Length);
+        }
 
         PlayAnimation(AnimationType.WalkDown);
     }

@@ -21,7 +21,7 @@ public class UISystem : MonoBehaviour
 
     public void SelectEntity(GameObject entity)
     {
-        CitizenData entityData = entitySystem.GetEntityData(entity);
+        CitizenData entityData = entitySystem.GetCitizenData(entity);
 
         entityLabeler.SelectEntity(entity);
 

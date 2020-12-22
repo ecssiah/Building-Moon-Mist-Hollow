@@ -8,6 +8,7 @@ public class InfoPanel : MonoBehaviour
     private GameObject cellTab;
 
     private TextMeshProUGUI entityNameText;
+    private TextMeshProUGUI entityCitizenNumberText;
 
     private TextMeshProUGUI cellPositionText;
     private TextMeshProUGUI cellGroundTypeText;
@@ -37,6 +38,9 @@ public class InfoPanel : MonoBehaviour
         entityTab = GameObject.Find("Entity Tab");
         entityTab.SetActive(false);
 
+        entityCitizenNumberText = UIUtil.SetLabel(
+           "Citizen", entityTab.transform.Find("Citizen Number")
+        );
         entityNameText = UIUtil.SetLabel(
             "Name", entityTab.transform.Find("Name")
         );
@@ -68,6 +72,7 @@ public class InfoPanel : MonoBehaviour
         cellTab.SetActive(false);
 
         entityNameText.text = entityData.name;
+        entityCitizenNumberText.text = $"{entityData.citizenNumber}";
     }
 
 
