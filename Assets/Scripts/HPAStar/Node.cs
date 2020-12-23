@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Priority_Queue;
 
-
-public class Node
+public class Node : FastPriorityQueueNode
 {
     public List<Edge> Edges;
 
