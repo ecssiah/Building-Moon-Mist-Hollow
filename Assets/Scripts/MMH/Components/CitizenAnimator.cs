@@ -63,12 +63,6 @@ public class CitizenAnimator : MonoBehaviour
             [AnimationType.WalkRight] = Resources.LoadAll<Sprite>($"Citizens/{groupType}/Right/Walk")
         };
 
-
-        foreach (KeyValuePair<AnimationType, Sprite[]> keyValue in frames)
-        {
-            Debug.Log(keyValue.Value.Length);
-        }
-
         PlayAnimation(AnimationType.WalkDown);
     }
 

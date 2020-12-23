@@ -25,8 +25,8 @@ public class SelectionHandler : MonoBehaviour
         {
             Vector2Int isoGridPosition = MapUtil.ScreenToIsoGrid(Input.mousePosition);
 
-            bool inVerticalBounds = Math.Abs(isoGridPosition.x) <= MapInfo.MapSize;
-            bool inHorizontalBounds = Math.Abs(isoGridPosition.y) <= MapInfo.MapSize;
+            bool inVerticalBounds = Math.Abs(isoGridPosition.x) <= MapInfo.Size;
+            bool inHorizontalBounds = Math.Abs(isoGridPosition.y) <= MapInfo.Size;
 
             bool onMap = inVerticalBounds && inHorizontalBounds;
 

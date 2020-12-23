@@ -12,15 +12,15 @@ public struct MapUtil
 
     public static int CoordsToIndex(int x, int y)
     {
-        return (x + MapInfo.MapSize) + MapInfo.MapWidth * (y + MapInfo.MapSize);
+        return (x + MapInfo.Size) + MapInfo.Width * (y + MapInfo.Size);
     }
 
 
     public static Vector2Int IndexToCoords(int i)
     {
         return new Vector2Int(
-            (i % MapInfo.MapWidth) - MapInfo.MapSize,
-            (i / MapInfo.MapWidth) - MapInfo.MapSize
+            (i % MapInfo.Width) - MapInfo.Size,
+            (i / MapInfo.Width) - MapInfo.Size
         );
     }
 
@@ -94,10 +94,10 @@ public struct MapUtil
     {
         RectInt mapBoundary = new RectInt
         {
-            x = -MapInfo.MapSize,
-            y = -MapInfo.MapSize,
-            width = MapInfo.MapWidth,
-            height = MapInfo.MapWidth,
+            x = -MapInfo.Size,
+            y = -MapInfo.Size,
+            width = MapInfo.Width,
+            height = MapInfo.Width,
         };
 
         return mapBoundary.Contains(position);
@@ -133,8 +133,8 @@ public struct MapUtil
     public static Vector2Int GetRandomMapPosition()
     {
         return new Vector2Int(
-            Random.Range(-MapInfo.MapSize, MapInfo.MapSize),
-            Random.Range(-MapInfo.MapSize, MapInfo.MapSize)
+            Random.Range(-MapInfo.Size, MapInfo.Size),
+            Random.Range(-MapInfo.Size, MapInfo.Size)
         );
     }
 
