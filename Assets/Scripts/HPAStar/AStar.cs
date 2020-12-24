@@ -1,14 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Priority_Queue;
-
 
 public class AStar
 {
-    private Graph graph;
-
-    private FastPriorityQueue<Node> openSet;
+    public Graph graph;
 
     private readonly int MaxPriorityQueueNodes = 1000;
 
@@ -17,8 +13,14 @@ public class AStar
     {
         this.graph = graph;
 
-        openSet = new FastPriorityQueue<Node>(MaxPriorityQueueNodes);
     }
 
 
+    public List<Node> FindPath(Node start, Node end)
+    {
+
+
+
+        return new List<Node>();
+    }
 }
