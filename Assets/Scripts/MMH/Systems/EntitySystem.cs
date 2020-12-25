@@ -8,6 +8,8 @@ public class EntitySystem : MonoBehaviour
 
     private EntityData entityData;
 
+    private GameObject entitiesObject;
+
     private GameObject citizenPrefab;
 
     void Awake()
@@ -17,6 +19,8 @@ public class EntitySystem : MonoBehaviour
         nameGenerator = gameObject.AddComponent<NameGenerator>();
 
         citizenPrefab = Resources.Load<GameObject>("Prefabs/Citizen");
+
+        entitiesObject = GameObject.Find("Entities");
 
         Physics2D.IgnoreLayerCollision(
             LayerMask.NameToLayer("Citizens"),
@@ -52,7 +56,7 @@ public class EntitySystem : MonoBehaviour
             Quaternion.identity
         );
 
-        newCitizenObject.transform.parent = transform;
+        newCitizenObject.transform.parent = entitiesObject.transform;
         newCitizenObject.name = nameGenerator.GetName();
         newCitizenObject.layer = LayerMask.NameToLayer("Citizens");
 
