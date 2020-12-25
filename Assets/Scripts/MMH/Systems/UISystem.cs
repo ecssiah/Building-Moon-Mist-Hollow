@@ -11,8 +11,8 @@ public class UISystem : MonoBehaviour
 
     void Awake()
     {
-        entitySystem = GameObject.Find("Entities").GetComponent<EntitySystem>();
-        mapSystem = GameObject.Find("Map").GetComponent<MapSystem>();
+        entitySystem = GameObject.Find("EntitySystem").GetComponent<EntitySystem>();
+        mapSystem = GameObject.Find("MapSystem").GetComponent<MapSystem>();
 
         entityLabeler = gameObject.AddComponent<EntityLabeler>();
         infoPanel = gameObject.AddComponent<InfoPanel>();

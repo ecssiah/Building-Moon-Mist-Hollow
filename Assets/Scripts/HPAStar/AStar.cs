@@ -17,13 +17,12 @@ public class AStar
         this.graph = graph;
 
         openSet = new FastPriorityQueue<Node>(MaxPriorityQueueNodes);
-
     }
 
 
     public List<Node> FindPath(Node start, Node end)
     {
-
+        openSet.Enqueue(start, 0);
 
 
         return new List<Node>();

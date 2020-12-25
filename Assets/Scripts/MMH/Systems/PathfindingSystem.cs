@@ -9,7 +9,7 @@ public class PathfindingSystem : MonoBehaviour
 
     void Awake()
     {
-        mapSystem = GameObject.Find("Map").GetComponent<MapSystem>();
+        mapSystem = GameObject.Find("MapSystem").GetComponent<MapSystem>();
     }
 
 

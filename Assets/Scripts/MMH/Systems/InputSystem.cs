@@ -10,8 +10,8 @@ public class InputSystem : MonoBehaviour
 
     void Awake()
     {
-        uiSystem = GameObject.Find("UI").GetComponent<UISystem>();
-        mapSystem = GameObject.Find("Map").GetComponent<MapSystem>();
+        uiSystem = GameObject.Find("UISystem").GetComponent<UISystem>();
+        mapSystem = GameObject.Find("MapSystem").GetComponent<MapSystem>();
 
         selectionHandler = gameObject.AddComponent<SelectionHandler>();
         selectionHandler.BroadcastEntitySelection = OnEntitySelection;

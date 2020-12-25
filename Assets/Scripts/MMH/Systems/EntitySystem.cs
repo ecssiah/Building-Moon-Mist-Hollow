@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class EntitySystem : MonoBehaviour
 {
@@ -13,7 +12,7 @@ public class EntitySystem : MonoBehaviour
 
     void Awake()
     {
-        mapSystem = GameObject.Find("Map").GetComponent<MapSystem>();
+        mapSystem = GameObject.Find("MapSystem").GetComponent<MapSystem>();
 
         nameGenerator = gameObject.AddComponent<NameGenerator>();
 
