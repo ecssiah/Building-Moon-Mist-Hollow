@@ -21,6 +21,17 @@ public class PathfindingSystem : MonoBehaviour
     }
 
 
+    private List<Node> FindPath(Vector2Int position1, Vector2Int position2)
+    {
+        Node start = aStar.GetNodeAt(position1.x, position1.y);
+        Node end = aStar.GetNodeAt(position1.x, position2.y);
+
+        aStar.FindPath(start, end);
+
+        return new List<Node>();
+    }
+
+
     private Graph BuildGraph()
     {
         Graph graph = new Graph();

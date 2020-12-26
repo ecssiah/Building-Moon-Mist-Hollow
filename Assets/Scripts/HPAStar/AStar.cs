@@ -24,7 +24,12 @@ public class AStar
     {
         openSet.Enqueue(start, 0);
 
-
         return new List<Node>();
+    }
+
+
+    public Node GetNodeAt(int x, int y)
+    {
+        return graph.GetNodeAt(x, y);
     }
 }
