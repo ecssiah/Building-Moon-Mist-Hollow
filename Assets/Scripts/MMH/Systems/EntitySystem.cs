@@ -50,19 +50,20 @@ public class EntitySystem : MonoBehaviour
     {
         Vector2 worldPosition = MapUtil.IsoToWorld(position);
 
+        GroupType groupType = Util.RandomEnumValue<GroupType>();
+
         GameObject newCitizenObject = Instantiate(
             citizenPrefab,
             new Vector3(worldPosition.x, worldPosition.y, 0),
             Quaternion.identity
         );
 
-        GroupType groupType = Util.RandomEnumValue<GroupType>();
-
         newCitizenObject.transform.parent = entitiesObject.transform;
         newCitizenObject.name = nameGenerator.GetName(groupType);
         newCitizenObject.layer = LayerMask.NameToLayer("Citizens");
 
         CitizenComponent newCitizen = newCitizenObject.AddComponent<CitizenComponent>();
+
         newCitizen.CitizenData = new CitizenData()
         {
             name = newCitizenObject.name,

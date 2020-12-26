@@ -5,13 +5,13 @@ public class NameGenerator : MonoBehaviour
 {
     public string GetName(GroupType groupType)
     {
-        int initialIndex = 0;
-        int middleIndex = 0;
-        int finalIndex = 0;
-
-        string initial = "[";
+        string initial = "";
         string middle = "";
-        string final = "]";
+        string final = "";
+
+        int initialIndex;
+        int middleIndex;
+        int finalIndex;
 
         switch (groupType)
         {
