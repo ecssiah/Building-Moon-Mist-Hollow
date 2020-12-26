@@ -56,8 +56,10 @@ public class EntitySystem : MonoBehaviour
             Quaternion.identity
         );
 
+        GroupType groupType = Util.RandomEnumValue<GroupType>();
+
         newCitizenObject.transform.parent = entitiesObject.transform;
-        newCitizenObject.name = nameGenerator.GetName();
+        newCitizenObject.name = nameGenerator.GetName(groupType);
         newCitizenObject.layer = LayerMask.NameToLayer("Citizens");
 
         CitizenComponent newCitizen = newCitizenObject.AddComponent<CitizenComponent>();
@@ -65,7 +67,7 @@ public class EntitySystem : MonoBehaviour
         {
             name = newCitizenObject.name,
             citizenNumber = entityData.nextCitizenNumber++,
-            groupData = new GroupData { groupType = Util.RandomEnumValue<GroupType>() },
+            groupData = new GroupData { groupType = groupType },
         };
     }
 

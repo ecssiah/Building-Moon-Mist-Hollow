@@ -13,28 +13,40 @@ public class Graph
     }
 
 
-    public Node AddNode()
+    public void AddNode(Node node)
     {
-        Node node = new Node();
-
         Nodes.Add(node);
-
-        return node;
-
-        //return Nodes[Nodes.IndexOf(node)];
     }
 
 
-    public void AddEdge(Node node1, Node node2, double weight)
+    public Node GetNodeAt(int x, int y)
     {
-        Edge newEdge = new Edge
-        {
-            node1 = node1,
-            node2 = node2,
-            weight = weight,
-        };
+        Node cellNode = Nodes.Find(node => node.Position[0] == x && node.Position[1] == y);
 
-        node1.Edges.Add(newEdge);
-        node2.Edges.Add(newEdge);
+        return cellNode ?? new Node(x, y);
+    }
+
+
+    public void AddEdge(Node nodeA, Node nodeB, double weight)
+    {
+        bool edgeExists = nodeA.Edges.Exists(edge => {
+            bool firstPairingMatches = edge.NodeA == nodeA && edge.NodeB == nodeB;
+            bool secondPairingMatches = edge.NodeB == nodeA && edge.NodeB == nodeA;
+
+            return firstPairingMatches || secondPairingMatches;
+        });
+
+        if (edgeExists == false)
+        {
+            Edge newEdge = new Edge
+            {
+                NodeA = nodeA,
+                NodeB = nodeB,
+                Weight = weight,
+            };
+
+            nodeA.Edges.Add(newEdge);
+            nodeB.Edges.Add(newEdge);
+        }
     }
 }

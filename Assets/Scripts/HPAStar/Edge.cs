@@ -1,7 +1,7 @@
 ﻿public class Edge
 {
-    public double weight;
+    public double Weight;
 
-    public Node node1;
-    public Node node2;
+    public Node NodeA;
+    public Node NodeB;
 }
