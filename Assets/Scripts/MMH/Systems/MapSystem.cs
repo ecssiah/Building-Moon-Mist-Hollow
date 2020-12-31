@@ -24,19 +24,8 @@ public class MapSystem: MonoBehaviour
 
         SetupMap();
 
-        using (StreamWriter file = File.CreateText("Assets/Resources/Data/map3.json"))
-        {
-            string jsonText = JsonUtility.ToJson(mapData, true);
-
-            file.Write(JsonUtility.ToJson(mapData, true));
-        }
-
-        //using (StreamReader reader = new StreamReader("Assets/Resources/Data/map3.json"))
-        //{
-        //    string jsonText = reader.ReadToEnd();
-
-        //    mapData = JsonUtility.FromJson<MapData>(jsonText);
-        //}
+        SaveMapData("map1");
+        LoadMapData("map1");
 
         ConstructMap();
     }
@@ -99,6 +88,8 @@ public class MapSystem: MonoBehaviour
     }
 
 
+    // Setup Methods
+
     private void SetupMap()
     {
         SetupBoundaries();
@@ -148,68 +139,6 @@ public class MapSystem: MonoBehaviour
 
     }
 
-
-    private void SetupBase()
-    {
-        for (int x = -MapInfo.Size; x <= MapInfo.Size; x++)
-        {
-            for (int y = -MapInfo.Size; y <= MapInfo.Size; y++)
-            {
-                SetupGround(x, y, GroundType.Grass);
-            }
-        }
-
-        SetupGround(0, 0, GroundType.Wood);
-    }
-
-    
-    private void SetupPaths()
-    {
-        int pathWidth = 8;
-
-        RectInt north1st = new RectInt(
-            -MapInfo.Size, MapInfo.Size / 2,
-            MapInfo.Width, pathWidth / 2
-        );
-        RectInt south1st = new RectInt(
-            -MapInfo.Size, -MapInfo.Size / 2 - pathWidth / 2,
-            MapInfo.Width, pathWidth / 2
-        );
-
-        RectInt west1st = new RectInt(
-            -MapInfo.Size / 2 - pathWidth / 2, -MapInfo.Size,
-            pathWidth / 2, MapInfo.Width
-        );
-        RectInt east1st = new RectInt(
-            MapInfo.Size / 2, -MapInfo.Size,
-            pathWidth / 2, MapInfo.Width
-        );
-
-        RectInt mainEastWest = new RectInt(
-            -MapInfo.Size, -pathWidth / 2,
-            MapInfo.Width, pathWidth
-        );
-        RectInt mainNorthSouth = new RectInt(
-            -pathWidth / 2, -MapInfo.Size,
-            pathWidth, MapInfo.Width
-        );
-
-        SetupGround(north1st, GroundType.Stone);
-        SetupGround(south1st, GroundType.Stone);
-        SetupGround(west1st, GroundType.Stone);
-        SetupGround(east1st, GroundType.Stone);
-        SetupGround(mainEastWest, GroundType.Stone);
-        SetupGround(mainNorthSouth, GroundType.Stone);
-
-        mapData.Placeholders.Add(north1st);
-        mapData.Placeholders.Add(south1st);
-        mapData.Placeholders.Add(west1st);
-        mapData.Placeholders.Add(east1st);
-        mapData.Placeholders.Add(mainEastWest);
-        mapData.Placeholders.Add(mainNorthSouth);
-    }
-
-    
     
     private void SetCellSolid(int x, int y, bool solid = true)
     {
@@ -305,6 +234,67 @@ public class MapSystem: MonoBehaviour
 
 
     // Higher Level Setup Methods
+
+    private void SetupBase()
+    {
+        for (int x = -MapInfo.Size; x <= MapInfo.Size; x++)
+        {
+            for (int y = -MapInfo.Size; y <= MapInfo.Size; y++)
+            {
+                SetupGround(x, y, GroundType.Grass);
+            }
+        }
+
+        SetupGround(0, 0, GroundType.Wood);
+    }
+
+
+    private void SetupPaths()
+    {
+        int pathWidth = 8;
+
+        RectInt north1st = new RectInt(
+            -MapInfo.Size, MapInfo.Size / 2,
+            MapInfo.Width, pathWidth / 2
+        );
+        RectInt south1st = new RectInt(
+            -MapInfo.Size, -MapInfo.Size / 2 - pathWidth / 2,
+            MapInfo.Width, pathWidth / 2
+        );
+
+        RectInt west1st = new RectInt(
+            -MapInfo.Size / 2 - pathWidth / 2, -MapInfo.Size,
+            pathWidth / 2, MapInfo.Width
+        );
+        RectInt east1st = new RectInt(
+            MapInfo.Size / 2, -MapInfo.Size,
+            pathWidth / 2, MapInfo.Width
+        );
+
+        RectInt mainEastWest = new RectInt(
+            -MapInfo.Size, -pathWidth / 2,
+            MapInfo.Width, pathWidth
+        );
+        RectInt mainNorthSouth = new RectInt(
+            -pathWidth / 2, -MapInfo.Size,
+            pathWidth, MapInfo.Width
+        );
+
+        SetupGround(north1st, GroundType.Stone);
+        SetupGround(south1st, GroundType.Stone);
+        SetupGround(west1st, GroundType.Stone);
+        SetupGround(east1st, GroundType.Stone);
+        SetupGround(mainEastWest, GroundType.Stone);
+        SetupGround(mainNorthSouth, GroundType.Stone);
+
+        mapData.Placeholders.Add(north1st);
+        mapData.Placeholders.Add(south1st);
+        mapData.Placeholders.Add(west1st);
+        mapData.Placeholders.Add(east1st);
+        mapData.Placeholders.Add(mainEastWest);
+        mapData.Placeholders.Add(mainNorthSouth);
+    }
+
 
     private void SetupRoom(RoomData roomData)
     {
@@ -430,4 +420,28 @@ public class MapSystem: MonoBehaviour
             new Vector3Int(selectedCell.x, selectedCell.y, 0), null
         );
     }
+
+
+    public void SaveMapData(string name)
+    {
+        using (StreamWriter file = File.CreateText($"Assets/Resources/Data/{name}.json"))
+        {
+            string jsonText = JsonUtility.ToJson(mapData, true);
+
+            file.Write(jsonText);
+        }
+    }
+
+
+    public void LoadMapData(string name)
+    {
+        using (StreamReader reader = new StreamReader($"Assets/Resources/Data/{name}.json"))
+        {
+            string jsonText = reader.ReadToEnd();
+
+            mapData = JsonUtility.FromJson<MapData>(jsonText);
+        }
+    }
+
+
 }
