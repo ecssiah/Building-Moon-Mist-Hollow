@@ -1,23 +1,23 @@
 ﻿public struct NameInfo
 {
     public static readonly string[] KailtInitialElements = {
-        "La", "At", "Se", "Il", "Elq", "Ce", "Re", "Til"
+        "La", "At", "Se", "Ill", "Elq", "Ce", "Re", "Tyl"
     };
 
     public static readonly string[] KailtMiddleElements = {
-        "ekah", "tere", "ede", "she", "rin", "e", "il", "ci"
+        "", "ekah", "tre", "ede", "she", "ryn", "e", "il", "ci"
     };
 
     public static readonly string[] KailtFinalElements = {
-        "cale", "si", "slt", "treh", "ehta", "ta", "lit", "ca"
+        "", "", "caleh", "si", "slt", "treh", "ehteh", "teh", "itl", "acq"
     };
 
     public static readonly string[] GuyInitialElements = {
-        "C", "C", "C", "C", "C", "C", "C", "C"
+        "C",
     };
 
     public static readonly string[] GuyMiddleElements = {
-        ""
+        "",
     };
 
     public static readonly string[] GuyFinalElements = {

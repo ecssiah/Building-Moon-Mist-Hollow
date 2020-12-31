@@ -12,7 +12,7 @@ public class MapSystem: MonoBehaviour
     private Dictionary<string, Tile> tiles;
     private Dictionary<string, Tilemap> tilemaps;
 
-    private RoomBuilder roomBuilder;
+    private MapFactory mapFactory;
 
 
     void Awake()
@@ -22,10 +22,7 @@ public class MapSystem: MonoBehaviour
         InitTiles();
         InitTilemaps();
 
-        SetupMap();
-
-        SaveMapData("map1");
-        LoadMapData("map1");
+        mapFactory.SetupMap(ref mapData);
 
         ConstructMap();
     }
@@ -43,7 +40,7 @@ public class MapSystem: MonoBehaviour
             Placeholders = new List<RectInt>()
         };
 
-        roomBuilder = gameObject.AddComponent<RoomBuilder>();
+        mapFactory = gameObject.AddComponent<MapFactory>();
 
         for (int x = -MapInfo.Size; x <= MapInfo.Size; x++)
         {
@@ -88,65 +85,13 @@ public class MapSystem: MonoBehaviour
     }
 
 
-    // Setup Methods
-
-    private void SetupMap()
-    {
-        SetupBoundaries();
-        SetupGroundLayer();
-        SetupWallsLayer();
-        SetupOverlayLayer();
-    }
-
-
-    private void SetupBoundaries()
-    {
-        for (int x = MapInfo.WorldBoundary.xMin; x <= MapInfo.WorldBoundary.xMax; x++)
-        {
-            for (int y = MapInfo.WorldBoundary.yMin; y <= MapInfo.WorldBoundary.yMax; y++)
-            {
-                if (MapUtil.OnRectBoundary(x, y, MapInfo.WorldBoundary))
-                {
-                    tilemaps["Collision"].SetTile(
-                        new Vector3Int(x, y, 0), tiles["Collision_1"]
-                    );
-                }
-            }
-        }
-    }
-
-
-    private void SetupGroundLayer()
-    {
-        SetupBase();
-        SetupPaths();
-    }
-
-
-    private void SetupWallsLayer()
-    {
-        roomBuilder.Build(ref mapData);
-
-        for (int i = 0; i < mapData.Rooms.Count; i++)
-        {
-            SetupRoom(mapData.Rooms[i]);
-        }
-    }
-
-
-    private void SetupOverlayLayer()
-    {
-
-    }
-
-    
-    private void SetCellSolid(int x, int y, bool solid = true)
+    public void SetCellSolid(int x, int y, bool solid = true)
     {
         SetCellSolid(new Vector2Int(x, y), solid);
     }
 
 
-    private void SetCellSolid(Vector2Int position, bool solid = true)
+    public void SetCellSolid(Vector2Int position, bool solid = true)
     {
         if (MapUtil.OnMap(position))
         {
@@ -155,11 +100,11 @@ public class MapSystem: MonoBehaviour
     }
 
 
-    private void SetCellSolid(RectInt bounds, bool solid = true, bool fill = true)
+    public void SetCellSolid(RectInt bounds, bool solid = true, bool fill = true)
     {
-        for (int x = bounds.xMin; x <= bounds.xMax; x++)
+        for (int x = bounds.xMin; x < bounds.xMax; x++)
         {
-            for (int y = bounds.yMin; y <= bounds.yMax; y++)
+            for (int y = bounds.yMin; y < bounds.yMax; y++)
             {
                 if (fill || MapUtil.OnRectBoundary(x, y, bounds))
                 {
@@ -170,13 +115,13 @@ public class MapSystem: MonoBehaviour
     }
 
 
-    private void SetupGround(int x, int y, GroundType groundType)
+    public void SetupGround(int x, int y, GroundType groundType)
     {
         SetupGround(new Vector2Int(x, y), groundType);
     }
 
 
-    private void SetupGround(Vector2Int position, GroundType groundType)
+    public void SetupGround(Vector2Int position, GroundType groundType)
     {
         if (MapUtil.OnMap(position))
         {
@@ -185,11 +130,11 @@ public class MapSystem: MonoBehaviour
     }
 
 
-    private void SetupGround(RectInt bounds, GroundType groundType, bool fill = true)
+    public void SetupGround(RectInt bounds, GroundType groundType, bool fill = true)
     {
-        for (int x = bounds.xMin; x <= bounds.xMax; x++)
+        for (int x = bounds.xMin; x < bounds.xMax; x++)
         {
-            for (int y = bounds.yMin; y <= bounds.yMax; y++)
+            for (int y = bounds.yMin; y < bounds.yMax; y++)
             {
                 if (fill || MapUtil.OnRectBoundary(x, y, bounds))
                 {
@@ -200,12 +145,12 @@ public class MapSystem: MonoBehaviour
     }
 
 
-    private void SetupWall(int x, int y, WallType wallType) {
+    public void SetupWall(int x, int y, WallType wallType) {
         SetupWall(new Vector2Int(x, y), wallType);
     }
 
 
-    private void SetupWall(Vector2Int position, WallType wallType)
+    public void SetupWall(Vector2Int position, WallType wallType)
     {
         if (MapUtil.OnMap(position))
         {
@@ -216,14 +161,34 @@ public class MapSystem: MonoBehaviour
         }
     }
 
+
+    public void SetupWall(RectInt bounds, WallType wallType, bool fill = false, bool solid = true)
+    {
+        for (int x = bounds.xMin; x < bounds.xMax; x++)
+        {
+            for (int y = bounds.yMin; y < bounds.yMax; y++)
+            {
+                if (fill || MapUtil.OnRectBoundary(x, y, bounds))
+                {
+                    SetupWall(x, y, wallType);
+
+                    if (solid)
+                    {
+                        SetCellSolid(x, y);
+                    }
+                }
+            }
+        }
+    }
+
     
-    private void SetupOverlay(int x, int y, OverlayType overlayType)
+    public void SetupOverlay(int x, int y, OverlayType overlayType)
     {
         SetupOverlay(new Vector2Int(x, y), overlayType);
     }
 
 
-    private void SetupOverlay(Vector2Int position, OverlayType overlayType)
+    public void SetupOverlay(Vector2Int position, OverlayType overlayType)
     {
         if (MapUtil.OnMap(position))
         {
@@ -233,98 +198,12 @@ public class MapSystem: MonoBehaviour
 
 
 
-    // Higher Level Setup Methods
-
-    private void SetupBase()
-    {
-        for (int x = -MapInfo.Size; x <= MapInfo.Size; x++)
-        {
-            for (int y = -MapInfo.Size; y <= MapInfo.Size; y++)
-            {
-                SetupGround(x, y, GroundType.Grass);
-            }
-        }
-
-        SetupGround(0, 0, GroundType.Wood);
-    }
-
-
-    private void SetupPaths()
-    {
-        int pathWidth = 8;
-
-        RectInt north1st = new RectInt(
-            -MapInfo.Size, MapInfo.Size / 2,
-            MapInfo.Width, pathWidth / 2
-        );
-        RectInt south1st = new RectInt(
-            -MapInfo.Size, -MapInfo.Size / 2 - pathWidth / 2,
-            MapInfo.Width, pathWidth / 2
-        );
-
-        RectInt west1st = new RectInt(
-            -MapInfo.Size / 2 - pathWidth / 2, -MapInfo.Size,
-            pathWidth / 2, MapInfo.Width
-        );
-        RectInt east1st = new RectInt(
-            MapInfo.Size / 2, -MapInfo.Size,
-            pathWidth / 2, MapInfo.Width
-        );
-
-        RectInt mainEastWest = new RectInt(
-            -MapInfo.Size, -pathWidth / 2,
-            MapInfo.Width, pathWidth
-        );
-        RectInt mainNorthSouth = new RectInt(
-            -pathWidth / 2, -MapInfo.Size,
-            pathWidth, MapInfo.Width
-        );
-
-        SetupGround(north1st, GroundType.Stone);
-        SetupGround(south1st, GroundType.Stone);
-        SetupGround(west1st, GroundType.Stone);
-        SetupGround(east1st, GroundType.Stone);
-        SetupGround(mainEastWest, GroundType.Stone);
-        SetupGround(mainNorthSouth, GroundType.Stone);
-
-        mapData.Placeholders.Add(north1st);
-        mapData.Placeholders.Add(south1st);
-        mapData.Placeholders.Add(west1st);
-        mapData.Placeholders.Add(east1st);
-        mapData.Placeholders.Add(mainEastWest);
-        mapData.Placeholders.Add(mainNorthSouth);
-    }
-
-
-    private void SetupRoom(RoomData roomData)
-    {
-        for (int x = roomData.Bounds.xMin; x <= roomData.Bounds.xMax; x++)
-        {
-            for (int y = roomData.Bounds.yMin; y <= roomData.Bounds.yMax; y++)
-            {
-                Vector2Int cellPosition = new Vector2Int(x, y);
-
-                SetupGround(cellPosition, roomData.GroundType);
-
-                if (MapUtil.EntranceExistsAt(x, y, roomData) == false)
-                {
-                    if (roomData.Fill || MapUtil.OnRectBoundary(x, y, roomData.Bounds))
-                    {
-                        SetupWall(cellPosition, roomData.WallType);
-                    }
-                }
-
-                SetupOverlay(cellPosition, roomData.OverlayType);
-            }
-        }
-    }
-
-
-
     // Construction Methods
 
-    private void ConstructMap()
+    public void ConstructMap()
     {
+        ConstructBoundary();
+
         for (int i = 0; i < mapData.Cells.Length; i++)
         {
             CellData cellData = mapData.Cells[i];
@@ -348,6 +227,23 @@ public class MapSystem: MonoBehaviour
             if (cellData.OverlayType != OverlayType.None)
             {
                 ConstructOverlay(position, cellData.OverlayType);
+            }
+        }
+    }
+
+
+    private void ConstructBoundary()
+    {
+        for (int x = MapInfo.WorldBoundary.xMin; x <= MapInfo.WorldBoundary.xMax; x++)
+        {
+            for (int y = MapInfo.WorldBoundary.yMin; y <= MapInfo.WorldBoundary.yMax; y++)
+            {
+                if (MapUtil.OnRectBoundary(x, y, MapInfo.WorldBoundary))
+                {
+                    tilemaps["Collision"].SetTile(
+                        new Vector3Int(x, y, 0), tiles["Collision_1"]
+                    );
+                }
             }
         }
     }
@@ -390,7 +286,7 @@ public class MapSystem: MonoBehaviour
 
 
 
-    // Helper Functions
+    // Helper Methods
 
     public CellData GetCellData(int x, int y)
     {
@@ -403,6 +299,9 @@ public class MapSystem: MonoBehaviour
         return mapData.Cells[MapUtil.CoordsToIndex(position)];
     }
 
+
+
+    // Selection Methods
 
     public void SelectCell(Vector2Int position)
     {
@@ -421,6 +320,9 @@ public class MapSystem: MonoBehaviour
         );
     }
 
+
+
+    // Saving/Loading - Serialization
 
     public void SaveMapData(string name)
     {
