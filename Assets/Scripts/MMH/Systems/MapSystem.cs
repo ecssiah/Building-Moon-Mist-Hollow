@@ -22,7 +22,7 @@ public class MapSystem: MonoBehaviour
         InitTiles();
         InitTilemaps();
 
-        mapFactory.SetupMap(ref mapData);
+        mapData = mapFactory.BuildMap(mapData);
 
         ConstructMap();
     }
@@ -70,18 +70,25 @@ public class MapSystem: MonoBehaviour
     {
         tilemaps = new Dictionary<string, Tilemap>();
 
-        Tilemap[] tilemapsArray = GameObject
-            .Find("Map").GetComponentsInChildren<Tilemap>();
+        Tilemap[] tilemapsArray = GameObject.Find("Map").GetComponentsInChildren<Tilemap>();
 
         foreach (Tilemap tilemap in tilemapsArray)
         {
             tilemaps[tilemap.name] = tilemap;
         }
 
-        TilemapRenderer collisionRenderer = tilemaps["Collision"]
-            .GetComponent<TilemapRenderer>();
+        TilemapRenderer collisionRenderer = tilemaps["Collision"].GetComponent<TilemapRenderer>();
 
         collisionRenderer.enabled = mapData.ShowCollision;
+    }
+
+
+
+    // Setup Methods
+
+    public void SetPlaceholder(RectInt bounds)
+    {
+        mapData.Placeholders.Add(bounds);
     }
 
 

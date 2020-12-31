@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class RoomBuilder : MonoBehaviour
 {
-    public void Build(ref MapData mapData)
+    public MapData Build(MapData mapData)
     {
-        SeedRooms(ref mapData);
-        ExpandRooms(ref mapData);
-        GenerateEntrances(ref mapData);
+        mapData = SeedRooms(mapData);
+        mapData = ExpandRooms(mapData);
+        mapData = GenerateEntrances(mapData);
+
+        return mapData;
     }
 
 
-    private void SeedRooms(ref MapData mapData)
+    private MapData SeedRooms(MapData mapData)
     {
         for (int i = 0; i < MapInfo.NumberOfSeedRooms; i++)
         {
@@ -29,24 +31,26 @@ public class RoomBuilder : MonoBehaviour
 
             mapData.Rooms.Add(roomData);
         }
+
+        return mapData;
     }
 
 
-    private void ExpandRooms(ref MapData mapData)
+    private MapData ExpandRooms(MapData mapData)
     {
         for (int expansionAttempt = 0; expansionAttempt < MapInfo.MaximumExpansionAttempts; expansionAttempt++)
         {
             for (int roomNumber = 0; roomNumber < mapData.Rooms.Count; roomNumber++)
             {
-                mapData.Rooms[roomNumber] = ExpandRoom(
-                    mapData.Rooms[roomNumber], ref mapData
-                );
+                mapData.Rooms[roomNumber] = ExpandRoom(mapData.Rooms[roomNumber], mapData);
             }
         }
+
+        return mapData;
     }
 
 
-    private RoomData ExpandRoom(RoomData roomData, ref MapData mapData)
+    private RoomData ExpandRoom(RoomData roomData, MapData mapData)
     {
         bool expanded = false;
 
@@ -116,7 +120,7 @@ public class RoomBuilder : MonoBehaviour
     }
 
 
-    private void GenerateEntrances(ref MapData mapData)
+    private MapData GenerateEntrances(MapData mapData)
     {
         for (int i = 0; i < mapData.Rooms.Count; i++)
         {
@@ -125,6 +129,8 @@ public class RoomBuilder : MonoBehaviour
 
             mapData.Rooms[i] = roomData;
         }
+
+        return mapData;
     }
 
 

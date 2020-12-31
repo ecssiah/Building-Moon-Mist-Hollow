@@ -17,11 +17,16 @@ public class MapFactory : MonoBehaviour
     }
 
 
-    public void SetupMap(ref MapData mapData)
+    public MapData BuildMap(MapData mapData)
     {
         SetupBase();
-        SetupPaths(ref mapData);
-        SetupRooms(ref mapData);
+        SetupPaths();
+
+        mapData = roomBuilder.Build(mapData);
+
+        SetupRooms(mapData);
+
+        return mapData;
     }
 
 
@@ -35,61 +40,59 @@ public class MapFactory : MonoBehaviour
             }
         }
 
-        mapSystem.SetupGround(0, 0, GroundType.Wood);
+        mapSystem.SetupGround(0, 0, GroundType.Water);
     }
 
 
-    private void SetupPaths(ref MapData mapData)
+    private void SetupPaths()
     {
-        int pathWidth = 8;
+        RectInt mainEastWest = new RectInt(
+            -MapInfo.Size, -MapInfo.PathWidth / 2,
+            MapInfo.Width, MapInfo.PathWidth
+        );
+        RectInt mainNorthSouth = new RectInt(
+            -MapInfo.PathWidth / 2, -MapInfo.Size,
+            MapInfo.PathWidth, MapInfo.Width
+        );
 
         RectInt north1st = new RectInt(
-            -MapInfo.Size, MapInfo.Size / 2,
-            MapInfo.Width, pathWidth / 2
+            -MapInfo.Size, MapInfo.Size / 2 - MapInfo.PathWidth / 2,
+            MapInfo.Width, MapInfo.PathWidth / 2
         );
         RectInt south1st = new RectInt(
-            -MapInfo.Size, -MapInfo.Size / 2 - pathWidth / 2,
-            MapInfo.Width, pathWidth / 2
+            -MapInfo.Size, -MapInfo.Size / 2 - MapInfo.PathWidth / 2,
+            MapInfo.Width, MapInfo.PathWidth / 2
         );
 
         RectInt west1st = new RectInt(
-            -MapInfo.Size / 2 - pathWidth / 2, -MapInfo.Size,
-            pathWidth / 2, MapInfo.Width
+            -MapInfo.Size / 2 - MapInfo.PathWidth / 2, -MapInfo.Size,
+            MapInfo.PathWidth / 2, MapInfo.Width
         );
         RectInt east1st = new RectInt(
-            MapInfo.Size / 2, -MapInfo.Size,
-            pathWidth / 2, MapInfo.Width
+            MapInfo.Size / 2 - MapInfo.PathWidth / 2, -MapInfo.Size,
+            MapInfo.PathWidth / 2, MapInfo.Width
         );
 
-        RectInt mainEastWest = new RectInt(
-            -MapInfo.Size, -pathWidth / 2,
-            MapInfo.Width, pathWidth
-        );
-        RectInt mainNorthSouth = new RectInt(
-            -pathWidth / 2, -MapInfo.Size,
-            pathWidth, MapInfo.Width
-        );
+        mapSystem.SetupGround(mainEastWest, GroundType.Stone);
+        mapSystem.SetupGround(mainNorthSouth, GroundType.Stone);
 
         mapSystem.SetupGround(north1st, GroundType.Stone);
         mapSystem.SetupGround(south1st, GroundType.Stone);
         mapSystem.SetupGround(west1st, GroundType.Stone);
         mapSystem.SetupGround(east1st, GroundType.Stone);
-        mapSystem.SetupGround(mainEastWest, GroundType.Stone);
-        mapSystem.SetupGround(mainNorthSouth, GroundType.Stone);
 
-        mapData.Placeholders.Add(north1st);
-        mapData.Placeholders.Add(south1st);
-        mapData.Placeholders.Add(west1st);
-        mapData.Placeholders.Add(east1st);
-        mapData.Placeholders.Add(mainEastWest);
-        mapData.Placeholders.Add(mainNorthSouth);
+        mapSystem.SetPlaceholder(mainEastWest);
+        mapSystem.SetPlaceholder(mainNorthSouth);
+
+        mapSystem.SetPlaceholder(north1st);
+        mapSystem.SetPlaceholder(south1st);
+        mapSystem.SetPlaceholder(west1st);
+        mapSystem.SetPlaceholder(east1st);
     }
 
 
-    private void SetupRooms(ref MapData mapData)
+    private void SetupRooms(MapData mapData)
     {
-        roomBuilder.Build(ref mapData);
-
         foreach (RoomData roomData in mapData.Rooms)
         {
             SetupRoom(roomData);
