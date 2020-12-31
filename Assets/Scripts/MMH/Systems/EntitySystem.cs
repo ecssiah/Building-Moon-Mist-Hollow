@@ -36,7 +36,7 @@ public class EntitySystem : MonoBehaviour
         {
             Vector2Int position = MapUtil.GetRandomMapPosition();
 
-            while (mapSystem.GetCellData(position).solid)
+            while (mapSystem.GetCellData(position).Solid)
             {
                 position = MapUtil.GetRandomMapPosition();
             }
@@ -66,9 +66,9 @@ public class EntitySystem : MonoBehaviour
 
         newCitizen.CitizenData = new CitizenData()
         {
-            name = newCitizenObject.name,
-            citizenNumber = entityData.nextCitizenNumber++,
-            groupData = new GroupData { groupType = groupType },
+            Name = newCitizenObject.name,
+            CitizenNumber = entityData.NextCitizenNumber++,
+            GroupData = new GroupData { GroupType = groupType },
         };
     }
 

@@ -1,12 +1,14 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
+[Serializable]
 public struct CellData
 {
-    public Vector2Int position;
+    public Vector2Int Position;
 
-    public bool solid;
+    public bool Solid;
 
-    public GroundType groundType;
-    public WallType wallType;
-    public OverlayType overlayType;
+    public GroundType GroundType;
+    public WallType WallType;
+    public OverlayType OverlayType;
 }

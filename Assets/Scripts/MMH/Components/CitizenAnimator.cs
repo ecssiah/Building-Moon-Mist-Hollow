@@ -47,7 +47,7 @@ public class CitizenAnimator : MonoBehaviour
     {
         string groupType = Enum.GetName(
             typeof(GroupType),
-            citizenComponent.CitizenData.groupData.groupType
+            citizenComponent.CitizenData.GroupData.GroupType
         );
 
         frames = new Dictionary<AnimationType, Sprite[]>

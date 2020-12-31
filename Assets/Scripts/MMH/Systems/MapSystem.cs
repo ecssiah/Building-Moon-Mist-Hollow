@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -23,6 +24,20 @@ public class MapSystem: MonoBehaviour
 
         SetupMap();
 
+        using (StreamWriter file = File.CreateText("Assets/Resources/Data/map3.json"))
+        {
+            string jsonText = JsonUtility.ToJson(mapData, true);
+
+            file.Write(JsonUtility.ToJson(mapData, true));
+        }
+
+        //using (StreamReader reader = new StreamReader("Assets/Resources/Data/map3.json"))
+        //{
+        //    string jsonText = reader.ReadToEnd();
+
+        //    mapData = JsonUtility.FromJson<MapData>(jsonText);
+        //}
+
         ConstructMap();
     }
 
@@ -33,10 +48,10 @@ public class MapSystem: MonoBehaviour
 
         mapData = new MapData
         {
-            showCollision = false,
-            cells = new CellData[(int)Mathf.Pow(MapInfo.Width, 2)],
-            rooms = new List<RoomData>(MapInfo.NumberOfSeedRooms),
-            placeholders = new List<RectInt>()
+            ShowCollision = false,
+            Cells = new CellData[(int)Mathf.Pow(MapInfo.Width, 2)],
+            Rooms = new List<RoomData>(MapInfo.NumberOfSeedRooms),
+            Placeholders = new List<RectInt>()
         };
 
         roomBuilder = gameObject.AddComponent<RoomBuilder>();
@@ -45,10 +60,10 @@ public class MapSystem: MonoBehaviour
         {
             for (int y = -MapInfo.Size; y <= MapInfo.Size; y++)
             {
-                CellData cellData = mapData.cells[MapUtil.CoordsToIndex(x, y)];
-                cellData.position = new Vector2Int(x, y);
+                CellData cellData = mapData.Cells[MapUtil.CoordsToIndex(x, y)];
+                cellData.Position = new Vector2Int(x, y);
 
-                mapData.cells[MapUtil.CoordsToIndex(x, y)] = cellData;
+                mapData.Cells[MapUtil.CoordsToIndex(x, y)] = cellData;
             }
         }
     }
@@ -80,7 +95,7 @@ public class MapSystem: MonoBehaviour
         TilemapRenderer collisionRenderer = tilemaps["Collision"]
             .GetComponent<TilemapRenderer>();
 
-        collisionRenderer.enabled = mapData.showCollision;
+        collisionRenderer.enabled = mapData.ShowCollision;
     }
 
 
@@ -121,9 +136,9 @@ public class MapSystem: MonoBehaviour
     {
         roomBuilder.Build(ref mapData);
 
-        for (int i = 0; i < mapData.rooms.Count; i++)
+        for (int i = 0; i < mapData.Rooms.Count; i++)
         {
-            SetupRoom(mapData.rooms[i]);
+            SetupRoom(mapData.Rooms[i]);
         }
     }
 
@@ -186,12 +201,12 @@ public class MapSystem: MonoBehaviour
         SetupGround(mainEastWest, GroundType.Stone);
         SetupGround(mainNorthSouth, GroundType.Stone);
 
-        mapData.placeholders.Add(north1st);
-        mapData.placeholders.Add(south1st);
-        mapData.placeholders.Add(west1st);
-        mapData.placeholders.Add(east1st);
-        mapData.placeholders.Add(mainEastWest);
-        mapData.placeholders.Add(mainNorthSouth);
+        mapData.Placeholders.Add(north1st);
+        mapData.Placeholders.Add(south1st);
+        mapData.Placeholders.Add(west1st);
+        mapData.Placeholders.Add(east1st);
+        mapData.Placeholders.Add(mainEastWest);
+        mapData.Placeholders.Add(mainNorthSouth);
     }
 
     
@@ -206,7 +221,7 @@ public class MapSystem: MonoBehaviour
     {
         if (MapUtil.OnMap(position))
         {
-            mapData.cells[MapUtil.CoordsToIndex(position)].solid = solid;
+            mapData.Cells[MapUtil.CoordsToIndex(position)].Solid = solid;
         }
     }
 
@@ -236,7 +251,7 @@ public class MapSystem: MonoBehaviour
     {
         if (MapUtil.OnMap(position))
         {
-            mapData.cells[MapUtil.CoordsToIndex(position)].groundType = groundType;
+            mapData.Cells[MapUtil.CoordsToIndex(position)].GroundType = groundType;
         }
     }
 
@@ -267,8 +282,8 @@ public class MapSystem: MonoBehaviour
         {
             int cellIndex = MapUtil.CoordsToIndex(position);
 
-            mapData.cells[cellIndex].solid = true;
-            mapData.cells[cellIndex].wallType = wallType;
+            mapData.Cells[cellIndex].Solid = true;
+            mapData.Cells[cellIndex].WallType = wallType;
         }
     }
 
@@ -283,7 +298,7 @@ public class MapSystem: MonoBehaviour
     {
         if (MapUtil.OnMap(position))
         {
-            mapData.cells[MapUtil.CoordsToIndex(position)].overlayType = overlayType;
+            mapData.Cells[MapUtil.CoordsToIndex(position)].OverlayType = overlayType;
         }
     }
 
@@ -293,23 +308,23 @@ public class MapSystem: MonoBehaviour
 
     private void SetupRoom(RoomData roomData)
     {
-        for (int x = roomData.bounds.xMin; x <= roomData.bounds.xMax; x++)
+        for (int x = roomData.Bounds.xMin; x <= roomData.Bounds.xMax; x++)
         {
-            for (int y = roomData.bounds.yMin; y <= roomData.bounds.yMax; y++)
+            for (int y = roomData.Bounds.yMin; y <= roomData.Bounds.yMax; y++)
             {
                 Vector2Int cellPosition = new Vector2Int(x, y);
 
-                SetupGround(cellPosition, roomData.groundType);
+                SetupGround(cellPosition, roomData.GroundType);
 
                 if (MapUtil.EntranceExistsAt(x, y, roomData) == false)
                 {
-                    if (roomData.fill || MapUtil.OnRectBoundary(x, y, roomData.bounds))
+                    if (roomData.Fill || MapUtil.OnRectBoundary(x, y, roomData.Bounds))
                     {
-                        SetupWall(cellPosition, roomData.wallType);
+                        SetupWall(cellPosition, roomData.WallType);
                     }
                 }
 
-                SetupOverlay(cellPosition, roomData.overlayType);
+                SetupOverlay(cellPosition, roomData.OverlayType);
             }
         }
     }
@@ -320,29 +335,29 @@ public class MapSystem: MonoBehaviour
 
     private void ConstructMap()
     {
-        for (int i = 0; i < mapData.cells.Length; i++)
+        for (int i = 0; i < mapData.Cells.Length; i++)
         {
-            CellData cellData = mapData.cells[i];
+            CellData cellData = mapData.Cells[i];
             Vector2Int position = MapUtil.IndexToCoords(i);
 
-            if (cellData.solid)
+            if (cellData.Solid)
             {
                 ConstructSolid(position);
             }
 
-            if (cellData.groundType != GroundType.None)
+            if (cellData.GroundType != GroundType.None)
             {
-                ConstructGround(position, cellData.groundType);
+                ConstructGround(position, cellData.GroundType);
             }
 
-            if (cellData.wallType != WallType.None)
+            if (cellData.WallType != WallType.None)
             {
-                ConstructWall(position, cellData.wallType);
+                ConstructWall(position, cellData.WallType);
             }
 
-            if (cellData.overlayType != OverlayType.None)
+            if (cellData.OverlayType != OverlayType.None)
             {
-                ConstructOverlay(position, cellData.overlayType);
+                ConstructOverlay(position, cellData.OverlayType);
             }
         }
     }
@@ -389,13 +404,13 @@ public class MapSystem: MonoBehaviour
 
     public CellData GetCellData(int x, int y)
     {
-        return mapData.cells[MapUtil.CoordsToIndex(x, y)];
+        return mapData.Cells[MapUtil.CoordsToIndex(x, y)];
     }
 
 
     public CellData GetCellData(Vector2Int position)
     {
-        return mapData.cells[MapUtil.CoordsToIndex(position)];
+        return mapData.Cells[MapUtil.CoordsToIndex(position)];
     }
 
 

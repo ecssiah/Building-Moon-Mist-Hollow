@@ -71,8 +71,8 @@ public class InfoPanel : MonoBehaviour
         entityTab.SetActive(true);
         cellTab.SetActive(false);
 
-        entityNameText.text = entityData.name;
-        entityCitizenNumberText.text = $"{entityData.citizenNumber}";
+        entityNameText.text = entityData.Name;
+        entityCitizenNumberText.text = $"{entityData.CitizenNumber}";
     }
 
 
@@ -83,9 +83,9 @@ public class InfoPanel : MonoBehaviour
         entityTab.SetActive(false);
         cellTab.SetActive(true);
 
-        cellPositionText.text = $"{cellData.position}";
-        cellGroundTypeText.text = $"{Enum.GetName(typeof(GroundType), cellData.groundType)}";
-        cellBuildingTypeText.text = $"{Enum.GetName(typeof(WallType), cellData.wallType)}";
+        cellPositionText.text = $"{cellData.Position}";
+        cellGroundTypeText.text = $"{Enum.GetName(typeof(GroundType), cellData.GroundType)}";
+        cellBuildingTypeText.text = $"{Enum.GetName(typeof(WallType), cellData.WallType)}";
     }
 
 

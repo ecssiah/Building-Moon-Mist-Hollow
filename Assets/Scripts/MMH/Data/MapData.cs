@@ -1,12 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public struct MapData
 {
-    public bool showCollision;
+    public bool ShowCollision;
 
-    public CellData[] cells;
+    public CellData[] Cells;
 
-    public List<RoomData> rooms;
-    public List<RectInt> placeholders;
+    public List<RoomData> Rooms;
+    public List<RectInt> Placeholders;
 }       

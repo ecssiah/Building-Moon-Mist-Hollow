@@ -1,5 +1,5 @@
 ﻿public struct PathInfo
 {
-    public static readonly double StraightMovementWeight = 1.00;
-    public static readonly double DiagonalMovementWeight = 1.42;
+    public static readonly float StraightMovementWeight = 1.00f;
+    public static readonly float DiagonalMovementWeight = 1.42f;
 }

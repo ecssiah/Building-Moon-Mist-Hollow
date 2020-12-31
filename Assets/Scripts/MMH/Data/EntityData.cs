@@ -1,5 +1,8 @@
-﻿public struct EntityData
+﻿using System;
+
+[Serializable]
+public struct EntityData
 {
-    public int nextCitizenNumber;
-    public int nextResidentNumber;
+    public int NextCitizenNumber;
+    public int NextResidentNumber;
 }

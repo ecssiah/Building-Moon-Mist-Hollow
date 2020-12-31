@@ -1,8 +1,11 @@
-﻿public struct ItemData
-{
-    public string name;
+﻿using System;
 
-    public float value;
-    public float condition;
-    public float weight;
+[Serializable]
+public struct ItemData
+{
+    public string Name;
+
+    public float Value;
+    public float Condition;
+    public float Weight;
 }

@@ -1,4 +1,4 @@
 ﻿public struct EntityInfo
 {
-    public static readonly int NumberOfSeedCitizens = 200;
+    public static readonly int NumberOfSeedCitizens = 12;
 }

@@ -28,16 +28,16 @@
 
     public static readonly string[] TaylorInitialElements =
     {
-        "A", "B", "C", "D", "E", "F", "G",
+        "Da", "Tu", "Br", "Za", "Ex", "Ne", "Ae", "Ri", "Ys", "Qi",
     };
 
     public static readonly string[] TaylorMiddleElements =
     {
-        "Α", "Β", "Δ", "Ε", "Φ", "Η", "Ι",
+        "",
     };
 
     public static readonly string[] TaylorFinalElements =
     {
-        "0", "1", "2", "3", "4", "5", "6",
+        "",
     };
 }

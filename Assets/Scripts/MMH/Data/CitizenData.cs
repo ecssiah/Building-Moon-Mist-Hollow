@@ -1,12 +1,14 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
+[Serializable]
 public struct CitizenData
 {
-    public GameObject entity;
+    public GameObject Entity;
 
-    public GroupData groupData;
-    public InventoryData inventoryData;
+    public GroupData GroupData;
+    public InventoryData InventoryData;
 
-    public int citizenNumber;
-    public string name;
+    public int CitizenNumber;
+    public string Name;
 }

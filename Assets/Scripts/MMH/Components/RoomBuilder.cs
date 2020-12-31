@@ -18,26 +18,28 @@ public class RoomBuilder : MonoBehaviour
         {
             RectInt bounds = GetNewRoomLocation(ref mapData);
 
+            if (bounds.width == 0 && bounds.height == 0) continue;
+
             RoomData roomData = new RoomData
             {
-                bounds = bounds,
-                groundType = GroundType.Wood,
-                wallType = WallType.StoneWall,
+                Bounds = bounds,
+                GroundType = GroundType.Wood,
+                WallType = WallType.StoneWall,
             };
 
-            mapData.rooms.Add(roomData);
+            mapData.Rooms.Add(roomData);
         }
     }
 
 
     private void ExpandRooms(ref MapData mapData)
     {
-        for (int expansionRound = 0; expansionRound < 400; expansionRound++)
+        for (int expansionAttempt = 0; expansionAttempt < MapInfo.MaximumExpansionAttempts; expansionAttempt++)
         {
-            for (int roomNumber = 0; roomNumber < mapData.rooms.Count; roomNumber++)
+            for (int roomNumber = 0; roomNumber < mapData.Rooms.Count; roomNumber++)
             {
-                mapData.rooms[roomNumber] = ExpandRoom(
-                    mapData.rooms[roomNumber], ref mapData
+                mapData.Rooms[roomNumber] = ExpandRoom(
+                    mapData.Rooms[roomNumber], ref mapData
                 );
             }
         }
@@ -62,16 +64,16 @@ public class RoomBuilder : MonoBehaviour
             switch (direction)
             {
                 case 0:
-                    expandedRoomData.bounds.xMin -= 1;
+                    expandedRoomData.Bounds.xMin -= 1;
                     break;
                 case 1:
-                    expandedRoomData.bounds.xMax += 1;
+                    expandedRoomData.Bounds.xMax += 1;
                     break;
                 case 2:
-                    expandedRoomData.bounds.yMin -= 1;
+                    expandedRoomData.Bounds.yMin -= 1;
                     break;
                 case 3:
-                    expandedRoomData.bounds.yMax += 1;
+                    expandedRoomData.Bounds.yMax += 1;
                     break;
                 default:
                     break;
@@ -79,25 +81,25 @@ public class RoomBuilder : MonoBehaviour
 
             bool roomCollision = false;
 
-            if (MapUtil.OnMap(expandedRoomData.bounds) == false)
+            if (MapUtil.OnMap(expandedRoomData.Bounds) == false)
             {
                 roomCollision = true;
             }
             else
             {
-                foreach (RoomData testRoomData in mapData.rooms)
+                foreach (RoomData testRoomData in mapData.Rooms)
                 {
                     if (testRoomData.Equals(roomData)) continue;
 
-                    if (testRoomData.bounds.Overlaps(expandedRoomData.bounds))
+                    if (testRoomData.Bounds.Overlaps(expandedRoomData.Bounds))
                     {
                         roomCollision = true;
                     }
                 }
 
-                foreach (RectInt bounds in mapData.placeholders)
+                foreach (RectInt bounds in mapData.Placeholders)
                 {
-                    if (bounds.Overlaps(expandedRoomData.bounds))
+                    if (bounds.Overlaps(expandedRoomData.Bounds))
                     {
                         roomCollision = true;
                     }
@@ -116,12 +118,12 @@ public class RoomBuilder : MonoBehaviour
 
     private void GenerateEntrances(ref MapData mapData)
     {
-        for (int i = 0; i < mapData.rooms.Count; i++)
+        for (int i = 0; i < mapData.Rooms.Count; i++)
         {
-            RoomData roomData = mapData.rooms[i];
-            roomData.entrances = GenerateRoomEntrances(mapData.rooms[i].bounds);
+            RoomData roomData = mapData.Rooms[i];
+            roomData.Entrances = GenerateRoomEntrances(mapData.Rooms[i].Bounds);
 
-            mapData.rooms[i] = roomData;
+            mapData.Rooms[i] = roomData;
         }
     }
 
@@ -153,7 +155,7 @@ public class RoomBuilder : MonoBehaviour
 
             EntranceData entranceData = new EntranceData
             {
-                bounds = entranceBounds,
+                Bounds = entranceBounds,
             };
 
             entrances.Add(entranceData);
@@ -182,15 +184,15 @@ public class RoomBuilder : MonoBehaviour
             }
             else
             {
-                foreach (RoomData roomData in mapData.rooms)
+                foreach (RoomData roomData in mapData.Rooms)
                 {
-                    if (roomBounds.Overlaps(roomData.bounds))
+                    if (roomBounds.Overlaps(roomData.Bounds))
                     {
                         collision = true;
                     }
                 }
 
-                foreach (RectInt placeholder in mapData.placeholders)
+                foreach (RectInt placeholder in mapData.Placeholders)
                 {
                     if (roomBounds.Overlaps(placeholder))
                     {

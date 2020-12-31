@@ -1,4 +1,7 @@
-﻿public struct GroupData
+﻿using System;
+
+[Serializable]
+public struct GroupData
 {
-    public GroupType groupType;
+    public GroupType GroupType;
 }

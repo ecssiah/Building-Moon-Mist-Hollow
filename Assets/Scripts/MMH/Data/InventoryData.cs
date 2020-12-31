@@ -1,4 +1,8 @@
-﻿public struct InventoryData
+﻿using System;
+using System.Collections.Generic;
+
+[Serializable]
+public struct InventoryData
 {
-    public ItemData[] items;
+    public IList<ItemData> Items;
 }

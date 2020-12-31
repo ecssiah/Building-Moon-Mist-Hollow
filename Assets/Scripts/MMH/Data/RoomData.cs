@@ -1,15 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public struct RoomData
 {
-    public RectInt bounds;
+    public RectInt Bounds;
 
-    public bool fill;
+    public bool Fill;
 
-    public GroundType groundType;
-    public WallType wallType;
-    public OverlayType overlayType;
+    public GroundType GroundType;
+    public WallType WallType;
+    public OverlayType OverlayType;
 
-    public List<EntranceData> entrances;
+    public IList<EntranceData> Entrances;
 }
