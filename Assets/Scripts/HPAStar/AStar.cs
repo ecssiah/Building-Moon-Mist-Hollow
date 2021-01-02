@@ -15,82 +15,82 @@ public class AStar
 
     public AStar()
     {
-        graph = new Graph();
-
         openSet = new FastPriorityQueue<Node>(MaxPriorityQueueNodes);
     }
 
 
-    public List<Node> FindPath(Node start, Node end)
+    public void BuildGraph(MapData mapData)
     {
-        openSet.Enqueue(start, CalculateCost(start, end));
-
-
-        Node currentNode = openSet.Dequeue();
-
-        if (currentNode == end)
+        int[,] mapTestCells = new int[,]
         {
-            return PathFrom(end);
-        }
+            { 0, 0, 0, 1, 0, 0, 0 },
+            { 0, 0, 0, 1, 0, 0, 0 },
+            { 0, 0, 0, 1, 0, 1, 1 },
+            { 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 1, 1, 0, 0, 0, 0 },
+            { 0, 0, 1, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0 },
+        };
 
-        foreach (Tuple<Node, float> nodeWeightTuple in currentNode.NeighborsAndWeights())
+        graph = new Graph(mapTestCells.GetLength(0) * mapTestCells.GetLength(1));
+
+        for (int y = 0; y < mapTestCells.GetLength(1); y++)
         {
-            Node neighbor = nodeWeightTuple.Item1;
-            float weight = nodeWeightTuple.Item2;
-
-            neighbor.PreviousNode = currentNode;
-            neighbor.GScore = currentNode.GScore + weight;
-            neighbor.FScore = neighbor.GScore + CalculateCost(neighbor, end);
-
-            if (!openSet.Contains(neighbor))
+            for (int x = 0; x < mapTestCells.GetLength(0); x++)
             {
-                openSet.Enqueue(neighbor, neighbor.FScore);
+                if (mapTestCells[x, y] == 1) continue;
+
+                Node node = new Node(x, y);
+                graph.AddNode(node);
+
+                BuildEdges(mapTestCells, node);
             }
         }
 
-
-        //while (openSet.Count > 0)
-        //{
-        //}
-
-        return new List<Node>();
+        Debug.Log(graph);
     }
 
 
-    private List<Node> PathFrom(Node end)
+    public void BuildEdges(int[,] mapData, Node node)
     {
-        Node currentNode = end;
-
-        List<Node> path = new List<Node> { end };
-
-        while (currentNode.PreviousNode != null)
+        for (int x = -1; x <= 1; x++)
         {
-            path.Insert(0, currentNode.PreviousNode);
+            for (int y = -1; y <= 1; y++)
+            {
+                Vector2Int position = new Vector2Int(node.Position.x + x, node.Position.y + y);
 
-            currentNode = currentNode.PreviousNode;
+                bool samePosition = position == node.Position;
+
+                if (samePosition) continue;
+
+                bool xOffMap = position.x < 0 || position.x >= mapData.GetLength(0);
+                bool yOffMap = position.y < 0 || position.y >= mapData.GetLength(1);
+
+                if (xOffMap || yOffMap) continue;
+
+                bool solid = mapData[position.x, position.y] == 1;
+
+                if (solid) continue;
+
+                Node candidateNode = GetNode(position);
+                float candidateDistance = Vector2Int.Distance(node.Position, position);
+
+                graph.AddEdge(node, candidateNode, candidateDistance);
+            }
         }
-
-        return path;
     }
 
 
-    public Node GetNodeAt(int x, int y)
+    public Node GetNode(int x, int y)
     {
-        return graph.GetNodeAt(x, y);
+        return GetNode(new Vector2Int(x, y));
     }
 
 
-    public Node GetNodeAt(Vector2Int position)
+    public Node GetNode(Vector2Int position)
     {
-        return GetNodeAt(position.x, position.y);
-    }
+        Node node = graph.Nodes.Find(testNode => position == testNode.Position);
 
-
-    private float CalculateCost(Node node1, Node node2)
-    {
-        Vector2 node1Position = new Vector2(node1.Position.x, node1.Position.y);
-        Vector2 node2Position = new Vector2(node2.Position.x, node2.Position.y);
-
-        return Vector2.Distance(node1Position, node2Position);
+        return node ?? new Node(position);
     }
 }

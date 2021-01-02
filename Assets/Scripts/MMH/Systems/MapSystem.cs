@@ -30,26 +30,26 @@ public class MapSystem: MonoBehaviour
 
     private void InitData()
     {
+        mapFactory = gameObject.AddComponent<MapFactory>();
+
         selectedCell = new Vector2Int();
 
         mapData = new MapData
         {
             ShowCollision = false,
-            Cells = new CellData[(int)Mathf.Pow(MapInfo.Width, 2)],
+            Cells = new CellData[MapInfo.Width * MapInfo.Width],
             Rooms = new List<RoomData>(MapInfo.NumberOfSeedRooms),
             Placeholders = new List<RectInt>()
         };
-
-        mapFactory = gameObject.AddComponent<MapFactory>();
 
         for (int x = -MapInfo.Size; x <= MapInfo.Size; x++)
         {
             for (int y = -MapInfo.Size; y <= MapInfo.Size; y++)
             {
-                CellData cellData = mapData.Cells[MapUtil.CoordsToIndex(x, y)];
+                CellData cellData = mapData.GetCell(x, y);
                 cellData.Position = new Vector2Int(x, y);
 
-                mapData.Cells[MapUtil.CoordsToIndex(x, y)] = cellData;
+                mapData.SetCell(x, y, cellData);
             }
         }
     }
@@ -102,7 +102,10 @@ public class MapSystem: MonoBehaviour
     {
         if (MapUtil.OnMap(position))
         {
-            mapData.Cells[MapUtil.CoordsToIndex(position)].Solid = solid;
+            CellData cellData = mapData.GetCell(position);
+            cellData.Solid = solid;
+
+            mapData.SetCell(position, cellData);
         }
     }
 
@@ -132,7 +135,10 @@ public class MapSystem: MonoBehaviour
     {
         if (MapUtil.OnMap(position))
         {
-            mapData.Cells[MapUtil.CoordsToIndex(position)].GroundType = groundType;
+            CellData cellData = mapData.GetCell(position);
+            cellData.GroundType = groundType;
+
+            mapData.SetCell(position, cellData);
         }
     }
 
@@ -161,10 +167,12 @@ public class MapSystem: MonoBehaviour
     {
         if (MapUtil.OnMap(position))
         {
-            int cellIndex = MapUtil.CoordsToIndex(position);
+            CellData cellData = mapData.GetCell(position);
 
-            mapData.Cells[cellIndex].Solid = true;
-            mapData.Cells[cellIndex].WallType = wallType;
+            cellData.Solid = true;
+            cellData.WallType = wallType;
+
+            mapData.SetCell(position, cellData);
         }
     }
 
@@ -199,7 +207,10 @@ public class MapSystem: MonoBehaviour
     {
         if (MapUtil.OnMap(position))
         {
-            mapData.Cells[MapUtil.CoordsToIndex(position)].OverlayType = overlayType;
+            CellData cellData = mapData.GetCell(position);
+            cellData.OverlayType = overlayType;
+
+            mapData.SetCell(position, cellData);
         }
     }
 
@@ -211,29 +222,26 @@ public class MapSystem: MonoBehaviour
     {
         ConstructBoundary();
 
-        for (int i = 0; i < mapData.Cells.Length; i++)
+        foreach (CellData cellData in mapData.Cells)
         {
-            CellData cellData = mapData.Cells[i];
-            Vector2Int position = MapUtil.IndexToCoords(i);
-
             if (cellData.Solid)
             {
-                ConstructSolid(position);
+                ConstructSolid(cellData.Position);
             }
 
             if (cellData.GroundType != GroundType.None)
             {
-                ConstructGround(position, cellData.GroundType);
+                ConstructGround(cellData.Position, cellData.GroundType);
             }
 
             if (cellData.WallType != WallType.None)
             {
-                ConstructWall(position, cellData.WallType);
+                ConstructWall(cellData.Position, cellData.WallType);
             }
 
             if (cellData.OverlayType != OverlayType.None)
             {
-                ConstructOverlay(position, cellData.OverlayType);
+                ConstructOverlay(cellData.Position, cellData.OverlayType);
             }
         }
     }
@@ -295,17 +303,10 @@ public class MapSystem: MonoBehaviour
 
     // Helper Methods
 
-    public CellData GetCellData(int x, int y)
+    public MapData GetMapData()
     {
-        return mapData.Cells[MapUtil.CoordsToIndex(x, y)];
+        return mapData;
     }
-
-
-    public CellData GetCellData(Vector2Int position)
-    {
-        return mapData.Cells[MapUtil.CoordsToIndex(position)];
-    }
-
 
 
     // Selection Methods

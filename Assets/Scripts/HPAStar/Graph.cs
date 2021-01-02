@@ -1,73 +1,57 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
 public class Graph
 {
-    public List<Node> Nodes;
+    private List<Node> nodes;
+    public List<Node> Nodes { get => nodes; }
+
+    private float[,] adjacency;
+    public float[,] Adjacency { get => adjacency; }
 
 
-    public Graph()
+    public Graph(int nodeCount)
     {
-        Nodes = new List<Node>();
+        nodes = Enumerable.Repeat(new Node(0, 0), nodeCount).ToList();
+
+        adjacency = new float[nodeCount, nodeCount];
     }
 
 
-    public Node AddNode(Node newNode)
+    public void AddNode(Node node)
     {
-        if (Nodes.Exists(node => newNode == node))
-        {
-            Debug.Log($"Node exists: ");
-            Debug.Log(newNode);
-        }
-        else
-        {
-            Nodes.Add(newNode);
-        }
-
-        return newNode;
+        nodes[node.Index] = node;
     }
 
 
-    public void AddEdge(Edge newEdge)
+    public void AddEdge(Node node1, Node node2, float weight)
     {
-        bool edgeExistsOnLeftNode = newEdge.LeftNode.Edges.Exists(edge => newEdge == edge);
-        bool edgeExistsOnRightNode = newEdge.RightNode.Edges.Exists(edge => newEdge == edge);
-
-        if (edgeExistsOnLeftNode && edgeExistsOnRightNode)
-        {
-            Debug.Log("Edge exists:");
-            Debug.Log(newEdge);
-        }
-        else if (edgeExistsOnLeftNode)
-        {
-            Debug.Log("Edge already exists on left node, adding right node reference");
-            Debug.Log(newEdge);
-
-            newEdge.RightNode.AddEdge(newEdge);
-        }
-        else if (edgeExistsOnRightNode)
-        {
-            Debug.Log("Edge already exists on right node, adding left node reference");
-            Debug.Log(newEdge);
-
-            newEdge.LeftNode.AddEdge(newEdge);
-        }
-        else
-        {
-            newEdge.LeftNode.AddEdge(newEdge);
-            newEdge.RightNode.AddEdge(newEdge);
-        }
+        adjacency[node1.Index, node2.Index] = weight;
+        adjacency[node2.Index, node1.Index] = weight;
     }
 
 
-    public Node GetNodeAt(int x, int y)
+    public List<Node> Neighbors(Node node)
     {
-        Node cellNode = Nodes.Find(
-            node => node.Position.x == x && node.Position.y == y
-        );
+        List<Node> neighbors = new List<Node>();
 
-        return cellNode ?? new Node(x, y);
+        for (int index = 0; index < adjacency.GetLength(0); index++)
+        {
+            if (adjacency[node.Index, index] != 0)
+            {
+                neighbors.Add(nodes[index]);
+            }
+        }
+
+        return neighbors;
+    }
+
+
+    public override string ToString()
+    {
+        return $"Graph: {nodes.Count} nodes";
     }
 }

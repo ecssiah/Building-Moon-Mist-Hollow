@@ -2,14 +2,13 @@
 
 public class EntitySystem : MonoBehaviour
 {
+    private EntityData entityData;
+
     private MapSystem mapSystem;
 
     private NameGenerator nameGenerator;
 
-    private EntityData entityData;
-
     private GameObject entitiesObject;
-
     private GameObject citizenPrefab;
 
     void Awake()
@@ -36,7 +35,7 @@ public class EntitySystem : MonoBehaviour
         {
             Vector2Int position = MapUtil.GetRandomMapPosition();
 
-            while (mapSystem.GetCellData(position).Solid)
+            while (mapSystem.GetMapData().GetCell(position).Solid)
             {
                 position = MapUtil.GetRandomMapPosition();
             }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class RoomBuilder : MonoBehaviour
 {
     public MapData Build(MapData mapData)
@@ -18,7 +19,7 @@ public class RoomBuilder : MonoBehaviour
     {
         for (int i = 0; i < MapInfo.NumberOfSeedRooms; i++)
         {
-            RectInt bounds = GetNewRoomLocation(ref mapData);
+            RectInt bounds = GetNewRoomLocation(mapData);
 
             if (bounds.width == 0 && bounds.height == 0) continue;
 
@@ -171,7 +172,7 @@ public class RoomBuilder : MonoBehaviour
     }
 
 
-    private RectInt GetNewRoomLocation(ref MapData mapData)
+    private RectInt GetNewRoomLocation(MapData mapData)
     {
         for (int i = 0; i < 10; i++)
         {

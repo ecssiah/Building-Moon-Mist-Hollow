@@ -31,7 +31,7 @@ public class UISystem : MonoBehaviour
 
     public void SelectCell(Vector2Int cellPosition)
     {
-        CellData cellData = mapSystem.GetCellData(cellPosition.x, cellPosition.y);
+        CellData cellData = mapSystem.GetMapData().GetCell(cellPosition);
 
         infoPanel.ActivateCellMode(cellData);
     }
