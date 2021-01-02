@@ -12,7 +12,7 @@ public class Node : FastPriorityQueueNode
 
     public Node(int x, int y)
     {
-        Index = x * y;
+        Index = x + (7 * y);
         Position = new Vector2Int(x, y);
     }
 

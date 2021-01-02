@@ -38,7 +38,7 @@ public class Graph
     {
         List<Node> neighbors = new List<Node>();
 
-        for (int index = 0; index < adjacency.GetLength(0); index++)
+        for (int index = 0; index < adjacency.GetLength(1); index++)
         {
             if (adjacency[node.Index, index] != 0)
             {

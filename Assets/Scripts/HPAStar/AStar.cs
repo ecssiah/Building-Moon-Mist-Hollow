@@ -47,7 +47,13 @@ public class AStar
             }
         }
 
-        Debug.Log(graph);
+
+        Node testNode = GetNode(1, 1);
+
+        foreach (Node neighbor in graph.Neighbors(testNode))
+        {
+            Debug.Log(neighbor);
+        }
     }
 
 
