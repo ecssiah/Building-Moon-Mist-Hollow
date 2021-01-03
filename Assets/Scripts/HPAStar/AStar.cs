@@ -37,8 +37,6 @@ public class AStar
                 BuildEdges(node);
             }
         }
-
-        Debug.Log(graph);
     }
 
 
