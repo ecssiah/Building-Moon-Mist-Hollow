@@ -20,6 +20,15 @@ public class AStar
     }
 
 
+    public List<Node> FindPath(Node start, Node end)
+    {
+
+
+
+        return new List<Node>();
+    }
+
+
     public void BuildGraph(MapData mapData)
     {
         this.mapData = mapData;
