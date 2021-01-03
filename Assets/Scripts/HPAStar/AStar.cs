@@ -9,6 +9,8 @@ public class AStar
     public Graph graph;
     public MapData mapData;
 
+    private Node target;
+
     private FastPriorityQueue<Node> openSet;
 
     private readonly int MaxPriorityQueueNodes = 1000;
@@ -20,12 +22,38 @@ public class AStar
     }
 
 
-    public List<Node> FindPath(Node start, Node end)
+    public PathData FindPath(Node start, Node end)
     {
+        target = end;
 
+        openSet.Enqueue(start, CalculateFCost(start, end));
 
+        int timer = 0;
+        int timeout = 10000;
 
-        return new List<Node>();
+        while (openSet.Count > 0 || timer++ > timeout)
+        {
+            Node current = openSet.Dequeue();
+
+            if (current == target)
+            {
+                return PathFrom(target);
+            }
+
+            foreach (Node neighbor in graph.Neighbors(current))
+            {
+                neighbor.Previous = current;
+                neighbor.GScore = CalcuateGCost(current, neighbor);
+                neighbor.FScore = CalculateFCost(neighbor, end);
+
+                if (!openSet.Contains(neighbor))
+                {
+                    openSet.Enqueue(neighbor, neighbor.FScore);
+                }
+            }
+        }
+
+        return new PathData { Success = false };
     }
 
 
@@ -61,6 +89,9 @@ public class AStar
         {
             Index = (x + mapData.Size) + mapData.Width * (y + mapData.Size),
             Position = new Vector2Int(x, y),
+            GScore = 0,
+            FScore = 0,
+            Previous = null,
         };
 
         graph.AddNode(node);
@@ -109,5 +140,50 @@ public class AStar
     public Node GetNode(Vector2Int position)
     {
         return graph.Nodes.Find(node => node.Position == position);
+    }
+
+
+    private float CalcuateGCost(Node start, Node end)
+    {
+        return start.GScore + CalculateHCost(start, end);
+    }
+
+
+    private float CalculateHCost(Node start, Node end)
+    {
+        return Vector2Int.Distance(start.Position, end.Position);
+    }
+
+
+    private float CalculateFCost(Node start, Node end)
+    {
+        float hCost = CalcuateGCost(start, end);
+
+        return start.GScore + hCost;
+    }
+
+
+    private PathData PathFrom(Node node)
+    {
+        PathData pathData = new PathData
+        {
+            Success = true,
+            Nodes = new List<Node> { node }
+        };
+
+        Node current = node;
+
+        int timer = 0;
+        int timeout = 10000;
+
+        while ((current.Previous != null) && (++timer < timeout))
+        {
+            pathData.Nodes.Insert(0, current);
+            current = current.Previous;
+        }
+
+        Debug.Log(pathData);
+
+        return pathData;
     }
 }
