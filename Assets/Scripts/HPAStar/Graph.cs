@@ -15,8 +15,7 @@ public class Graph
 
     public Graph(int nodeCount)
     {
-        nodes = Enumerable.Repeat(new Node(0, 0), nodeCount).ToList();
-
+        nodes = Enumerable.Repeat(new Node(), nodeCount).ToList();
         adjacency = new float[nodeCount, nodeCount];
     }
 
@@ -52,6 +51,18 @@ public class Graph
 
     public override string ToString()
     {
-        return $"Graph: {nodes.Count} nodes";
+        string output = $"Graph: {Nodes.Count} nodes\n";
+
+        foreach (Node node in Nodes)
+        {
+            output += $"  {node}";
+
+            if (node.Index % MapInfo.Width == MapInfo.Width - 1)
+            {
+                output += "\n"; 
+            }
+        }
+
+        return output;
     }
 }

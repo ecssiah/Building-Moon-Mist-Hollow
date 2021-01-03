@@ -20,8 +20,6 @@ public class PathfindingSystem : MonoBehaviour
         aStar = new AStar();
 
         aStar.BuildGraph(mapSystem.GetMapData());
-
-        TEST_ConstructGraph();
     }
 
 

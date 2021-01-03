@@ -37,6 +37,7 @@ public class MapSystem: MonoBehaviour
         mapData = new MapData
         {
             ShowCollision = false,
+            Size = MapInfo.Size,
             Cells = new CellData[MapInfo.Width * MapInfo.Width],
             Rooms = new List<RoomData>(MapInfo.NumberOfSeedRooms),
             Placeholders = new List<RectInt>()

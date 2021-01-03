@@ -7,6 +7,7 @@ using System;
 public class AStar
 {
     public Graph graph;
+    public MapData mapData;
 
     private FastPriorityQueue<Node> openSet;
 
@@ -21,67 +22,72 @@ public class AStar
 
     public void BuildGraph(MapData mapData)
     {
-        int[,] mapTestCells = new int[,]
-        {
-            { 0, 0, 0, 1, 0, 0, 0 },
-            { 0, 0, 0, 1, 0, 0, 0 },
-            { 0, 0, 0, 1, 0, 1, 1 },
-            { 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 1, 1, 0, 0, 0, 0 },
-            { 0, 0, 1, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0, 0 },
-        };
+        this.mapData = mapData;
 
-        graph = new Graph(mapTestCells.GetLength(0) * mapTestCells.GetLength(1));
+        graph = new Graph(mapData.Cells.Length);
 
-        for (int y = 0; y < mapTestCells.GetLength(1); y++)
+        for (int x = -mapData.Size; x <= mapData.Size; x++)
         {
-            for (int x = 0; x < mapTestCells.GetLength(0); x++)
+            for (int y = -mapData.Size; y <= mapData.Size; y++)
             {
-                if (mapTestCells[x, y] == 1) continue;
+                if (mapData.GetCell(x, y).Solid) continue;
 
-                Node node = new Node(x, y);
-                graph.AddNode(node);
+                Node node = BuildNode(x, y);
 
-                BuildEdges(mapTestCells, node);
+                BuildEdges(node);
             }
         }
 
-
-        Node testNode = GetNode(1, 1);
-
-        foreach (Node neighbor in graph.Neighbors(testNode))
-        {
-            Debug.Log(neighbor);
-        }
+        Debug.Log(graph);
     }
 
 
-    public void BuildEdges(int[,] mapData, Node node)
+    public Node BuildNode(Vector2Int position)
+    {
+        return BuildNode(position.x, position.y);
+    }
+
+
+    public Node BuildNode(int x, int y)
+    {
+        Node node = new Node
+        {
+            Index = (x + mapData.Size) + mapData.Width * (y + mapData.Size),
+            Position = new Vector2Int(x, y),
+        };
+
+        graph.AddNode(node);
+
+        return node;
+    }
+
+
+    private void BuildEdges(Node targetNode)
     {
         for (int x = -1; x <= 1; x++)
         {
             for (int y = -1; y <= 1; y++)
             {
-                Vector2Int position = new Vector2Int(node.Position.x + x, node.Position.y + y);
+                if (x == 0 && y == 0) continue;
 
-                bool samePosition = position == node.Position;
+                Vector2Int position = new Vector2Int(
+                    targetNode.Position.x + x, targetNode.Position.y + y
+                );
 
-                if (samePosition) continue;
-
-                bool xOffMap = position.x < 0 || position.x >= mapData.GetLength(0);
-                bool yOffMap = position.y < 0 || position.y >= mapData.GetLength(1);
+                bool xOffMap = position.x < -mapData.Size || position.x > mapData.Size;
+                bool yOffMap = position.y < -mapData.Size || position.y > mapData.Size;
 
                 if (xOffMap || yOffMap) continue;
 
-                bool solid = mapData[position.x, position.y] == 1;
+                bool solid = mapData.GetCell(position).Solid;
 
                 if (solid) continue;
 
-                Node candidateNode = GetNode(position);
-                float candidateDistance = Vector2Int.Distance(node.Position, position);
+                Node candidateNode = GetNode(position) ?? BuildNode(position);
 
-                graph.AddEdge(node, candidateNode, candidateDistance);
+                float candidateDistance = Vector2Int.Distance(targetNode.Position, position);
+
+                graph.AddEdge(targetNode, candidateNode, candidateDistance);
             }
         }
     }
@@ -95,8 +101,6 @@ public class AStar
 
     public Node GetNode(Vector2Int position)
     {
-        Node node = graph.Nodes.Find(testNode => position == testNode.Position);
-
-        return node ?? new Node(position);
+        return graph.Nodes.Find(node => node.Position == position);
     }
 }
