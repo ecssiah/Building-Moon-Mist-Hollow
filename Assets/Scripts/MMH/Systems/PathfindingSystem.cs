@@ -20,19 +20,9 @@ public class PathfindingSystem : MonoBehaviour
         aStar = new AStar();
         aStar.BuildGraph(mapSystem.GetMapData());
 
-        PathData path = FindPath(new Vector2Int(0, 0), new Vector2Int(3, 3));
+        PathData pathData = FindPath(new Vector2Int(0, 0), new Vector2Int(3, 3));
 
-        if (path.Success)
-        {
-            string output = "Path: ";
-
-            foreach (Node node in path.Nodes)
-            {
-                output += $"{node}";
-            }
-
-            Debug.Log(output);
-        }
+        Debug.Log(pathData);
     }
 
 
@@ -41,11 +31,14 @@ public class PathfindingSystem : MonoBehaviour
         Node startNode = aStar.GetNode(position1);
         Node endNode = aStar.GetNode(position2);
 
-        bool nodesExist = startNode != null && endNode != null;
-        bool startClear = !mapSystem.GetMapData().GetCell(startNode.Position[0], startNode.Position[1]).Solid;
-        bool endClear = !mapSystem.GetMapData().GetCell(endNode.Position[0], endNode.Position[1]).Solid;
+        bool nodesDoNotExist = startNode is null || endNode is null;
 
-        if (nodesExist && startClear && endClear)
+        if (nodesDoNotExist) return new PathData { Success = false };
+
+        bool startClear = !mapSystem.GetMapData().GetCell(startNode.Position).Solid;
+        bool endClear = !mapSystem.GetMapData().GetCell(endNode.Position).Solid;
+
+        if (startClear && endClear)
         {
             return aStar.FindPath(startNode, endNode);
         }

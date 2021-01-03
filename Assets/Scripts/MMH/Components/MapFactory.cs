@@ -27,6 +27,8 @@ public class MapFactory : MonoBehaviour
 
         SetupRooms(mapData);
 
+        mapSystem.SetCellSolid(1, 1);
+
         return mapData;
     }
 

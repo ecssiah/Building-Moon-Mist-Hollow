@@ -29,11 +29,13 @@ public class AStar
         openSet.Enqueue(start, CalculateFCost(start, end));
 
         int timer = 0;
-        int timeout = 10000;
+        int timeout = 60;
 
-        while (openSet.Count > 0 || timer++ > timeout)
+        while (openSet.Count > 0 || ++timer > timeout)
         {
             Node current = openSet.Dequeue();
+
+            string output = $"Target: {current}\n";
 
             if (current == target)
             {
@@ -43,14 +45,22 @@ public class AStar
             foreach (Node neighbor in graph.Neighbors(current))
             {
                 neighbor.Previous = current;
+
                 neighbor.GScore = CalcuateGCost(current, neighbor);
                 neighbor.FScore = CalculateFCost(neighbor, end);
 
+                output += $"Neighbor: {neighbor}";
+
                 if (!openSet.Contains(neighbor))
                 {
+                    output += " : added to openset";
                     openSet.Enqueue(neighbor, neighbor.FScore);
                 }
+
+                output += "\n\n";
             }
+
+            Debug.Log(output);
         }
 
         return new PathData { Success = false };
@@ -145,21 +155,19 @@ public class AStar
 
     private float CalcuateGCost(Node start, Node end)
     {
-        return start.GScore + CalculateHCost(start, end);
+        return start.GScore + Vector2Int.Distance(start.Position, end.Position);
     }
 
 
     private float CalculateHCost(Node start, Node end)
     {
-        return Vector2Int.Distance(start.Position, end.Position);
+        return OctileDistance(start, end);
     }
 
 
     private float CalculateFCost(Node start, Node end)
     {
-        float hCost = CalcuateGCost(start, end);
-
-        return start.GScore + hCost;
+        return start.GScore + CalculateHCost(start, end);
     }
 
 
@@ -174,16 +182,30 @@ public class AStar
         Node current = node;
 
         int timer = 0;
-        int timeout = 10000;
+        int timeout = 16;
 
-        while ((current.Previous != null) && (++timer < timeout))
+        while (current.Previous != null && ++timer < timeout)
         {
             pathData.Nodes.Insert(0, current);
             current = current.Previous;
         }
 
-        Debug.Log(pathData);
+        if (timer >= timeout) Debug.Log("Timed out, invalid path");
 
         return pathData;
+    }
+
+
+    private float OctileDistance(Node start, Node end)
+    {
+        Vector2Int differenceVector = end.Position - start.Position;
+
+        int minDifference = Mathf.Min(Mathf.Abs(differenceVector.x), Mathf.Abs(differenceVector.y));
+
+        float distance =
+            PathInfo.HorizontalWeight * (differenceVector.x + differenceVector.y) +
+            (PathInfo.DiagonalWeight - 2 * PathInfo.HorizontalWeight) * minDifference;
+
+        return distance;
     }
 }
