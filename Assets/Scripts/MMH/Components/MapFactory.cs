@@ -22,11 +22,18 @@ public class MapFactory : MonoBehaviour
         SetupBase();
         SetupPaths();
 
-        mapData = roomBuilder.Build(mapData);
+        //mapData = roomBuilder.LayoutRooms(mapData);
+        mapData = roomBuilder.LayoutTestRooms(mapData);
 
         SetupRooms(mapData);
 
         return mapData;
+    }
+
+
+    private void LayoutTestRooms()
+    {
+        
     }
 
 

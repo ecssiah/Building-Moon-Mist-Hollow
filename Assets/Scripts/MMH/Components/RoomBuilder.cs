@@ -5,10 +5,38 @@ using UnityEngine;
 
 public class RoomBuilder : MonoBehaviour
 {
-    public MapData Build(MapData mapData)
+    public MapData LayoutRooms(MapData mapData)
     {
         mapData = SeedRooms(mapData);
         mapData = ExpandRooms(mapData);
+        mapData = GenerateEntrances(mapData);
+
+        return mapData;
+    }
+
+
+    public MapData LayoutTestRooms(MapData mapData)
+    {
+        RoomData northEastTestRoom = new RoomData
+        {
+            Bounds = new RectInt(2, 2, 2, 2),
+            Entrances = new List<EntranceData>(),
+            WallType = WallType.WoodWall,
+            GroundType = GroundType.Stone,
+        };
+
+        mapData.Rooms.Add(northEastTestRoom);
+
+        RoomData northWestTestRoom = new RoomData
+        {
+            Bounds = new RectInt(-4, 2, 2, 2),
+            Entrances = new List<EntranceData>(),
+            WallType = WallType.WoodWall,
+            GroundType = GroundType.Stone,
+        };
+
+        mapData.Rooms.Add(northWestTestRoom);
+
         mapData = GenerateEntrances(mapData);
 
         return mapData;
