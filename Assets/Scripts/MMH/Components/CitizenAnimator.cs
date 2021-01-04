@@ -48,7 +48,7 @@ public class CitizenAnimator : MonoBehaviour
             [AnimationType.WalkRight] = Resources.LoadAll<Sprite>($"Citizens/{groupType}/Right/Walk")
         };
 
-        PlayAnimation(AnimationType.WalkDown);
+        PlayAnimation(AnimationType.WalkUp);
     }
 
 
@@ -113,11 +113,11 @@ public class CitizenAnimator : MonoBehaviour
     }
 
 
-    public void OnDirectionChange(Vector2 direction)
+    public void OnDirectionChange()
     {
-        citizenComponent.EntityData.Direction = direction;
+        Vector2 newDirection = citizenComponent.EntityData.Direction;
 
-        if (direction.x == 0 && direction.y == 0)
+        if (newDirection.x == 0 && newDirection.y == 0)
         {
             if (animationType == AnimationType.WalkUp)
             {
@@ -136,19 +136,19 @@ public class CitizenAnimator : MonoBehaviour
                 PlayAnimation(AnimationType.IdleRight);
             }
         }
-        else if (direction.x > 0)
+        else if (newDirection.x > 0)
         {
             PlayAnimation(AnimationType.WalkRight);
         }
-        else if (direction.x < 0)
+        else if (newDirection.x < 0)
         {
             PlayAnimation(AnimationType.WalkLeft);
         }
-        else if (direction.y > 0)
+        else if (newDirection.y > 0)
         {
             PlayAnimation(AnimationType.WalkUp);
         }
-        else if (direction.y < 0)
+        else if (newDirection.y < 0)
         {
             PlayAnimation(AnimationType.WalkDown);
         }

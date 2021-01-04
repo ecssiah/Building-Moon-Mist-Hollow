@@ -68,7 +68,7 @@ public class EntitySystem : MonoBehaviour
             Entity = newCitizenObject,
             Speed = 84f,
             Position = new Vector2(position.x, position.y),
-            Direction = new Vector2(0, -1),
+            Direction = new Vector2(0, 1),
         };
 
         newCitizen.CitizenData = new CitizenData
