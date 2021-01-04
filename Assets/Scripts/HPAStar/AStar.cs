@@ -9,9 +9,8 @@ public class AStar
     public Graph graph;
     public MapData mapData;
 
-    private Node target;
-
     private FastPriorityQueue<Node> openSet;
+    private List<Node> closedSet;
 
     private readonly int MaxPriorityQueueNodes = 1000;
 
@@ -19,51 +18,52 @@ public class AStar
     public AStar()
     {
         openSet = new FastPriorityQueue<Node>(MaxPriorityQueueNodes);
+        closedSet = new List<Node>(MaxPriorityQueueNodes);
     }
 
 
     public PathData FindPath(Node start, Node end)
     {
-        target = end;
-
         openSet.Enqueue(start, CalculateFCost(start, end));
+        closedSet.Clear();
 
         int timer = 0;
         int timeout = 60;
 
-        while (openSet.Count > 0 || ++timer > timeout)
+        while (openSet.First != end || ++timer > timeout)
         {
-            Node current = openSet.Dequeue();
+            Node targetNode = openSet.Dequeue();
+            closedSet.Add(targetNode);
 
-            string output = $"Target: {current}\n";
+            string output = $"Target: {targetNode}\n";
 
-            if (current == target)
+            foreach (Node neighbor in graph.Neighbors(targetNode))
             {
-                return PathFrom(target);
-            }
+                float gCost = CalcuateGCost(targetNode, neighbor);
 
-            foreach (Node neighbor in graph.Neighbors(current))
-            {
-                neighbor.Previous = current;
-
-                neighbor.GScore = CalcuateGCost(current, neighbor);
-                neighbor.FScore = CalculateFCost(neighbor, end);
-
-                output += $"Neighbor: {neighbor}";
-
-                if (!openSet.Contains(neighbor))
+                if (openSet.Contains(neighbor) && gCost < neighbor.GScore)
                 {
-                    output += " : added to openset";
-                    openSet.Enqueue(neighbor, neighbor.FScore);
+                    openSet.Remove(neighbor);
                 }
 
-                output += "\n\n";
-            }
+                if (closedSet.Contains(neighbor) && gCost < neighbor.GScore)
+                {
+                    closedSet.Remove(neighbor);
+                }
 
-            Debug.Log(output);
+                if (!openSet.Contains(neighbor) && !closedSet.Contains(neighbor))
+                {
+                    neighbor.GScore = gCost;
+                    neighbor.FScore = CalculateFCost(neighbor, end);
+
+                    openSet.Enqueue(neighbor, neighbor.FScore);
+
+                    neighbor.Previous = targetNode;
+                }
+            }
         }
 
-        return new PathData { Success = false };
+        return PathFrom(end);
     }
 
 
@@ -86,6 +86,9 @@ public class AStar
         }
     }
 
+
+
+    // Building Methods
 
     public Node BuildNode(Vector2Int position)
     {
@@ -141,15 +144,12 @@ public class AStar
     }
 
 
-    public Node GetNode(int x, int y)
-    {
-        return GetNode(new Vector2Int(x, y));
-    }
+    
+    // Cost Methods
 
-
-    public Node GetNode(Vector2Int position)
+    private float CalculateHCost(Node start, Node end)
     {
-        return graph.Nodes.Find(node => node.Position == position);
+        return OctileDistance(start, end);
     }
 
 
@@ -159,24 +159,36 @@ public class AStar
     }
 
 
-    private float CalculateHCost(Node start, Node end)
-    {
-        return OctileDistance(start, end);
-    }
-
-
     private float CalculateFCost(Node start, Node end)
     {
         return start.GScore + CalculateHCost(start, end);
     }
 
 
+    private float OctileDistance(Node start, Node end)
+    {
+        Vector2Int differenceVector = end.Position - start.Position;
+
+        int minDifference = Mathf.Min(Mathf.Abs(differenceVector.x), Mathf.Abs(differenceVector.y));
+        int maxDifference = Mathf.Max(Mathf.Abs(differenceVector.x), Mathf.Abs(differenceVector.y));
+
+        float octileDistance =
+            PathInfo.HorizontalWeight * maxDifference +
+            (PathInfo.DiagonalWeight - PathInfo.HorizontalWeight) * minDifference;
+
+        return octileDistance;
+    }
+
+
+
+    // Helper Methods
+
     private PathData PathFrom(Node node)
     {
         PathData pathData = new PathData
         {
             Success = true,
-            Nodes = new List<Node> { node }
+            Nodes = new List<Node>(),
         };
 
         Node current = node;
@@ -196,16 +208,15 @@ public class AStar
     }
 
 
-    private float OctileDistance(Node start, Node end)
+    public Node GetNode(int x, int y)
     {
-        Vector2Int differenceVector = end.Position - start.Position;
-
-        int minDifference = Mathf.Min(Mathf.Abs(differenceVector.x), Mathf.Abs(differenceVector.y));
-
-        float distance =
-            PathInfo.HorizontalWeight * (differenceVector.x + differenceVector.y) +
-            (PathInfo.DiagonalWeight - 2 * PathInfo.HorizontalWeight) * minDifference;
-
-        return distance;
+        return GetNode(new Vector2Int(x, y));
     }
+
+
+    public Node GetNode(Vector2Int position)
+    {
+        return graph.Nodes.Find(node => node.Position == position);
+    }
+
 }

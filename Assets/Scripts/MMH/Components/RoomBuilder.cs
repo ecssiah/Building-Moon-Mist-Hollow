@@ -19,7 +19,7 @@ public class RoomBuilder : MonoBehaviour
     {
         RoomData northEastTestRoom = new RoomData
         {
-            Bounds = new RectInt(2, 2, 2, 2),
+            Bounds = new RectInt(2, 2, 3, 3),
             Entrances = new List<EntranceData>(),
             WallType = WallType.WoodWall,
             GroundType = GroundType.Stone,
@@ -29,7 +29,7 @@ public class RoomBuilder : MonoBehaviour
 
         RoomData northWestTestRoom = new RoomData
         {
-            Bounds = new RectInt(-4, 2, 2, 2),
+            Bounds = new RectInt(-5, 2, 3, 3),
             Entrances = new List<EntranceData>(),
             WallType = WallType.WoodWall,
             GroundType = GroundType.Stone,

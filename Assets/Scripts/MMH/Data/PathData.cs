@@ -11,13 +11,16 @@ public struct PathData
     {
         string output = $"Path: {Success}";
 
-        for (int i = 0; i < Nodes.Count; i++)
-        { 
-            output += $" - {Nodes[i].Position}";
+        if (Success)
+        {
+            for (int i = 0; i < Nodes.Count; i++)
+            { 
+                output += $" - {Nodes[i].Position}";
 
-            if (Nodes[i].Index % 16 == 0)
-            {
-                output += "\n";
+                if (Nodes[i].Index % 16 == 0)
+                {
+                    output += "\n";
+                }
             }
         }
 
