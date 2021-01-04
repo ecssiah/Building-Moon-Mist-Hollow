@@ -2,7 +2,7 @@
 
 public class EntitySystem : MonoBehaviour
 {
-    private EntityData entityData;
+    private PopulationData populationData;
 
     private MapSystem mapSystem;
 
@@ -63,11 +63,26 @@ public class EntitySystem : MonoBehaviour
 
         CitizenComponent newCitizen = newCitizenObject.AddComponent<CitizenComponent>();
 
-        newCitizen.CitizenData = new CitizenData()
+        newCitizen.EntityData = new EntityData
         {
-            Name = newCitizenObject.name,
-            CitizenNumber = entityData.NextCitizenNumber++,
-            GroupData = new GroupData { GroupType = groupType },
+            Entity = newCitizenObject,
+            Speed = 84f,
+            Position = new Vector2(position.x, position.y),
+            Direction = new Vector2(0, -1),
+        };
+
+        newCitizen.CitizenData = new CitizenData
+        {
+            IdData = new IdData
+            {
+                FullName = newCitizenObject.name,
+                IdNumber = populationData.NextCitizenNumber++,
+                PopulationType = PopulationType.Citizen,
+            },
+            GroupData = new GroupData
+            {
+                GroupType = groupType
+            },
         };
     }
 

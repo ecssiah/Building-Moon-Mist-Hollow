@@ -1,8 +1,11 @@
-﻿using System;
+﻿using UnityEngine;
 
-[Serializable]
+
 public struct EntityData
 {
-    public int NextCitizenNumber;
-    public int NextResidentNumber;
+    public GameObject Entity;
+
+    public float Speed;
+    public Vector2 Position;
+    public Vector2 Direction;
 }

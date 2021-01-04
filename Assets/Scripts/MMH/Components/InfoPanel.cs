@@ -17,11 +17,7 @@ public class InfoPanel : MonoBehaviour
     private InfoType mode;
     public InfoType Mode { get => mode; }
 
-    private CitizenData entityData;
-    public CitizenData EntityData { get => entityData; }
-
-    private CellData cellData;
-    public CellData CellData { get => cellData; }
+    private CitizenComponent citizenComponent;
 
 
     void Awake()
@@ -64,15 +60,15 @@ public class InfoPanel : MonoBehaviour
     }
 
 
-    public void ActivateEntityMode(CitizenData entityData)
+    public void ActivateEntityMode(CitizenData citizenData)
     {
         mode = InfoType.Entity;
 
         entityTab.SetActive(true);
         cellTab.SetActive(false);
 
-        entityNameText.text = entityData.Name;
-        entityCitizenNumberText.text = $"{entityData.CitizenNumber}";
+        entityNameText.text = citizenData.IdData.FullName;
+        entityCitizenNumberText.text = $"{citizenData.IdData.IdNumber}";
     }
 
 

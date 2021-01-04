@@ -4,16 +4,12 @@ using UnityEngine;
 
 public class CitizenComponent : MonoBehaviour
 {
-    private CitizenAnimator animator;
-    private CitizenMovement movement;
-
-    private CitizenData citizenData;
-    public CitizenData CitizenData { get => citizenData; set => citizenData = value; }
+    public EntityData EntityData;
+    public CitizenData CitizenData;
 
 
     void Awake()
     {
-        movement = gameObject.AddComponent<CitizenMovement>();
-        animator = gameObject.AddComponent<CitizenAnimator>();
+        gameObject.AddComponent<CitizenController>();
     }
 }

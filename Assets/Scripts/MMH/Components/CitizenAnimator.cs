@@ -4,20 +4,15 @@ using UnityEngine;
 
 public class CitizenAnimator : MonoBehaviour
 {
-    private CitizenComponent citizenComponent;
-    private CitizenMovement citizenMovement;
-
     private AnimationType animationType;
 
-    private Rigidbody2D rigidBody;
+    private CitizenComponent citizenComponent;
+
     private SpriteRenderer spriteRenderer;
 
     private Sprite[] currentFrames;
 
     private Dictionary<AnimationType, Sprite[]> frames;
-
-    private float speed;
-    private Vector2 direction;
 
     private float timer;
     private int frameNumber;
@@ -28,14 +23,7 @@ public class CitizenAnimator : MonoBehaviour
     {
         citizenComponent = GetComponent<CitizenComponent>();
 
-        citizenMovement = GetComponent<CitizenMovement>();
-        citizenMovement.OnDirectionChange = OnDirectionChange;
-
-        rigidBody = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-
-        speed = 82f;
-        direction = new Vector2();
 
         timer = 0f;
         frameNumber = 0;
@@ -45,10 +33,7 @@ public class CitizenAnimator : MonoBehaviour
 
     void Start()
     {
-        string groupType = Enum.GetName(
-            typeof(GroupType),
-            citizenComponent.CitizenData.GroupData.GroupType
-        );
+        string groupType = Enum.GetName(typeof(GroupType), citizenComponent.CitizenData.GroupData.GroupType);
 
         frames = new Dictionary<AnimationType, Sprite[]>
         {
@@ -69,17 +54,7 @@ public class CitizenAnimator : MonoBehaviour
 
     void Update()
     {
-        citizenMovement.Think();
-
-        Move();
-
         UpdateAnimation();
-    }
-
-
-    private void Move()
-    {
-        rigidBody.velocity = Time.deltaTime * speed * direction;
     }
 
 
@@ -140,7 +115,7 @@ public class CitizenAnimator : MonoBehaviour
 
     public void OnDirectionChange(Vector2 direction)
     {
-        this.direction = direction;
+        citizenComponent.EntityData.Direction = direction;
 
         if (direction.x == 0 && direction.y == 0)
         {
