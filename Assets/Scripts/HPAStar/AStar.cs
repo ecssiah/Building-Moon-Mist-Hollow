@@ -123,29 +123,23 @@ public class AStar
                     targetNode.Position.x + x, targetNode.Position.y + y
                 );
 
-                if (ValidEdgeLocation(position, x, y))
+                if (ValidEdgeLocation(position, new Vector2Int(x, y)))
                 {
                     Node candidateNode = GetNode(position) ?? BuildNode(position);
                     float candidateDistance = Vector2Int.Distance(targetNode.Position, position);
 
                     graph.AddEdge(targetNode, candidateNode, candidateDistance);
                 }
-
             }
         }
     }
 
 
-    private bool ValidEdgeLocation(Vector2Int position, int xOffset, int yOffset)
+    private bool ValidEdgeLocation(Vector2Int position, Vector2Int offset)
     {
-        bool xOffMap = position.x < -mapData.Size || position.x > mapData.Size;
-        bool yOffMap = position.y < -mapData.Size || position.y > mapData.Size;
+        if (!MapUtil.OnMap(position)) return false;
 
-        if (xOffMap || yOffMap) return false;
-
-        bool solid = mapData.GetCell(position).Solid;
-
-        if (solid) return false;
+        if (mapData.GetCell(position).Solid) return false;
 
         Vector2Int northPosition = position + new Vector2Int(0, 1);
         Vector2Int eastPosition = position + new Vector2Int(1, 0);
@@ -157,24 +151,24 @@ public class AStar
         bool southSolid = !MapUtil.OnMap(southPosition) || mapData.GetCell(southPosition).Solid;
         bool westSolid = !MapUtil.OnMap(westPosition) || mapData.GetCell(westPosition).Solid;
 
-        if (xOffset != 0 && yOffset != 0)
+        if (offset.x != 0 && offset.y != 0)
         {
-            if (xOffset == -1 && yOffset == 1 && (northSolid || westSolid))
+            if (offset.x == -1 && offset.y == 1 && (northSolid || westSolid))
             {
                 return false;
             }
 
-            if (xOffset == 1 && yOffset == 1 && (northSolid || eastSolid))
+            if (offset.x == 1 && offset.y == 1 && (northSolid || eastSolid))
             {
                 return false;
             }
 
-            if (xOffset == -1 && yOffset == -1 && (southSolid || westSolid))
+            if (offset.x == -1 && offset.y == -1 && (southSolid || westSolid))
             {
                 return false;
             }
 
-            if (xOffset == 1 && yOffset == -1 && (southSolid || eastSolid))
+            if (offset.x == 1 && offset.y == -1 && (southSolid || eastSolid))
             {
                 return false;
             }
