@@ -24,6 +24,7 @@ public class MapSystem: MonoBehaviour
 
         mapData = mapFactory.BuildMap(mapData);
 
+        ConstructBoundary();
         ConstructMap();
     }
 
@@ -36,8 +37,8 @@ public class MapSystem: MonoBehaviour
 
         mapData = new MapData
         {
-            ShowCollision = false,
             Size = MapInfo.Size,
+            ShowCollision = MapInfo.ShowCollision,
             Cells = new CellData[MapInfo.Width * MapInfo.Width],
             Rooms = new List<RoomData>(MapInfo.NumberOfSeedRooms),
             Placeholders = new List<RectInt>()
@@ -188,10 +189,7 @@ public class MapSystem: MonoBehaviour
                 {
                     SetupWall(x, y, wallType);
 
-                    if (solid)
-                    {
-                        SetCellSolid(x, y);
-                    }
+                    if (solid) SetCellSolid(x, y);
                 }
             }
         }
@@ -221,7 +219,6 @@ public class MapSystem: MonoBehaviour
 
     public void ConstructMap()
     {
-        ConstructBoundary();
 
         foreach (CellData cellData in mapData.Cells)
         {

@@ -7,17 +7,18 @@ public class InfoPanel : MonoBehaviour
     private GameObject entityTab;
     private GameObject cellTab;
 
+    private TextMeshProUGUI entityIdText;
     private TextMeshProUGUI entityNameText;
-    private TextMeshProUGUI entityCitizenNumberText;
+    private TextMeshProUGUI entityPopulationTypeText;
+    private TextMeshProUGUI entityGroupTypeText;
 
+    private TextMeshProUGUI cellSolidText;
     private TextMeshProUGUI cellPositionText;
     private TextMeshProUGUI cellGroundTypeText;
     private TextMeshProUGUI cellBuildingTypeText;
 
     private InfoType mode;
     public InfoType Mode { get => mode; }
-
-    private CitizenComponent citizenComponent;
 
 
     void Awake()
@@ -34,11 +35,17 @@ public class InfoPanel : MonoBehaviour
         entityTab = GameObject.Find("Entity Tab");
         entityTab.SetActive(false);
 
-        entityCitizenNumberText = UIUtil.SetLabel(
-           "Citizen", entityTab.transform.Find("Citizen Number")
+        entityIdText = UIUtil.SetLabel(
+           "Id", entityTab.transform.Find("Id")
         );
         entityNameText = UIUtil.SetLabel(
             "Name", entityTab.transform.Find("Name")
+        );
+        entityPopulationTypeText = UIUtil.SetLabel(
+            "Population", entityTab.transform.Find("Population Type")
+        );
+        entityGroupTypeText = UIUtil.SetLabel(
+            "Group", entityTab.transform.Find("Group Type")
         );
     }
 
@@ -48,6 +55,9 @@ public class InfoPanel : MonoBehaviour
         cellTab = GameObject.Find("Cell Tab");
         cellTab.SetActive(false);
 
+        cellSolidText = UIUtil.SetLabel(
+            "Solid", cellTab.transform.Find("Solid")
+        );
         cellPositionText = UIUtil.SetLabel(
             "Position", cellTab.transform.Find("Position")
         );
@@ -67,8 +77,10 @@ public class InfoPanel : MonoBehaviour
         entityTab.SetActive(true);
         cellTab.SetActive(false);
 
+        entityIdText.text = $"{citizenData.IdData.IdNumber}";
         entityNameText.text = citizenData.IdData.FullName;
-        entityCitizenNumberText.text = $"{citizenData.IdData.IdNumber}";
+        entityPopulationTypeText.text = $"{Enum.GetName(typeof(PopulationType), citizenData.IdData.PopulationType)}";
+        entityGroupTypeText.text = $"{Enum.GetName(typeof(GroupType), citizenData.GroupData.GroupType)}";
     }
 
 
@@ -79,6 +91,7 @@ public class InfoPanel : MonoBehaviour
         entityTab.SetActive(false);
         cellTab.SetActive(true);
 
+        cellSolidText.text = $"{cellData.Solid}";
         cellPositionText.text = $"{cellData.Position}";
         cellGroundTypeText.text = $"{Enum.GetName(typeof(GroundType), cellData.GroundType)}";
         cellBuildingTypeText.text = $"{Enum.GetName(typeof(WallType), cellData.WallType)}";

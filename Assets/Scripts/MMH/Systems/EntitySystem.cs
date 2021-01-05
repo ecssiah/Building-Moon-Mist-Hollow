@@ -77,7 +77,7 @@ public class EntitySystem : MonoBehaviour
         {
             IdData = new IdData
             {
-                FullName = name,
+                FullName = citizenName,
                 IdNumber = populationData.NextCitizenNumber++,
                 PopulationType = PopulationType.Citizen,
             },
