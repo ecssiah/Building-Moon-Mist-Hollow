@@ -22,18 +22,26 @@ public class MapFactory : MonoBehaviour
         SetupBase();
         SetupPaths();
 
-        //mapData = roomBuilder.LayoutRooms(mapData);
-        //mapData = roomBuilder.LayoutTestRooms(mapData);
+        mapData = roomBuilder.LayoutRooms(mapData);
 
-        //SetupRooms(mapData);
+        SetupRooms(mapData);
 
-        mapSystem.SetCellSolid(0, 1);
-        mapSystem.SetCellSolid(1, 0);
-        mapSystem.SetCellSolid(-1, 0);
-        mapSystem.SetCellSolid(0, -1);
-
-
+        SetupTestObstacles();
+        
         return mapData;
+    }
+
+
+    private void SetupTestObstacles()
+    {
+        mapSystem.SetCellSolid(2, 0);
+        mapSystem.SetCellSolid(2, 2);
+        mapSystem.SetCellSolid(0, 2);
+        mapSystem.SetCellSolid(-2, 2);
+        mapSystem.SetCellSolid(-2, 0);
+        mapSystem.SetCellSolid(-2, -2);
+        mapSystem.SetCellSolid(0, -2);
+        mapSystem.SetCellSolid(2, -2);
     }
 
 

@@ -36,6 +36,10 @@ public class PathfindingSystem : MonoBehaviour
 
     private PathData FindPath(Vector2Int position1, Vector2Int position2)
     {
+        bool offMap = !MapUtil.OnMap(position1) || !MapUtil.OnMap(position2);
+
+        if (offMap) return new PathData { Valid = false };
+
         Node startNode = aStar.GetNode(position1);
         Node endNode = aStar.GetNode(position2);
 

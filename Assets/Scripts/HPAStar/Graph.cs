@@ -6,8 +6,8 @@ using UnityEngine;
 
 public class Graph
 {
-    private List<Node> nodes;
-    public List<Node> Nodes { get => nodes; }
+    private Dictionary<int, Node> nodes;
+    public Dictionary<int, Node> Nodes { get => nodes; }
 
     private float[,] adjacency;
     public float[,] Adjacency { get => adjacency; }
@@ -15,7 +15,7 @@ public class Graph
 
     public Graph(int nodeCount)
     {
-        nodes = Enumerable.Repeat(new Node(), nodeCount).ToList();
+        nodes = new Dictionary<int, Node>(nodeCount);
         adjacency = new float[nodeCount, nodeCount];
     }
 
@@ -30,6 +30,14 @@ public class Graph
     {
         adjacency[node1.Index, node2.Index] = weight;
         adjacency[node2.Index, node1.Index] = weight;
+    }
+
+
+    public float GetEdge(Node node1, Node node2)
+    {
+        if (node1 is null || node2 is null) return 0;
+
+        return adjacency[node1.Index, node2.Index];
     }
 
 
@@ -53,11 +61,11 @@ public class Graph
     {
         string output = $"Graph: {Nodes.Count} nodes\n";
 
-        foreach (Node node in Nodes)
+        foreach (var key in Nodes.Keys)
         {
-            output += $"  {node}";
+            output += $"  {Nodes[key]}";
 
-            if (node.Index % MapInfo.Width == MapInfo.Width - 1)
+            if (Nodes[key].Index % MapInfo.Width == MapInfo.Width - 1)
             {
                 output += "\n"; 
             }

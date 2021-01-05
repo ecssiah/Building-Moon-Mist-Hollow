@@ -7,10 +7,11 @@ using Priority_Queue;
 public class AStar
 {
     public Graph graph;
+
     public MapData mapData;
 
-    private FastPriorityQueue<Node> openSet;
-    private List<Node> closedSet;
+    private readonly FastPriorityQueue<Node> openSet;
+    private readonly List<Node> closedSet;
 
     private readonly int MaxPriorityQueueNodes = 1000;
 
@@ -119,22 +120,16 @@ public class AStar
             {
                 if (x == 0 && y == 0) continue;
 
-                Vector2Int position = new Vector2Int(
-                    targetNode.Position.x + x, targetNode.Position.y + y
-                );
+                Vector2Int offset = new Vector2Int(x, y);
+                Vector2Int neighborPosition = targetNode.Position + offset;
 
-                if (ValidEdgeLocation(position, new Vector2Int(x, y)))
+                if (ValidEdgeLocation(neighborPosition, offset))
                 {
-                    Debug.Log($"Valid: {targetNode.Position} - {position}");
+                    Node neighborNode = GetNode(neighborPosition) ?? BuildNode(neighborPosition);
 
-                    Node candidateNode = GetNode(position) ?? BuildNode(position);
-                    float candidateDistance = Vector2Int.Distance(targetNode.Position, position);
+                    float neighborDistance = Vector2Int.Distance(targetNode.Position, neighborPosition);
 
-                    graph.AddEdge(targetNode, candidateNode, candidateDistance);
-                }
-                else
-                {
-                    Debug.Log($"Invalid: {targetNode.Position} - {position}");
+                    graph.AddEdge(targetNode, neighborNode, neighborDistance);
                 }
             }
         }
@@ -245,7 +240,13 @@ public class AStar
 
     public Node GetNode(Vector2Int position)
     {
-        return graph.Nodes.Find(node => node.Position == position);
-    }
+        int nodeIndex = MapUtil.CoordsToIndex(position);
 
+        if (graph.Nodes.ContainsKey(nodeIndex))
+        {
+            return graph.Nodes[nodeIndex];
+        }
+
+        return null;
+    }
 }
