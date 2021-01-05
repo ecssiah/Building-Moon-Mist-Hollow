@@ -1,19 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
-public struct MapData
+public class Map : MonoBehaviour
 {
+    public RoomBuilder RoomBuilder;
+
     public bool ShowCollision;
 
     public int Size;
-    public int Width { get => 2 * Size + 1;  }
+    public int Width { get => 2 * Size + 1; }
 
     public CellData[] Cells;
 
     public List<RoomData> Rooms;
     public List<RectInt> Placeholders;
+
+
+    void Awake()
+    {
+        RoomBuilder = gameObject.AddComponent<RoomBuilder>();
+
+        Size = MapInfo.Size;
+        ShowCollision = MapInfo.ShowCollision;
+        Cells = new CellData[MapInfo.Width * MapInfo.Width];
+        Rooms = new List<RoomData>(MapInfo.NumberOfSeedRooms);
+        Placeholders = new List<RectInt>();
+    }
 
 
     public CellData GetCell(int x, int y)
@@ -38,4 +50,5 @@ public struct MapData
     {
         SetCell(position.x, position.y, cellData);
     }
-}       
+
+}

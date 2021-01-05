@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class CitizenAnimator : MonoBehaviour
 {
-    private AnimationType animationType;
+    private Citizen citizen;
 
-    private CitizenComponent citizenComponent;
+    private AnimationType animationType;
 
     private SpriteRenderer spriteRenderer;
 
@@ -21,7 +21,7 @@ public class CitizenAnimator : MonoBehaviour
 
     void Awake()
     {
-        citizenComponent = GetComponent<CitizenComponent>();
+        citizen = GetComponent<Citizen>();
 
         spriteRenderer = GetComponent<SpriteRenderer>();
 
@@ -33,7 +33,7 @@ public class CitizenAnimator : MonoBehaviour
 
     void Start()
     {
-        string groupType = Enum.GetName(typeof(GroupType), citizenComponent.CitizenData.GroupData.GroupType);
+        string groupType = Enum.GetName(typeof(GroupType), citizen.IdData.GroupType);
 
         frames = new Dictionary<AnimationType, Sprite[]>
         {
@@ -115,7 +115,7 @@ public class CitizenAnimator : MonoBehaviour
 
     public void OnDirectionChange()
     {
-        Vector2 newDirection = citizenComponent.EntityData.Direction;
+        Vector2 newDirection = citizen.EntityData.Direction;
 
         if (newDirection.x == 0 && newDirection.y == 0)
         {

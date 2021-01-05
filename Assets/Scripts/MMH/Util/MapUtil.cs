@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using Random = UnityEngine.Random;
 
 public struct MapUtil
@@ -12,7 +11,7 @@ public struct MapUtil
 
     public static int CoordsToIndex(int x, int y)
     {
-        return (x + MapInfo.Size) + MapInfo.Width * (y + MapInfo.Size);
+        return x + MapInfo.Size + MapInfo.Width * (y + MapInfo.Size);
     }
 
 

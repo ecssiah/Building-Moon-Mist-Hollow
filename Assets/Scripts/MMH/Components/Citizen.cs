@@ -1,14 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class CitizenComponent : MonoBehaviour
+public class Citizen : MonoBehaviour
 {
     public EntityData EntityData;
-    public CitizenData CitizenData;
+
+    public IdData IdData;
+    public InventoryData InventoryData;
 
     private CitizenAnimator citizenAnimator;
     private CitizenMovement citizenMovement;
+
 
     void Awake()
     {

@@ -70,17 +70,17 @@ public class InfoPanel : MonoBehaviour
     }
 
 
-    public void ActivateEntityMode(CitizenData citizenData)
+    public void DisplayCitizen(Citizen citizen)
     {
-        mode = InfoType.Entity;
+        mode = InfoType.Citizen;
 
         entityTab.SetActive(true);
         cellTab.SetActive(false);
 
-        entityIdText.text = $"{citizenData.IdData.IdNumber}";
-        entityNameText.text = citizenData.IdData.FullName;
-        entityPopulationTypeText.text = $"{Enum.GetName(typeof(PopulationType), citizenData.IdData.PopulationType)}";
-        entityGroupTypeText.text = $"{Enum.GetName(typeof(GroupType), citizenData.GroupData.GroupType)}";
+        entityIdText.text = $"{citizen.IdData.IdNumber}";
+        entityNameText.text = citizen.IdData.FullName;
+        entityPopulationTypeText.text = $"{Enum.GetName(typeof(PopulationType), citizen.IdData.PopulationType)}";
+        entityGroupTypeText.text = $"{Enum.GetName(typeof(GroupType), citizen.IdData.GroupType)}";
     }
 
 

@@ -2,8 +2,7 @@
 
 public class UISystem : MonoBehaviour
 {
-    private EntitySystem entitySystem;
-    private MapSystem mapSystem;
+    private Map map;
 
     private EntityLabeler entityLabeler;
     private InfoPanel infoPanel;
@@ -11,8 +10,7 @@ public class UISystem : MonoBehaviour
 
     void Awake()
     {
-        entitySystem = GameObject.Find("EntitySystem").GetComponent<EntitySystem>();
-        mapSystem = GameObject.Find("MapSystem").GetComponent<MapSystem>();
+        map = GameObject.Find("MapSystem").GetComponent<Map>();
 
         entityLabeler = gameObject.AddComponent<EntityLabeler>();
         infoPanel = gameObject.AddComponent<InfoPanel>();
@@ -21,17 +19,17 @@ public class UISystem : MonoBehaviour
 
     public void SelectEntity(GameObject entity)
     {
-        CitizenData entityData = entitySystem.GetCitizenData(entity);
+        Citizen citizen = entity.GetComponent<Citizen>();
 
         entityLabeler.SelectEntity(entity);
 
-        infoPanel.ActivateEntityMode(entityData);
+        infoPanel.DisplayCitizen(citizen);
     }
 
 
     public void SelectCell(Vector2Int cellPosition)
     {
-        CellData cellData = mapSystem.GetMapData().GetCell(cellPosition);
+        CellData cellData = map.GetCell(cellPosition);
 
         infoPanel.ActivateCellMode(cellData);
     }

@@ -7,21 +7,31 @@ public class CitizenMovement : MonoBehaviour
 {
     private PathData pathData;
 
-    private CitizenComponent citizenComponent;
+    private Citizen citizenComponent;
 
     private Rigidbody2D rigidBody2D;
 
     public Action OnDirectionChange;
+
+    public delegate PathData RequestPathDelegate(Vector2Int start, Vector2Int end);
+
+    public RequestPathDelegate RequestPath;
 
 
     void Awake()
     {
         pathData = new PathData { Valid = false };
 
-        citizenComponent = GetComponent<CitizenComponent>();
+        citizenComponent = GetComponent<Citizen>();
         rigidBody2D = GetComponent<Rigidbody2D>();
+    }
 
 
+    void Start()
+    {
+        PathData pathData = RequestPath(new Vector2Int(0, 0), new Vector2Int(3, 3));
+
+        Debug.Log(pathData);
     }
 
 

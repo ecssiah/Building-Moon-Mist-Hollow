@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using Priority_Queue;
 
@@ -8,7 +6,7 @@ public class AStar
 {
     public Graph graph;
 
-    public MapData mapData;
+    public Map map;
 
     private readonly FastPriorityQueue<Node> openSet;
     private readonly List<Node> closedSet;
@@ -68,26 +66,23 @@ public class AStar
     }
 
 
-    public void BuildGraph(MapData mapData)
+    public void BuildGraph(Map map)
     {
-        this.mapData = mapData;
+        this.map = map;
 
-        graph = new Graph(mapData.Cells.Length);
+        graph = new Graph(map.Cells.Length);
 
-        for (int x = -mapData.Size; x <= mapData.Size; x++)
+        for (int x = -map.Size; x <= map.Size; x++)
         {
-            for (int y = -mapData.Size; y <= mapData.Size; y++)
+            for (int y = -map.Size; y <= map.Size; y++)
             {
-                if (mapData.GetCell(x, y).Solid) continue;
+                if (map.GetCell(x, y).Solid) continue;
 
                 Node node = GetNode(x, y) ?? BuildNode(x, y);
 
                 BuildEdges(node);
             }
         }
-
-        Debug.Log(graph.GetEdge(GetNode(1, 2), GetNode(2, 3)));
-        Debug.Log(graph.GetEdge(GetNode(2, 3), GetNode(1, 2)));
     }
 
 
@@ -104,7 +99,7 @@ public class AStar
     {
         Node node = new Node
         {
-            Index = (x + mapData.Size) + mapData.Width * (y + mapData.Size),
+            Index = MapUtil.CoordsToIndex(x, y),
             Position = new Vector2Int(x, y),
             GScore = 0,
             FScore = 0,
@@ -148,17 +143,17 @@ public class AStar
 
         if (!MapUtil.OnMap(neighborPosition)) return false;
 
-        if (mapData.GetCell(neighborPosition).Solid) return false;
+        if (map.GetCell(neighborPosition).Solid) return false;
 
         Vector2Int northPosition = position + new Vector2Int(0, 1);
         Vector2Int eastPosition = position + new Vector2Int(1, 0);
         Vector2Int southPosition = position + new Vector2Int(0, -1);
         Vector2Int westPosition = position + new Vector2Int(-1, 0);
 
-        bool northSolid = !MapUtil.OnMap(northPosition) || mapData.GetCell(northPosition).Solid;
-        bool eastSolid = !MapUtil.OnMap(eastPosition) || mapData.GetCell(eastPosition).Solid;
-        bool southSolid = !MapUtil.OnMap(southPosition) || mapData.GetCell(southPosition).Solid;
-        bool westSolid = !MapUtil.OnMap(westPosition) || mapData.GetCell(westPosition).Solid;
+        bool northSolid = !MapUtil.OnMap(northPosition) || map.GetCell(northPosition).Solid;
+        bool eastSolid = !MapUtil.OnMap(eastPosition) || map.GetCell(eastPosition).Solid;
+        bool southSolid = !MapUtil.OnMap(southPosition) || map.GetCell(southPosition).Solid;
+        bool westSolid = !MapUtil.OnMap(westPosition) || map.GetCell(westPosition).Solid;
 
         if (offset.x == 1 && offset.y == 1)
         {

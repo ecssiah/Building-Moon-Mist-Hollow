@@ -2,18 +2,19 @@
 
 public class EntitySystem : MonoBehaviour
 {
-    private PopulationData populationData;
+    private Map map;
 
-    private MapSystem mapSystem;
+    private PopulationData populationData;
 
     private NameGenerator nameGenerator;
 
     private GameObject entitiesObject;
     private GameObject citizenPrefab;
 
+
     void Awake()
     {
-        mapSystem = GameObject.Find("MapSystem").GetComponent<MapSystem>();
+        map = GameObject.Find("MapSystem").GetComponent<Map>();
 
         nameGenerator = gameObject.AddComponent<NameGenerator>();
 
@@ -35,7 +36,7 @@ public class EntitySystem : MonoBehaviour
         {
             Vector2Int position = MapUtil.GetRandomMapPosition();
 
-            while (mapSystem.GetMapData().GetCell(position).Solid)
+            while (map.GetCell(position).Solid)
             {
                 position = MapUtil.GetRandomMapPosition();
             }
@@ -63,7 +64,7 @@ public class EntitySystem : MonoBehaviour
         newCitizenObject.name = citizenName;
         newCitizenObject.layer = LayerMask.NameToLayer("Citizens");
 
-        CitizenComponent newCitizen = newCitizenObject.AddComponent<CitizenComponent>();
+        Citizen newCitizen = newCitizenObject.AddComponent<Citizen>();
 
         newCitizen.EntityData = new EntityData
         {
@@ -73,26 +74,12 @@ public class EntitySystem : MonoBehaviour
             Direction = new Vector2(0, -1),
         };
 
-        newCitizen.CitizenData = new CitizenData
+        newCitizen.IdData = new IdData
         {
-            IdData = new IdData
-            {
-                FullName = citizenName,
-                IdNumber = populationData.NextCitizenNumber++,
-                PopulationType = PopulationType.Citizen,
-            },
-            GroupData = new GroupData
-            {
-                GroupType = groupType
-            },
+            FullName = citizenName,
+            IdNumber = populationData.NextCitizenNumber++,
+            PopulationType = PopulationType.Citizen,
+            GroupType = groupType,
         };
-    }
-
-
-    public CitizenData GetCitizenData(GameObject citizenObject)
-    {
-        CitizenComponent citizenComponent = citizenObject.GetComponent<CitizenComponent>();
-
-        return citizenComponent.CitizenData;
     }
 }

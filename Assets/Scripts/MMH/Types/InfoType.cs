@@ -1,6 +1,6 @@
 ﻿public enum InfoType
 {
     None,
-    Entity,
+    Citizen,
     Cell,
 }

@@ -5,24 +5,28 @@ using UnityEngine.Tilemaps;
 
 public class MapSystem: MonoBehaviour
 {
-    private MapData mapData;
+    private Map map;
 
     private Vector2Int selectedCell;
 
     private Dictionary<string, Tile> tiles;
     private Dictionary<string, Tilemap> tilemaps;
 
-    private MapFactory mapFactory;
-
 
     void Awake()
     {
+        map = gameObject.AddComponent<Map>();
+        
         InitData();
 
         InitTiles();
         InitTilemaps();
+    }
 
-        mapData = mapFactory.BuildMap(mapData);
+
+    void Start()
+    {
+        SetupMap();
 
         ConstructBoundary();
         ConstructMap();
@@ -31,27 +35,16 @@ public class MapSystem: MonoBehaviour
 
     private void InitData()
     {
-        mapFactory = gameObject.AddComponent<MapFactory>();
-
         selectedCell = new Vector2Int();
-
-        mapData = new MapData
-        {
-            Size = MapInfo.Size,
-            ShowCollision = MapInfo.ShowCollision,
-            Cells = new CellData[MapInfo.Width * MapInfo.Width],
-            Rooms = new List<RoomData>(MapInfo.NumberOfSeedRooms),
-            Placeholders = new List<RectInt>()
-        };
 
         for (int x = -MapInfo.Size; x <= MapInfo.Size; x++)
         {
             for (int y = -MapInfo.Size; y <= MapInfo.Size; y++)
             {
-                CellData cellData = mapData.GetCell(x, y);
+                CellData cellData = map.GetCell(x, y);
                 cellData.Position = new Vector2Int(x, y);
 
-                mapData.SetCell(x, y, cellData);
+                map.SetCell(x, y, cellData);
             }
         }
     }
@@ -81,7 +74,14 @@ public class MapSystem: MonoBehaviour
 
         TilemapRenderer collisionRenderer = tilemaps["Collision"].GetComponent<TilemapRenderer>();
 
-        collisionRenderer.enabled = mapData.ShowCollision;
+        collisionRenderer.enabled = map.ShowCollision;
+    }
+
+
+
+    private void SetupMap()
+    {
+        SetupTestObstacles();
     }
 
 
@@ -90,7 +90,7 @@ public class MapSystem: MonoBehaviour
 
     public void SetPlaceholder(RectInt bounds)
     {
-        mapData.Placeholders.Add(bounds);
+        map.Placeholders.Add(bounds);
     }
 
 
@@ -104,10 +104,10 @@ public class MapSystem: MonoBehaviour
     {
         if (MapUtil.OnMap(position))
         {
-            CellData cellData = mapData.GetCell(position);
+            CellData cellData = map.GetCell(position);
             cellData.Solid = solid;
 
-            mapData.SetCell(position, cellData);
+            map.SetCell(position, cellData);
         }
     }
 
@@ -137,10 +137,10 @@ public class MapSystem: MonoBehaviour
     {
         if (MapUtil.OnMap(position))
         {
-            CellData cellData = mapData.GetCell(position);
+            CellData cellData = map.GetCell(position);
             cellData.GroundType = groundType;
 
-            mapData.SetCell(position, cellData);
+            map.SetCell(position, cellData);
         }
     }
 
@@ -169,12 +169,12 @@ public class MapSystem: MonoBehaviour
     {
         if (MapUtil.OnMap(position))
         {
-            CellData cellData = mapData.GetCell(position);
+            CellData cellData = map.GetCell(position);
 
             cellData.Solid = true;
             cellData.WallType = wallType;
 
-            mapData.SetCell(position, cellData);
+            map.SetCell(position, cellData);
         }
     }
 
@@ -206,10 +206,128 @@ public class MapSystem: MonoBehaviour
     {
         if (MapUtil.OnMap(position))
         {
-            CellData cellData = mapData.GetCell(position);
+            CellData cellData = map.GetCell(position);
             cellData.OverlayType = overlayType;
 
-            mapData.SetCell(position, cellData);
+            map.SetCell(position, cellData);
+        }
+    }
+
+
+    private void SetupTestObstacles()
+    {
+        SetCellSolid(2, 0);
+        SetCellSolid(2, 2);
+        SetCellSolid(0, 2);
+        SetCellSolid(-2, 2);
+        SetCellSolid(-2, 0);
+        SetCellSolid(-2, -2);
+        SetCellSolid(0, -2);
+        SetCellSolid(2, -2);
+    }
+
+
+
+    public void Build()
+    {
+        SetupBase();
+        SetupPaths();
+
+        map.RoomBuilder.LayoutRooms(map);
+
+        SetupRooms();
+    }
+
+
+
+    private void SetupBase()
+    {
+        for (int x = -MapInfo.Size; x <= MapInfo.Size; x++)
+        {
+            for (int y = -MapInfo.Size; y <= MapInfo.Size; y++)
+            {
+                SetupGround(x, y, GroundType.Grass);
+            }
+        }
+    }
+
+
+    private void SetupPaths()
+    {
+        RectInt mainEastWest = new RectInt(
+            -MapInfo.Size, -MapInfo.PathWidth / 2,
+            MapInfo.Width, MapInfo.PathWidth
+        );
+        RectInt mainNorthSouth = new RectInt(
+            -MapInfo.PathWidth / 2, -MapInfo.Size,
+            MapInfo.PathWidth, MapInfo.Width
+        );
+
+        RectInt north1st = new RectInt(
+            -MapInfo.Size, MapInfo.Size / 2 - MapInfo.PathWidth / 2,
+            MapInfo.Width, MapInfo.PathWidth / 2
+        );
+        RectInt south1st = new RectInt(
+            -MapInfo.Size, -MapInfo.Size / 2 - MapInfo.PathWidth / 2,
+            MapInfo.Width, MapInfo.PathWidth / 2
+        );
+
+        RectInt west1st = new RectInt(
+            -MapInfo.Size / 2 - MapInfo.PathWidth / 2, -MapInfo.Size,
+            MapInfo.PathWidth / 2, MapInfo.Width
+        );
+        RectInt east1st = new RectInt(
+            MapInfo.Size / 2 - MapInfo.PathWidth / 2, -MapInfo.Size,
+            MapInfo.PathWidth / 2, MapInfo.Width
+        );
+
+        SetupGround(mainEastWest, GroundType.Stone);
+        SetupGround(mainNorthSouth, GroundType.Stone);
+
+        SetupGround(north1st, GroundType.Stone);
+        SetupGround(south1st, GroundType.Stone);
+        SetupGround(west1st, GroundType.Stone);
+        SetupGround(east1st, GroundType.Stone);
+
+        SetPlaceholder(mainEastWest);
+        SetPlaceholder(mainNorthSouth);
+
+        SetPlaceholder(north1st);
+        SetPlaceholder(south1st);
+        SetPlaceholder(west1st);
+        SetPlaceholder(east1st);
+    }
+
+
+    private void SetupRooms()
+    {
+        foreach (RoomData roomData in map.Rooms)
+        {
+            SetupRoom(roomData);
+        }
+    }
+
+
+    private void SetupRoom(RoomData roomData)
+    {
+        for (int x = roomData.Bounds.xMin; x <= roomData.Bounds.xMax; x++)
+        {
+            for (int y = roomData.Bounds.yMin; y <= roomData.Bounds.yMax; y++)
+            {
+                Vector2Int cellPosition = new Vector2Int(x, y);
+
+                SetupGround(cellPosition, roomData.GroundType);
+
+                if (MapUtil.EntranceExistsAt(x, y, roomData) == false)
+                {
+                    if (roomData.Fill || MapUtil.OnRectBoundary(x, y, roomData.Bounds))
+                    {
+                        SetupWall(cellPosition, roomData.WallType);
+                    }
+                }
+
+                SetupOverlay(cellPosition, roomData.OverlayType);
+            }
         }
     }
 
@@ -219,8 +337,7 @@ public class MapSystem: MonoBehaviour
 
     public void ConstructMap()
     {
-
-        foreach (CellData cellData in mapData.Cells)
+        foreach (CellData cellData in map.Cells)
         {
             if (cellData.Solid)
             {
@@ -299,14 +416,6 @@ public class MapSystem: MonoBehaviour
 
 
 
-    // Helper Methods
-
-    public MapData GetMapData()
-    {
-        return mapData;
-    }
-
-
     // Selection Methods
 
     public void SelectCell(Vector2Int position)
@@ -334,9 +443,9 @@ public class MapSystem: MonoBehaviour
     {
         using (StreamWriter file = File.CreateText($"Assets/Resources/Data/{name}.json"))
         {
-            string jsonText = JsonUtility.ToJson(mapData, true);
+            string jsonCellsText = JsonUtility.ToJson(map, true);
 
-            file.Write(jsonText);
+            file.Write(jsonCellsText);
         }
     }
 
@@ -347,9 +456,7 @@ public class MapSystem: MonoBehaviour
         {
             string jsonText = reader.ReadToEnd();
 
-            mapData = JsonUtility.FromJson<MapData>(jsonText);
+            map = JsonUtility.FromJson<Map>(jsonText);
         }
     }
-
-
 }
