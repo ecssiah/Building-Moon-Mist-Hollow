@@ -36,8 +36,10 @@ public class AStar
             Node targetNode = openSet.Dequeue();
             closedSet.Add(targetNode);
 
-            foreach (Node neighbor in graph.Neighbors(targetNode))
+            foreach (KeyValuePair<int, Node> keyValuePair in graph.Neighbors(targetNode))
             {
+                Node neighbor = keyValuePair.Value;
+
                 float gCost = CalcuateGCost(targetNode, neighbor);
 
                 if (openSet.Contains(neighbor) && gCost < neighbor.GScore)
@@ -83,6 +85,9 @@ public class AStar
                 BuildEdges(node);
             }
         }
+
+        Debug.Log(graph.GetEdge(GetNode(1, 2), GetNode(2, 3)));
+        Debug.Log(graph.GetEdge(GetNode(2, 3), GetNode(1, 2)));
     }
 
 
@@ -121,10 +126,11 @@ public class AStar
                 if (x == 0 && y == 0) continue;
 
                 Vector2Int offset = new Vector2Int(x, y);
-                Vector2Int neighborPosition = targetNode.Position + offset;
 
-                if (ValidEdgeLocation(neighborPosition, offset))
+                if (ValidEdgeLocation(targetNode.Position, offset))
                 {
+                    Vector2Int neighborPosition = targetNode.Position + offset;
+
                     Node neighborNode = GetNode(neighborPosition) ?? BuildNode(neighborPosition);
 
                     float neighborDistance = Vector2Int.Distance(targetNode.Position, neighborPosition);
@@ -138,9 +144,11 @@ public class AStar
 
     private bool ValidEdgeLocation(Vector2Int position, Vector2Int offset)
     {
-        if (!MapUtil.OnMap(position)) return false;
+        Vector2Int neighborPosition = position + offset;
 
-        if (mapData.GetCell(position).Solid) return false;
+        if (!MapUtil.OnMap(neighborPosition)) return false;
+
+        if (mapData.GetCell(neighborPosition).Solid) return false;
 
         Vector2Int northPosition = position + new Vector2Int(0, 1);
         Vector2Int eastPosition = position + new Vector2Int(1, 0);

@@ -2,13 +2,13 @@
 
 public struct MapInfo
 {
-    public static readonly int Size = 3;
+    public static readonly int Size = 6;
     public static readonly int Width = 2 * Size + 1;
 
     public static readonly bool ShowCollision = true;
 
     public static readonly int SeedRoomSize = 3;
-    public static readonly int NumberOfSeedRooms = 2;
+    public static readonly int NumberOfSeedRooms = 0;
     public static readonly int MaximumExpansionAttempts = 20;
 
     public static readonly int PathWidth = Width / 12;

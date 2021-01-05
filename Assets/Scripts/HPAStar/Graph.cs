@@ -41,15 +41,15 @@ public class Graph
     }
 
 
-    public List<Node> Neighbors(Node node)
+    public Dictionary<int, Node> Neighbors(Node node)
     {
-        List<Node> neighbors = new List<Node>();
+        Dictionary<int, Node> neighbors = new Dictionary<int, Node>();
 
-        for (int index = 0; index < adjacency.GetLength(1); index++)
+        for (int i = 0; i < adjacency.GetLength(1); i++)
         {
-            if (adjacency[node.Index, index] != 0)
+            if (adjacency[node.Index, i] != 0)
             {
-                neighbors.Add(nodes[index]);
+                neighbors[i] = nodes[i];
             }
         }
 
