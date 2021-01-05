@@ -48,7 +48,7 @@ public class CitizenAnimator : MonoBehaviour
             [AnimationType.WalkRight] = Resources.LoadAll<Sprite>($"Citizens/{groupType}/Right/Walk")
         };
 
-        PlayAnimation(AnimationType.WalkUp);
+        PlayAnimation(AnimationType.IdleDown);
     }
 
 

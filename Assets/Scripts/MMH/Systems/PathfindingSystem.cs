@@ -33,7 +33,7 @@ public class PathfindingSystem : MonoBehaviour
 
         bool nodesDoNotExist = startNode is null || endNode is null;
 
-        if (nodesDoNotExist) return new PathData { Success = false };
+        if (nodesDoNotExist) return new PathData { Valid = false };
 
         bool startClear = !mapSystem.GetMapData().GetCell(startNode.Position).Solid;
         bool endClear = !mapSystem.GetMapData().GetCell(endNode.Position).Solid;
@@ -43,6 +43,6 @@ public class PathfindingSystem : MonoBehaviour
             return aStar.FindPath(startNode, endNode);
         }
 
-        return new PathData { Success = false };
+        return new PathData { Valid = false };
     }
 }

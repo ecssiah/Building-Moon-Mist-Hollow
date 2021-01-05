@@ -2,16 +2,16 @@
 
 public struct PathData
 {
-    public bool Success;
+    public bool Valid;
 
     public List<Node> Nodes;
 
 
     public override string ToString()
     {
-        string output = $"Path: {Success}";
+        string output = $"Path: {Valid}";
 
-        if (Success)
+        if (Valid)
         {
             for (int i = 0; i < Nodes.Count; i++)
             { 

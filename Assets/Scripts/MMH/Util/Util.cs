@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 public struct Util
@@ -8,5 +9,13 @@ public struct Util
         Array values = Enum.GetValues(typeof(T));
 
         return (T)values.GetValue(Random.Range(0, values.Length));
+    }
+
+
+    public static Vector2 RandomIsoDirection()
+    {
+        Vector2 newIsoDirection = new Vector2(UnityEngine.Random.Range(-1, 2), UnityEngine.Random.Range(-1, 2));
+
+        return MapUtil.IsoToWorld(newIsoDirection);
     }
 }

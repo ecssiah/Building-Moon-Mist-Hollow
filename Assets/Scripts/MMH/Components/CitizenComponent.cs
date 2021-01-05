@@ -7,9 +7,14 @@ public class CitizenComponent : MonoBehaviour
     public EntityData EntityData;
     public CitizenData CitizenData;
 
+    private CitizenAnimator citizenAnimator;
+    private CitizenMovement citizenMovement;
 
     void Awake()
     {
-        gameObject.AddComponent<CitizenController>();
+        citizenAnimator = gameObject.AddComponent<CitizenAnimator>();
+        citizenMovement = gameObject.AddComponent<CitizenMovement>();
+
+        citizenMovement.OnDirectionChange = citizenAnimator.OnDirectionChange;
     }
 }

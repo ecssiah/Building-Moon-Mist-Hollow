@@ -51,7 +51,7 @@ public class EntityLabeler : MonoBehaviour
     private Vector3 GetLabelPosition(Vector3 entityPosition)
     {
         Vector3 screenPosition = MapUtil.WorldToScreen(entityPosition);
-        screenPosition.y += UIInfo.LabelYOffset * ViewUtil.GetCameraZoomRatio();
+        screenPosition.y += UIInfo.LabelYOffset * ViewUtil.CameraZoomRatio;
 
         return screenPosition;
     }

@@ -2,8 +2,11 @@
 
 public struct ViewUtil
 {
-    public static float GetCameraZoomRatio()
+    public static float CameraZoomRatio
     {
-        return ViewInfo.DefaultOrthographicSize / Camera.main.orthographicSize;
+        get
+        {
+            return ViewInfo.DefaultOrthographicSize / Camera.main.orthographicSize;
+        }
     }
 }

@@ -187,7 +187,7 @@ public class AStar
     {
         PathData pathData = new PathData
         {
-            Success = true,
+            Valid = true,
             Nodes = new List<Node>(),
         };
 
