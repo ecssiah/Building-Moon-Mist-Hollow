@@ -2,7 +2,7 @@
 
 public struct MapInfo
 {
-    public static readonly int Size = 3;
+    public static readonly int Size = 1;
     public static readonly int Width = 2 * Size + 1;
 
     public static readonly bool ShowCollision = false;

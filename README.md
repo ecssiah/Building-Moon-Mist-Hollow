@@ -12,4 +12,4 @@ but they are still in control of their daily lives.
 
 You design the rules by which they live out their lives, and they will respond
 accordingly. Eventually, if the people's anger gets intense enough they will join
-together and kill you.
+together and kill you - ending your rule.
