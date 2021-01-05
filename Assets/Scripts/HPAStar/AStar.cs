@@ -123,55 +123,64 @@ public class AStar
                     targetNode.Position.x + x, targetNode.Position.y + y
                 );
 
-                bool xOffMap = position.x < -mapData.Size || position.x > mapData.Size;
-                bool yOffMap = position.y < -mapData.Size || position.y > mapData.Size;
-
-                if (xOffMap || yOffMap) continue;
-
-                bool solid = mapData.GetCell(position).Solid;
-
-                if (solid) continue;
-
-                Vector2Int northPosition = position + new Vector2Int(0, 1);
-                Vector2Int eastPosition = position + new Vector2Int(1, 0);
-                Vector2Int southPosition = position + new Vector2Int(0, -1);
-                Vector2Int westPosition = position + new Vector2Int(-1, 0);
-
-                bool northSolid = !MapUtil.OnMap(northPosition) || mapData.GetCell(northPosition).Solid;
-                bool eastSolid = !MapUtil.OnMap(eastPosition) || mapData.GetCell(eastPosition).Solid;
-                bool southSolid = !MapUtil.OnMap(southPosition) || mapData.GetCell(southPosition).Solid;
-                bool westSolid = !MapUtil.OnMap(westPosition) || mapData.GetCell(westPosition).Solid;
-
-                if (x != 0 && y != 0)
+                if (ValidEdgeLocation(position, x, y))
                 {
-                    if (x == -1 && y == 1 && (northSolid || westSolid))
-                    {
-                        continue;
-                    }
+                    Node candidateNode = GetNode(position) ?? BuildNode(position);
+                    float candidateDistance = Vector2Int.Distance(targetNode.Position, position);
 
-                    if (x == 1 && y == 1 && (northSolid || eastSolid))
-                    {
-                        continue;
-                    }
-
-                    if (x == -1 && y == -1 && (southSolid || westSolid))
-                    {
-                        continue;
-                    }
-
-                    if (x == 1 && y == -1 && (southSolid || eastSolid))
-                    {
-                        continue;
-                    }
+                    graph.AddEdge(targetNode, candidateNode, candidateDistance);
                 }
 
-                Node candidateNode = GetNode(position) ?? BuildNode(position);
-
-                float candidateDistance = Vector2Int.Distance(targetNode.Position, position);
-
-                graph.AddEdge(targetNode, candidateNode, candidateDistance);
             }
         }
+    }
+
+
+    private bool ValidEdgeLocation(Vector2Int position, int xOffset, int yOffset)
+    {
+        bool xOffMap = position.x < -mapData.Size || position.x > mapData.Size;
+        bool yOffMap = position.y < -mapData.Size || position.y > mapData.Size;
+
+        if (xOffMap || yOffMap) return false;
+
+        bool solid = mapData.GetCell(position).Solid;
+
+        if (solid) return false;
+
+        Vector2Int northPosition = position + new Vector2Int(0, 1);
+        Vector2Int eastPosition = position + new Vector2Int(1, 0);
+        Vector2Int southPosition = position + new Vector2Int(0, -1);
+        Vector2Int westPosition = position + new Vector2Int(-1, 0);
+
+        bool northSolid = !MapUtil.OnMap(northPosition) || mapData.GetCell(northPosition).Solid;
+        bool eastSolid = !MapUtil.OnMap(eastPosition) || mapData.GetCell(eastPosition).Solid;
+        bool southSolid = !MapUtil.OnMap(southPosition) || mapData.GetCell(southPosition).Solid;
+        bool westSolid = !MapUtil.OnMap(westPosition) || mapData.GetCell(westPosition).Solid;
+
+        if (xOffset != 0 && yOffset != 0)
+        {
+            if (xOffset == -1 && yOffset == 1 && (northSolid || westSolid))
+            {
+                return false;
+            }
+
+            if (xOffset == 1 && yOffset == 1 && (northSolid || eastSolid))
+            {
+                return false;
+            }
+
+            if (xOffset == -1 && yOffset == -1 && (southSolid || westSolid))
+            {
+                return false;
+            }
+
+            if (xOffset == 1 && yOffset == -1 && (southSolid || eastSolid))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
 
