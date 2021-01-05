@@ -20,9 +20,17 @@ public class PathfindingSystem : MonoBehaviour
         aStar = new AStar();
         aStar.BuildGraph(mapSystem.GetMapData());
 
-        PathData pathData = FindPath(new Vector2Int(0, 0), new Vector2Int(3, 3));
+        PathData path1 = FindPath(new Vector2Int(0, 0), new Vector2Int( 4,  4));
+        Debug.Log(path1);
 
-        Debug.Log(pathData);
+        PathData path2 = FindPath(new Vector2Int(0, 0), new Vector2Int(-4,  4));
+        Debug.Log(path2);
+
+        PathData path3 = FindPath(new Vector2Int(0, 0), new Vector2Int( 4, -4));
+        Debug.Log(path3);
+
+        PathData path4 = FindPath(new Vector2Int(0, 0), new Vector2Int(-4, -4));
+        Debug.Log(path4);
     }
 
 
@@ -31,18 +39,13 @@ public class PathfindingSystem : MonoBehaviour
         Node startNode = aStar.GetNode(position1);
         Node endNode = aStar.GetNode(position2);
 
-        bool nodesDoNotExist = startNode is null || endNode is null;
+        if (startNode is null || endNode is null) return new PathData { Valid = false };
 
-        if (nodesDoNotExist) return new PathData { Valid = false };
+        bool startSolid = mapSystem.GetMapData().GetCell(startNode.Position).Solid;
+        bool endSolid = mapSystem.GetMapData().GetCell(endNode.Position).Solid;
 
-        bool startClear = !mapSystem.GetMapData().GetCell(startNode.Position).Solid;
-        bool endClear = !mapSystem.GetMapData().GetCell(endNode.Position).Solid;
+        if (startSolid || endSolid) return new PathData { Valid = false };
 
-        if (startClear && endClear)
-        {
-            return aStar.FindPath(startNode, endNode);
-        }
-
-        return new PathData { Valid = false };
+        return aStar.FindPath(startNode, endNode);
     }
 }

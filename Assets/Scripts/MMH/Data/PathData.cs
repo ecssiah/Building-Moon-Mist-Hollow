@@ -16,11 +16,6 @@ public struct PathData
             for (int i = 0; i < Nodes.Count; i++)
             { 
                 output += $" - {Nodes[i].Position}";
-
-                if (Nodes[i].Index % 16 == 0)
-                {
-                    output += "\n";
-                }
             }
         }
 

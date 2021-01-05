@@ -22,20 +22,12 @@ public class MapFactory : MonoBehaviour
         SetupBase();
         SetupPaths();
 
-        //mapData = roomBuilder.LayoutRooms(mapData);
-        mapData = roomBuilder.LayoutTestRooms(mapData);
+        mapData = roomBuilder.LayoutRooms(mapData);
+        //mapData = roomBuilder.LayoutTestRooms(mapData);
 
         SetupRooms(mapData);
 
-        mapSystem.SetCellSolid(1, 1);
-
         return mapData;
-    }
-
-
-    private void LayoutTestRooms()
-    {
-        
     }
 
 
