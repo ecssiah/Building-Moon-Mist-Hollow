@@ -21,7 +21,7 @@ public class CitizenMovement : MonoBehaviour
         citizenComponent = GetComponent<CitizenComponent>();
         rigidBody2D = GetComponent<Rigidbody2D>();
 
-        
+
     }
 
 

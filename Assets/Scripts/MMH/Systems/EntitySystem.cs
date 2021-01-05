@@ -51,6 +51,8 @@ public class EntitySystem : MonoBehaviour
 
         GroupType groupType = Util.RandomEnumValue<GroupType>();
 
+        string citizenName = nameGenerator.GetName(groupType);
+
         GameObject newCitizenObject = Instantiate(
             citizenPrefab,
             new Vector3(worldPosition.x, worldPosition.y, 0),
@@ -58,7 +60,7 @@ public class EntitySystem : MonoBehaviour
         );
 
         newCitizenObject.transform.parent = entitiesObject.transform;
-        newCitizenObject.name = nameGenerator.GetName(groupType);
+        newCitizenObject.name = citizenName;
         newCitizenObject.layer = LayerMask.NameToLayer("Citizens");
 
         CitizenComponent newCitizen = newCitizenObject.AddComponent<CitizenComponent>();
@@ -75,7 +77,7 @@ public class EntitySystem : MonoBehaviour
         {
             IdData = new IdData
             {
-                FullName = newCitizenObject.name,
+                FullName = name,
                 IdNumber = populationData.NextCitizenNumber++,
                 PopulationType = PopulationType.Citizen,
             },

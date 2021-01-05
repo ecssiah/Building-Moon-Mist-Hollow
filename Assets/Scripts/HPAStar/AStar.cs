@@ -35,8 +35,6 @@ public class AStar
             Node targetNode = openSet.Dequeue();
             closedSet.Add(targetNode);
 
-            string output = $"Target: {targetNode}\n";
-
             foreach (Node neighbor in graph.Neighbors(targetNode))
             {
                 float gCost = CalcuateGCost(targetNode, neighbor);
@@ -134,6 +132,39 @@ public class AStar
 
                 if (solid) continue;
 
+                Vector2Int northPosition = position + new Vector2Int(0, 1);
+                Vector2Int eastPosition = position + new Vector2Int(1, 0);
+                Vector2Int southPosition = position + new Vector2Int(0, -1);
+                Vector2Int westPosition = position + new Vector2Int(-1, 0);
+
+                bool northSolid = !MapUtil.OnMap(northPosition) || mapData.GetCell(northPosition).Solid;
+                bool eastSolid = !MapUtil.OnMap(eastPosition) || mapData.GetCell(eastPosition).Solid;
+                bool southSolid = !MapUtil.OnMap(southPosition) || mapData.GetCell(southPosition).Solid;
+                bool westSolid = !MapUtil.OnMap(westPosition) || mapData.GetCell(westPosition).Solid;
+
+                if (x != 0 && y != 0)
+                {
+                    if (x == -1 && y == 1 && (northSolid || westSolid))
+                    {
+                        continue;
+                    }
+
+                    if (x == 1 && y == 1 && (northSolid || eastSolid))
+                    {
+                        continue;
+                    }
+
+                    if (x == -1 && y == -1 && (southSolid || westSolid))
+                    {
+                        continue;
+                    }
+
+                    if (x == 1 && y == -1 && (southSolid || eastSolid))
+                    {
+                        continue;
+                    }
+                }
+
                 Node candidateNode = GetNode(position) ?? BuildNode(position);
 
                 float candidateDistance = Vector2Int.Distance(targetNode.Position, position);
@@ -191,18 +222,10 @@ public class AStar
             Nodes = new List<Node>(),
         };
 
-        Node current = node;
-
-        int timer = 0;
-        int timeout = 16;
-
-        while (current.Previous != null && ++timer < timeout)
+        for (Node current = node; current != null; current = current.Previous)
         {
             pathData.Nodes.Insert(0, current);
-            current = current.Previous;
         }
-
-        if (timer >= timeout) Debug.Log("Timed out, invalid path");
 
         return pathData;
     }

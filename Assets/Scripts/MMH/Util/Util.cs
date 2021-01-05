@@ -14,7 +14,7 @@ public struct Util
 
     public static Vector2 RandomIsoDirection()
     {
-        Vector2 newIsoDirection = new Vector2(UnityEngine.Random.Range(-1, 2), UnityEngine.Random.Range(-1, 2));
+        Vector2 newIsoDirection = new Vector2(Random.Range(-1, 2), Random.Range(-1, 2));
 
         return MapUtil.IsoToWorld(newIsoDirection);
     }
