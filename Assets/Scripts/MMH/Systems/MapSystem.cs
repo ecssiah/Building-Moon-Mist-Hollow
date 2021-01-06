@@ -5,7 +5,9 @@ using UnityEngine.Tilemaps;
 
 public class MapSystem: MonoBehaviour
 {
-    private Map map;
+    private WorldMap worldMap;
+
+    private RoomBuilder roomBuilder;
 
     private Vector2Int selectedCell;
 
@@ -15,7 +17,10 @@ public class MapSystem: MonoBehaviour
 
     void Awake()
     {
-        map = gameObject.AddComponent<Map>();
+        worldMap = gameObject.AddComponent<WorldMap>();
+
+        roomBuilder = gameObject.AddComponent<RoomBuilder>();
+        roomBuilder.WorldMap = worldMap;
         
         InitData();
 
@@ -41,10 +46,10 @@ public class MapSystem: MonoBehaviour
         {
             for (int y = -MapInfo.Size; y <= MapInfo.Size; y++)
             {
-                CellData cellData = map.GetCell(x, y);
+                CellData cellData = worldMap.GetCell(x, y);
                 cellData.Position = new Vector2Int(x, y);
 
-                map.SetCell(x, y, cellData);
+                worldMap.SetCell(x, y, cellData);
             }
         }
     }
@@ -74,13 +79,20 @@ public class MapSystem: MonoBehaviour
 
         TilemapRenderer collisionRenderer = tilemaps["Collision"].GetComponent<TilemapRenderer>();
 
-        collisionRenderer.enabled = map.ShowCollision;
+        collisionRenderer.enabled = worldMap.ShowCollision;
     }
 
 
 
     private void SetupMap()
     {
+        SetupBase();
+        SetupPaths();
+
+        roomBuilder.LayoutRooms();
+
+        SetupRooms();
+
         SetupTestObstacles();
     }
 
@@ -90,7 +102,7 @@ public class MapSystem: MonoBehaviour
 
     public void SetPlaceholder(RectInt bounds)
     {
-        map.Placeholders.Add(bounds);
+        worldMap.Placeholders.Add(bounds);
     }
 
 
@@ -104,10 +116,10 @@ public class MapSystem: MonoBehaviour
     {
         if (MapUtil.OnMap(position))
         {
-            CellData cellData = map.GetCell(position);
+            CellData cellData = worldMap.GetCell(position);
             cellData.Solid = solid;
 
-            map.SetCell(position, cellData);
+            worldMap.SetCell(position, cellData);
         }
     }
 
@@ -137,10 +149,10 @@ public class MapSystem: MonoBehaviour
     {
         if (MapUtil.OnMap(position))
         {
-            CellData cellData = map.GetCell(position);
+            CellData cellData = worldMap.GetCell(position);
             cellData.GroundType = groundType;
 
-            map.SetCell(position, cellData);
+            worldMap.SetCell(position, cellData);
         }
     }
 
@@ -169,12 +181,12 @@ public class MapSystem: MonoBehaviour
     {
         if (MapUtil.OnMap(position))
         {
-            CellData cellData = map.GetCell(position);
+            CellData cellData = worldMap.GetCell(position);
 
             cellData.Solid = true;
             cellData.WallType = wallType;
 
-            map.SetCell(position, cellData);
+            worldMap.SetCell(position, cellData);
         }
     }
 
@@ -206,10 +218,10 @@ public class MapSystem: MonoBehaviour
     {
         if (MapUtil.OnMap(position))
         {
-            CellData cellData = map.GetCell(position);
+            CellData cellData = worldMap.GetCell(position);
             cellData.OverlayType = overlayType;
 
-            map.SetCell(position, cellData);
+            worldMap.SetCell(position, cellData);
         }
     }
 
@@ -230,12 +242,7 @@ public class MapSystem: MonoBehaviour
 
     public void Build()
     {
-        SetupBase();
-        SetupPaths();
-
-        map.RoomBuilder.LayoutRooms(map);
-
-        SetupRooms();
+        
     }
 
 
@@ -301,7 +308,7 @@ public class MapSystem: MonoBehaviour
 
     private void SetupRooms()
     {
-        foreach (RoomData roomData in map.Rooms)
+        foreach (RoomData roomData in worldMap.Rooms)
         {
             SetupRoom(roomData);
         }
@@ -337,7 +344,7 @@ public class MapSystem: MonoBehaviour
 
     public void ConstructMap()
     {
-        foreach (CellData cellData in map.Cells)
+        foreach (CellData cellData in worldMap.Cells)
         {
             if (cellData.Solid)
             {
@@ -443,7 +450,7 @@ public class MapSystem: MonoBehaviour
     {
         using (StreamWriter file = File.CreateText($"Assets/Resources/Data/{name}.json"))
         {
-            string jsonCellsText = JsonUtility.ToJson(map, true);
+            string jsonCellsText = JsonUtility.ToJson(worldMap, true);
 
             file.Write(jsonCellsText);
         }
@@ -456,7 +463,7 @@ public class MapSystem: MonoBehaviour
         {
             string jsonText = reader.ReadToEnd();
 
-            map = JsonUtility.FromJson<Map>(jsonText);
+            worldMap = JsonUtility.FromJson<WorldMap>(jsonText);
         }
     }
 }

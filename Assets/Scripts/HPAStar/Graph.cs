@@ -3,30 +3,27 @@
 
 public class Graph
 {
-    private Dictionary<int, Node> nodes;
-    public Dictionary<int, Node> Nodes { get => nodes; }
-
-    private float[,] adjacency;
-    public float[,] Adjacency { get => adjacency; }
+    public Dictionary<int, Node> Nodes;
+    public float[,] Adjacency;
 
 
     public Graph(int nodeCount)
     {
-        nodes = new Dictionary<int, Node>(nodeCount);
-        adjacency = new float[nodeCount, nodeCount];
+        Nodes = new Dictionary<int, Node>(nodeCount);
+        Adjacency = new float[nodeCount, nodeCount];
     }
 
 
     public void AddNode(Node node)
     {
-        nodes[node.Index] = node;
+        Nodes[node.Index] = node;
     }
 
 
     public void AddEdge(Node node1, Node node2, float weight)
     {
-        adjacency[node1.Index, node2.Index] = weight;
-        adjacency[node2.Index, node1.Index] = weight;
+        Adjacency[node1.Index, node2.Index] = weight;
+        Adjacency[node2.Index, node1.Index] = weight;
     }
 
 
@@ -34,7 +31,7 @@ public class Graph
     {
         if (node1 is null || node2 is null) return 0;
 
-        return adjacency[node1.Index, node2.Index];
+        return Adjacency[node1.Index, node2.Index];
     }
 
 
@@ -42,11 +39,11 @@ public class Graph
     {
         Dictionary<int, Node> neighbors = new Dictionary<int, Node>();
 
-        for (int i = 0; i < adjacency.GetLength(1); i++)
+        for (int i = 0; i < Adjacency.GetLength(1); i++)
         {
-            if (adjacency[node.Index, i] != 0)
+            if (Adjacency[node.Index, i] != 0)
             {
-                neighbors[i] = nodes[i];
+                neighbors[i] = Nodes[i];
             }
         }
 
@@ -58,7 +55,7 @@ public class Graph
     {
         string output = $"Graph: {Nodes.Count} nodes\n";
 
-        foreach (var key in Nodes.Keys)
+        foreach (int key in Nodes.Keys)
         {
             output += $"  {Nodes[key]}";
 

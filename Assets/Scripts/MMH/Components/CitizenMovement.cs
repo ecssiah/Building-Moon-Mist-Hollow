@@ -29,9 +29,9 @@ public class CitizenMovement : MonoBehaviour
 
     void Start()
     {
-        PathData pathData = RequestPath(new Vector2Int(0, 0), new Vector2Int(3, 3));
+        //PathData pathData = RequestPath(new Vector2Int(0, 0), new Vector2Int(3, 3));
 
-        Debug.Log(pathData);
+        //Debug.Log(pathData);
     }
 
 

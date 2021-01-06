@@ -3,19 +3,19 @@
 public class PathfindingSystem : MonoBehaviour
 {
     private AStar aStar;
-    private Map map;
+    private WorldMap worldMap;
 
 
     void Awake()
     {
-        map = GameObject.Find("MapSystem").GetComponent<Map>();
+        worldMap = GameObject.Find("MapSystem").GetComponent<WorldMap>();
     }
 
 
     void Start()
     {
         aStar = new AStar();
-        aStar.BuildGraph(map);
+        aStar.BuildGraph(worldMap);
 
         PathData path1 = FindPath(new Vector2Int(0, 0), new Vector2Int( 4,  4));
         Debug.Log(path1);
@@ -33,19 +33,26 @@ public class PathfindingSystem : MonoBehaviour
 
     public PathData FindPath(Vector2Int position1, Vector2Int position2)
     {
+        if (!MapUtil.OnMap(position1) || !MapUtil.OnMap(position2))
+        {
+            return new PathData { Valid = false };
+        }
+
         Node startNode = aStar.GetNode(position1);
         Node endNode = aStar.GetNode(position2);
 
-        if (startNode is null || endNode is null) return new PathData { Valid = false };
+        if (startNode is null || endNode is null)
+        {
+            return new PathData { Valid = false };
+        }
 
-        bool offMap = !MapUtil.OnMap(position1) || !MapUtil.OnMap(position2);
+        CellData startCell = worldMap.GetCell(startNode.Position);
+        CellData endCell = worldMap.GetCell(endNode.Position);
 
-        if (offMap) return new PathData { Valid = false };
-
-        bool startSolid = map.GetCell(startNode.Position).Solid;
-        bool endSolid = map.GetCell(endNode.Position).Solid;
-
-        if (startSolid || endSolid) return new PathData { Valid = false };
+        if (startCell.Solid || endCell.Solid)
+        {
+            return new PathData { Valid = false };
+        }
 
         return aStar.FindPath(startNode, endNode);
     }

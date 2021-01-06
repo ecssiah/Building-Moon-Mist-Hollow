@@ -2,7 +2,7 @@
 
 public class EntitySystem : MonoBehaviour
 {
-    private Map map;
+    private WorldMap worldMap;
 
     private PopulationData populationData;
 
@@ -14,8 +14,6 @@ public class EntitySystem : MonoBehaviour
 
     void Awake()
     {
-        map = GameObject.Find("MapSystem").GetComponent<Map>();
-
         nameGenerator = gameObject.AddComponent<NameGenerator>();
 
         citizenPrefab = Resources.Load<GameObject>("Prefabs/Citizen");
@@ -32,11 +30,13 @@ public class EntitySystem : MonoBehaviour
 
     void Start()
     {
+        worldMap = GameObject.Find("MapSystem").GetComponent<WorldMap>();
+
         for (int i = 0; i < EntityInfo.NumberOfSeedCitizens; i++)
         {
             Vector2Int position = MapUtil.GetRandomMapPosition();
 
-            while (map.GetCell(position).Solid)
+            while (worldMap.GetCell(position).Solid)
             {
                 position = MapUtil.GetRandomMapPosition();
             }

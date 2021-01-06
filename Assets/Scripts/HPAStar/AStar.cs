@@ -4,9 +4,9 @@ using Priority_Queue;
 
 public class AStar
 {
-    public Graph graph;
+    public Graph Graph;
 
-    public Map map;
+    public WorldMap WorldMap;
 
     private readonly FastPriorityQueue<Node> openSet;
     private readonly List<Node> closedSet;
@@ -34,7 +34,7 @@ public class AStar
             Node targetNode = openSet.Dequeue();
             closedSet.Add(targetNode);
 
-            foreach (KeyValuePair<int, Node> keyValuePair in graph.Neighbors(targetNode))
+            foreach (KeyValuePair<int, Node> keyValuePair in Graph.Neighbors(targetNode))
             {
                 Node neighbor = keyValuePair.Value;
 
@@ -66,17 +66,17 @@ public class AStar
     }
 
 
-    public void BuildGraph(Map map)
+    public void BuildGraph(WorldMap worldMap)
     {
-        this.map = map;
+        WorldMap = worldMap;
 
-        graph = new Graph(map.Cells.Length);
+        Graph = new Graph(worldMap.Cells.Length);
 
-        for (int x = -map.Size; x <= map.Size; x++)
+        for (int x = -worldMap.Size; x <= worldMap.Size; x++)
         {
-            for (int y = -map.Size; y <= map.Size; y++)
+            for (int y = -worldMap.Size; y <= worldMap.Size; y++)
             {
-                if (map.GetCell(x, y).Solid) continue;
+                if (worldMap.GetCell(x, y).Solid) continue;
 
                 Node node = GetNode(x, y) ?? BuildNode(x, y);
 
@@ -106,7 +106,7 @@ public class AStar
             Previous = null,
         };
 
-        graph.AddNode(node);
+        Graph.AddNode(node);
 
         return node;
     }
@@ -130,7 +130,7 @@ public class AStar
 
                     float neighborDistance = Vector2Int.Distance(targetNode.Position, neighborPosition);
 
-                    graph.AddEdge(targetNode, neighborNode, neighborDistance);
+                    Graph.AddEdge(targetNode, neighborNode, neighborDistance);
                 }
             }
         }
@@ -143,17 +143,17 @@ public class AStar
 
         if (!MapUtil.OnMap(neighborPosition)) return false;
 
-        if (map.GetCell(neighborPosition).Solid) return false;
+        if (WorldMap.GetCell(neighborPosition).Solid) return false;
 
         Vector2Int northPosition = position + new Vector2Int(0, 1);
         Vector2Int eastPosition = position + new Vector2Int(1, 0);
         Vector2Int southPosition = position + new Vector2Int(0, -1);
         Vector2Int westPosition = position + new Vector2Int(-1, 0);
 
-        bool northSolid = !MapUtil.OnMap(northPosition) || map.GetCell(northPosition).Solid;
-        bool eastSolid = !MapUtil.OnMap(eastPosition) || map.GetCell(eastPosition).Solid;
-        bool southSolid = !MapUtil.OnMap(southPosition) || map.GetCell(southPosition).Solid;
-        bool westSolid = !MapUtil.OnMap(westPosition) || map.GetCell(westPosition).Solid;
+        bool northSolid = !MapUtil.OnMap(northPosition) || WorldMap.GetCell(northPosition).Solid;
+        bool eastSolid = !MapUtil.OnMap(eastPosition) || WorldMap.GetCell(eastPosition).Solid;
+        bool southSolid = !MapUtil.OnMap(southPosition) || WorldMap.GetCell(southPosition).Solid;
+        bool westSolid = !MapUtil.OnMap(westPosition) || WorldMap.GetCell(westPosition).Solid;
 
         if (offset.x == 1 && offset.y == 1)
         {
@@ -245,9 +245,9 @@ public class AStar
     {
         int nodeIndex = MapUtil.CoordsToIndex(position);
 
-        if (graph.Nodes.ContainsKey(nodeIndex))
+        if (Graph.Nodes.ContainsKey(nodeIndex))
         {
-            return graph.Nodes[nodeIndex];
+            return Graph.Nodes[nodeIndex];
         }
 
         return null;

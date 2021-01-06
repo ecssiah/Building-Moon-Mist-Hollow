@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class RoomBuilder : MonoBehaviour
 {
-    public void LayoutRooms(Map map)
+    public WorldMap WorldMap;
+
+    public void LayoutRooms()
     {
-        SeedRooms(map);
-        ExpandRooms(map);
-        GenerateEntrances(map);
+        SeedRooms();
+        ExpandRooms();
+        GenerateEntrances();
     }
 
 
-    public void LayoutTestRooms(Map map)
+    public void LayoutTestRooms()
     {
         RoomData northEastTestRoom = new RoomData
         {
@@ -22,7 +24,7 @@ public class RoomBuilder : MonoBehaviour
             GroundType = GroundType.Stone,
         };
 
-        map.Rooms.Add(northEastTestRoom);
+        WorldMap.Rooms.Add(northEastTestRoom);
 
         RoomData northWestTestRoom = new RoomData
         {
@@ -32,17 +34,17 @@ public class RoomBuilder : MonoBehaviour
             GroundType = GroundType.Stone,
         };
 
-        map.Rooms.Add(northWestTestRoom);
+        WorldMap.Rooms.Add(northWestTestRoom);
 
-        GenerateEntrances(map);
+        GenerateEntrances();
     }
 
 
-    private void SeedRooms(Map map)
+    private void SeedRooms()
     {
         for (int i = 0; i < MapInfo.NumberOfSeedRooms; i++)
         {
-            RectInt bounds = GetNewRoomLocation(map);
+            RectInt bounds = GetNewRoomLocation();
 
             if (bounds.width == 0 && bounds.height == 0) continue;
 
@@ -53,24 +55,24 @@ public class RoomBuilder : MonoBehaviour
                 WallType = WallType.StoneWall,
             };
 
-            map.Rooms.Add(roomData);
+            WorldMap.Rooms.Add(roomData);
         }
     }
 
 
-    private void ExpandRooms(Map map)
+    private void ExpandRooms()
     {
         for (int expansionAttempt = 0; expansionAttempt < MapInfo.MaximumExpansionAttempts; expansionAttempt++)
         {
-            for (int roomNumber = 0; roomNumber < map.Rooms.Count; roomNumber++)
+            for (int roomNumber = 0; roomNumber < WorldMap.Rooms.Count; roomNumber++)
             {
-                map.Rooms[roomNumber] = ExpandRoom(map.Rooms[roomNumber], map);
+                WorldMap.Rooms[roomNumber] = ExpandRoom(WorldMap.Rooms[roomNumber]);
             }
         }
     }
 
 
-    private RoomData ExpandRoom(RoomData roomData, Map map)
+    private RoomData ExpandRoom(RoomData roomData)
     {
         bool expanded = false;
 
@@ -111,7 +113,7 @@ public class RoomBuilder : MonoBehaviour
             }
             else
             {
-                foreach (RoomData testRoomData in map.Rooms)
+                foreach (RoomData testRoomData in WorldMap.Rooms)
                 {
                     if (testRoomData.Equals(roomData)) continue;
 
@@ -121,7 +123,7 @@ public class RoomBuilder : MonoBehaviour
                     }
                 }
 
-                foreach (RectInt bounds in map.Placeholders)
+                foreach (RectInt bounds in WorldMap.Placeholders)
                 {
                     if (bounds.Overlaps(expandedRoomData.Bounds))
                     {
@@ -140,14 +142,14 @@ public class RoomBuilder : MonoBehaviour
     }
 
 
-    private void GenerateEntrances(Map map)
+    private void GenerateEntrances()
     {
-        for (int i = 0; i < map.Rooms.Count; i++)
+        for (int i = 0; i < WorldMap.Rooms.Count; i++)
         {
-            RoomData roomData = map.Rooms[i];
-            roomData.Entrances = GenerateRoomEntrances(map.Rooms[i].Bounds);
+            RoomData roomData = WorldMap.Rooms[i];
+            roomData.Entrances = GenerateRoomEntrances(WorldMap.Rooms[i].Bounds);
 
-            map.Rooms[i] = roomData;
+            WorldMap.Rooms[i] = roomData;
         }
     }
 
@@ -189,7 +191,7 @@ public class RoomBuilder : MonoBehaviour
     }
 
 
-    private RectInt GetNewRoomLocation(Map map)
+    private RectInt GetNewRoomLocation()
     {
         for (int i = 0; i < 10; i++)
         {
@@ -208,7 +210,7 @@ public class RoomBuilder : MonoBehaviour
             }
             else
             {
-                foreach (RoomData roomData in map.Rooms)
+                foreach (RoomData roomData in WorldMap.Rooms)
                 {
                     if (roomBounds.Overlaps(roomData.Bounds))
                     {
@@ -216,7 +218,7 @@ public class RoomBuilder : MonoBehaviour
                     }
                 }
 
-                foreach (RectInt placeholder in map.Placeholders)
+                foreach (RectInt placeholder in WorldMap.Placeholders)
                 {
                     if (roomBounds.Overlaps(placeholder))
                     {

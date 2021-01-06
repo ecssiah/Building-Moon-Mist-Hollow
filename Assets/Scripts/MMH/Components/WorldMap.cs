@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Map : MonoBehaviour
+public class WorldMap : MonoBehaviour
 {
     public RoomBuilder RoomBuilder;
+
+    public CellData[] Cells;
 
     public bool ShowCollision;
 
     public int Size;
     public int Width { get => 2 * Size + 1; }
-
-    public CellData[] Cells;
 
     public List<RoomData> Rooms;
     public List<RectInt> Placeholders;
@@ -20,9 +20,12 @@ public class Map : MonoBehaviour
     {
         RoomBuilder = gameObject.AddComponent<RoomBuilder>();
 
-        Size = MapInfo.Size;
-        ShowCollision = MapInfo.ShowCollision;
         Cells = new CellData[MapInfo.Width * MapInfo.Width];
+
+        ShowCollision = MapInfo.ShowCollision;
+
+        Size = MapInfo.Size;
+
         Rooms = new List<RoomData>(MapInfo.NumberOfSeedRooms);
         Placeholders = new List<RectInt>();
     }
