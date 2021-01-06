@@ -5,39 +5,51 @@ using UnityEngine;
 
 public class CitizenMovement : MonoBehaviour
 {
-    private PathData pathData;
+    private EntitySystem entitySystem;
 
-    private Citizen citizenComponent;
+    private Citizen citizen;
 
     private Rigidbody2D rigidBody2D;
 
-    public Action OnDirectionChange;
-
-    public delegate PathData RequestPathDelegate(Vector2Int start, Vector2Int end);
-
-    public RequestPathDelegate RequestPath;
+    private PathData pathData;
 
 
     void Awake()
     {
-        pathData = new PathData { Valid = false };
+        entitySystem = GameObject.Find("EntitySystem").GetComponent<EntitySystem>();
 
-        citizenComponent = GetComponent<Citizen>();
+        citizen = GetComponent<Citizen>();
+
         rigidBody2D = GetComponent<Rigidbody2D>();
+
+        pathData = new PathData { Valid = false };
     }
 
 
     void Start()
     {
-        //PathData pathData = RequestPath(new Vector2Int(0, 0), new Vector2Int(3, 3));
+        Debug.Log(citizen.IdData.FullName);
+        Debug.Log(citizen.EntityData.GridPosition);
 
-        //Debug.Log(pathData);
+        pathData = entitySystem.RequestPath(citizen.EntityData.GridPosition, new Vector2Int(4, 4));
+
+        Debug.Log(pathData);
     }
 
 
     void Update()
     {
-        rigidBody2D.velocity = Time.deltaTime * citizenComponent.EntityData.Speed * citizenComponent.EntityData.Direction;
+        Vector2 unscaledVelocity =
+            citizen.EntityData.Speed *
+            citizen.EntityData.Direction;
+
+        rigidBody2D.velocity = Time.deltaTime * unscaledVelocity;
+    }
+
+
+    private Vector2 DecideVelocity()
+    {
+        return new Vector2(0, 0);
     }
 
 }

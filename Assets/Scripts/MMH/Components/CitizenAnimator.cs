@@ -10,8 +10,6 @@ public class CitizenAnimator : MonoBehaviour
 
     private SpriteRenderer spriteRenderer;
 
-    private Sprite[] currentFrames;
-
     private Dictionary<AnimationType, Sprite[]> frames;
 
     private float timer;
@@ -26,14 +24,15 @@ public class CitizenAnimator : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         timer = 0f;
-        frameNumber = 0;
-        frameRate = 1 / 10f;
     }
 
 
     void Start()
     {
         string groupType = Enum.GetName(typeof(GroupType), citizen.IdData.GroupType);
+
+        frameNumber = 0;
+        frameRate = 1 / 10f;
 
         frames = new Dictionary<AnimationType, Sprite[]>
         {
@@ -47,18 +46,10 @@ public class CitizenAnimator : MonoBehaviour
             [AnimationType.WalkLeft] = Resources.LoadAll<Sprite>($"Citizens/{groupType}/Left/Walk"),
             [AnimationType.WalkRight] = Resources.LoadAll<Sprite>($"Citizens/{groupType}/Right/Walk")
         };
-
-        PlayAnimation(AnimationType.IdleDown);
     }
 
 
     void Update()
-    {
-        UpdateAnimation();
-    }
-
-
-    private void UpdateAnimation()
     {
         timer += Time.deltaTime;
 
@@ -66,91 +57,65 @@ public class CitizenAnimator : MonoBehaviour
         {
             timer -= frameRate;
 
-            frameNumber = (frameNumber + 1) % currentFrames.Length;
+            Sprite[] frames = GetCurrentFrames();
 
-            spriteRenderer.sprite = currentFrames[frameNumber];
+            frameNumber = (frameNumber + 1) % frames.Length;
+
+            spriteRenderer.sprite = frames[frameNumber];
         }
     }
 
 
-    private void PlayAnimation(AnimationType animationType)
+    private Sprite[] GetCurrentFrames()
     {
-        timer = 0;
-        frameNumber = 0;
-
-        this.animationType = animationType;
-
-        switch (animationType)
+        if (citizen.EntityData.Direction.x > 0)
         {
-            case AnimationType.IdleUp:
-                currentFrames = frames[AnimationType.IdleUp];
-                break;
-            case AnimationType.IdleDown:
-                currentFrames = frames[AnimationType.IdleDown];
-                break;
-            case AnimationType.IdleLeft:
-                currentFrames = frames[AnimationType.IdleLeft];
-                break;
-            case AnimationType.IdleRight:
-                currentFrames = frames[AnimationType.IdleRight];
-                break;
-            case AnimationType.WalkUp:
-                currentFrames = frames[AnimationType.WalkUp];
-                break;
-            case AnimationType.WalkDown:
-                currentFrames = frames[AnimationType.WalkDown];
-                break;
-            case AnimationType.WalkLeft:
-                currentFrames = frames[AnimationType.WalkLeft];
-                break;
-            case AnimationType.WalkRight:
-                currentFrames = frames[AnimationType.WalkRight];
-                break;
-            default:
-                currentFrames = frames[AnimationType.IdleDown];
-                break;
-        }
-    }
-
-
-    public void OnDirectionChange()
-    {
-        Vector2 newDirection = citizen.EntityData.Direction;
-
-        if (newDirection.x == 0 && newDirection.y == 0)
-        {
-            if (animationType == AnimationType.WalkUp)
+            if (citizen.EntityData.Speed > 0)
             {
-                PlayAnimation(AnimationType.IdleUp);
+                return frames[AnimationType.WalkRight];
             }
-            else if (animationType == AnimationType.WalkDown)
+            else
             {
-                PlayAnimation(AnimationType.IdleDown);
-            }
-            else if (animationType == AnimationType.WalkLeft)
-            {
-                PlayAnimation(AnimationType.IdleLeft);
-            }
-            else if (animationType == AnimationType.WalkRight)
-            {
-                PlayAnimation(AnimationType.IdleRight);
+                return frames[AnimationType.IdleRight];
             }
         }
-        else if (newDirection.x > 0)
+        else if (citizen.EntityData.Direction.x < 0)
         {
-            PlayAnimation(AnimationType.WalkRight);
+            if (citizen.EntityData.Speed > 0)
+            {
+                return frames[AnimationType.WalkLeft];
+            }
+            else
+            {
+                return frames[AnimationType.IdleLeft];
+            }
         }
-        else if (newDirection.x < 0)
+        else
         {
-            PlayAnimation(AnimationType.WalkLeft);
+            if (citizen.EntityData.Speed > 0)
+            {
+                if (citizen.EntityData.Direction.y > 0)
+                {
+                    return frames[AnimationType.WalkUp];
+                }
+                else if (citizen.EntityData.Direction.y < 0)
+                {
+                    return frames[AnimationType.WalkDown];
+                }
+            }
+            else
+            {
+                if (citizen.EntityData.Direction.y > 0)
+                {
+                    return frames[AnimationType.IdleUp];
+                }
+                else if (citizen.EntityData.Direction.y < 0)
+                {
+                    return frames[AnimationType.IdleDown];
+                }
+            }
         }
-        else if (newDirection.y > 0)
-        {
-            PlayAnimation(AnimationType.WalkUp);
-        }
-        else if (newDirection.y < 0)
-        {
-            PlayAnimation(AnimationType.WalkDown);
-        }
+
+        return frames[AnimationType.IdleDown];
     }
 }

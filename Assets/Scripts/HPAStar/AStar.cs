@@ -6,8 +6,6 @@ public class AStar
 {
     public Graph Graph;
 
-    public WorldMap WorldMap;
-
     private readonly FastPriorityQueue<Node> openSet;
     private readonly List<Node> closedSet;
 
@@ -23,8 +21,10 @@ public class AStar
 
     public PathData FindPath(Node start, Node end)
     {
-        openSet.Enqueue(start, CalculateFCost(start, end));
+        openSet.Clear();
         closedSet.Clear();
+
+        openSet.Enqueue(start, CalculateFCost(start, end));
 
         int timer = 0;
         int timeout = 60;
@@ -66,120 +66,24 @@ public class AStar
     }
 
 
-    public void BuildGraph(WorldMap worldMap)
+    private PathData PathFrom(Node node)
     {
-        WorldMap = worldMap;
-
-        Graph = new Graph(worldMap.Cells.Length);
-
-        for (int x = -worldMap.Size; x <= worldMap.Size; x++)
+        PathData pathData = new PathData
         {
-            for (int y = -worldMap.Size; y <= worldMap.Size; y++)
-            {
-                if (worldMap.GetCell(x, y).Solid) continue;
-
-                Node node = GetNode(x, y) ?? BuildNode(x, y);
-
-                BuildEdges(node);
-            }
-        }
-    }
-
-
-
-    // Building Methods
-
-    public Node BuildNode(Vector2Int position)
-    {
-        return BuildNode(position.x, position.y);
-    }
-
-
-    public Node BuildNode(int x, int y)
-    {
-        Node node = new Node
-        {
-            Index = MapUtil.CoordsToIndex(x, y),
-            Position = new Vector2Int(x, y),
-            GScore = 0,
-            FScore = 0,
-            Previous = null,
+            Valid = true,
+            Nodes = new List<Node>(),
         };
 
-        Graph.AddNode(node);
+        for (Node current = node; current != null; current = current.Previous)
+        {
+            pathData.Nodes.Insert(0, current);
+        }
 
-        return node;
+        return pathData;
     }
 
 
-    private void BuildEdges(Node targetNode)
-    {
-        for (int x = -1; x <= 1; x++)
-        {
-            for (int y = -1; y <= 1; y++)
-            {
-                if (x == 0 && y == 0) continue;
 
-                Vector2Int offset = new Vector2Int(x, y);
-
-                if (ValidEdgeLocation(targetNode.Position, offset))
-                {
-                    Vector2Int neighborPosition = targetNode.Position + offset;
-
-                    Node neighborNode = GetNode(neighborPosition) ?? BuildNode(neighborPosition);
-
-                    float neighborDistance = Vector2Int.Distance(targetNode.Position, neighborPosition);
-
-                    Graph.AddEdge(targetNode, neighborNode, neighborDistance);
-                }
-            }
-        }
-    }
-
-
-    private bool ValidEdgeLocation(Vector2Int position, Vector2Int offset)
-    {
-        Vector2Int neighborPosition = position + offset;
-
-        if (!MapUtil.OnMap(neighborPosition)) return false;
-
-        if (WorldMap.GetCell(neighborPosition).Solid) return false;
-
-        Vector2Int northPosition = position + new Vector2Int(0, 1);
-        Vector2Int eastPosition = position + new Vector2Int(1, 0);
-        Vector2Int southPosition = position + new Vector2Int(0, -1);
-        Vector2Int westPosition = position + new Vector2Int(-1, 0);
-
-        bool northSolid = !MapUtil.OnMap(northPosition) || WorldMap.GetCell(northPosition).Solid;
-        bool eastSolid = !MapUtil.OnMap(eastPosition) || WorldMap.GetCell(eastPosition).Solid;
-        bool southSolid = !MapUtil.OnMap(southPosition) || WorldMap.GetCell(southPosition).Solid;
-        bool westSolid = !MapUtil.OnMap(westPosition) || WorldMap.GetCell(westPosition).Solid;
-
-        if (offset.x == 1 && offset.y == 1)
-        {
-            if (northSolid || eastSolid) return false;
-        }
-
-        if (offset.x == 1 && offset.y == -1)
-        {
-            if (southSolid || eastSolid) return false;
-        }
-
-        if (offset.x == -1 && offset.y == 1)
-        {
-            if (westSolid || northSolid) return false;
-        }
-
-        if (offset.x == -1 && offset.y == -1)
-        {
-            if (southSolid || westSolid) return false;
-        }
-
-        return true;
-    }
-
-
-    
     // Cost Methods
 
     private float CalculateHCost(Node start, Node end)
@@ -215,26 +119,42 @@ public class AStar
     }
 
 
+    // Building Methods
 
-    // Helper Methods
-
-    private PathData PathFrom(Node node)
+    public Node BuildNode(Vector2Int position)
     {
-        PathData pathData = new PathData
-        {
-            Valid = true,
-            Nodes = new List<Node>(),
-        };
-
-        for (Node current = node; current != null; current = current.Previous)
-        {
-            pathData.Nodes.Insert(0, current);
-        }
-
-        return pathData;
+        return BuildNode(position.x, position.y);
     }
 
 
+    public Node BuildNode(int x, int y)
+    {
+        Node node = new Node
+        {
+            Index = MapUtil.CoordsToIndex(x, y),
+            Position = new Vector2Int(x, y),
+            GScore = 0,
+            FScore = 0,
+            Previous = null,
+        };
+
+        Graph.AddNode(node);
+
+        return node;
+    }
+
+
+    public void BuildEdge(Node start, Node end, float weight)
+    {
+        Graph.AddEdge(start, end, weight);
+    }
+
+
+    
+    
+    // Helper Methods
+
+    
     public Node GetNode(int x, int y)
     {
         return GetNode(new Vector2Int(x, y));

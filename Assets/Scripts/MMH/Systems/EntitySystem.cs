@@ -2,6 +2,8 @@
 
 public class EntitySystem : MonoBehaviour
 {
+    private PathfindingSystem pathfindingSystem;
+
     private WorldMap worldMap;
 
     private PopulationData populationData;
@@ -14,6 +16,8 @@ public class EntitySystem : MonoBehaviour
 
     void Awake()
     {
+        pathfindingSystem = GameObject.Find("PathfindingSystem").GetComponent<PathfindingSystem>();
+
         nameGenerator = gameObject.AddComponent<NameGenerator>();
 
         citizenPrefab = Resources.Load<GameObject>("Prefabs/Citizen");
@@ -71,7 +75,7 @@ public class EntitySystem : MonoBehaviour
             Entity = newCitizenObject,
             Speed = 0f,
             Position = new Vector2(position.x, position.y),
-            Direction = new Vector2(0, -1),
+            Direction = new Vector2(1, 0),
         };
 
         newCitizen.IdData = new IdData
@@ -81,5 +85,11 @@ public class EntitySystem : MonoBehaviour
             PopulationType = PopulationType.Citizen,
             GroupType = groupType,
         };
+    }
+
+
+    public PathData RequestPath(Vector2Int start, Vector2Int end)
+    {
+        return pathfindingSystem.FindPath(start, end);
     }
 }

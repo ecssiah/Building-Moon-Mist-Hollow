@@ -15,7 +15,5 @@ public class Citizen : MonoBehaviour
     {
         citizenAnimator = gameObject.AddComponent<CitizenAnimator>();
         citizenMovement = gameObject.AddComponent<CitizenMovement>();
-
-        citizenMovement.OnDirectionChange = citizenAnimator.OnDirectionChange;
     }
 }
