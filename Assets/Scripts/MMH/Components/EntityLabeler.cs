@@ -42,7 +42,7 @@ namespace MMH
 
             TextMeshProUGUI textMesh = newLabel.GetComponent<TextMeshProUGUI>();
             textMesh.text = entity.name;
-            textMesh.fontSize = 22;
+            textMesh.fontSize = Info.UI.LabelFontSize;
 
             newLabel.transform.SetParent(labelsObject.transform, true);
 

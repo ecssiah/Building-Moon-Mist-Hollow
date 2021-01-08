@@ -5,24 +5,23 @@ namespace MMH
 {
     namespace System
     {
-        public class Pathfinding : MonoBehaviour
+        public class PathfindingSystem : MonoBehaviour
         {
-            private Map mapSystem;
+            private MapSystem mapSystem;
 
             private AStar aStar;
-            private WorldMap worldMap;
 
 
             void Awake()
             {
-                mapSystem = GameObject.Find("Map").GetComponent<Map>();
+                mapSystem = GameObject.Find("MapSystem").GetComponent<MapSystem>();
+
+                aStar = new AStar();
             }
 
 
             void Start()
             {
-                aStar = new AStar();
-
                 BuildGraph();
             }
 

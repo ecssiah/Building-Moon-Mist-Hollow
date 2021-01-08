@@ -4,18 +4,18 @@ namespace MMH
 {
     namespace System
     {
-        public class Input : MonoBehaviour
+        public class InputSystem : MonoBehaviour
         {
-            private UI uiSystem;
-            private Map mapSystem;
+            private UISystem uiSystem;
+            private MapSystem mapSystem;
 
             private SelectionHandler selectionHandler;
 
 
             void Awake()
             {
-                uiSystem = GameObject.Find("UI").GetComponent<UI>();
-                mapSystem = GameObject.Find("Map").GetComponent<Map>();
+                uiSystem = GameObject.Find("UISystem").GetComponent<UISystem>();
+                mapSystem = GameObject.Find("MapSystem").GetComponent<MapSystem>();
 
                 selectionHandler = gameObject.AddComponent<SelectionHandler>();
                 selectionHandler.BroadcastEntitySelection = OnEntitySelection;

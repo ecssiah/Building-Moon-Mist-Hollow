@@ -4,9 +4,9 @@ namespace MMH
 {
     namespace System
     {
-        public class UI : MonoBehaviour
+        public class UISystem : MonoBehaviour
         {
-            private Map mapSystem;
+            private MapSystem mapSystem;
 
             private EntityLabeler entityLabeler;
             private InfoPanel infoPanel;
@@ -14,7 +14,7 @@ namespace MMH
 
             void Awake()
             {
-                mapSystem = GameObject.Find("Map").GetComponent<Map>();
+                mapSystem = GameObject.Find("MapSystem").GetComponent<MapSystem>();
 
                 entityLabeler = gameObject.AddComponent<EntityLabeler>();
                 infoPanel = gameObject.AddComponent<InfoPanel>();

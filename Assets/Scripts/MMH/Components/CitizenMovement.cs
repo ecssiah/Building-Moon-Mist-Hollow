@@ -4,7 +4,7 @@ namespace MMH
 {
     public class CitizenMovement : MonoBehaviour
     {
-        private System.Entity entitySystem;
+        private System.EntitySystem entitySystem;
 
         private Citizen citizen;
 
@@ -15,7 +15,7 @@ namespace MMH
 
         void Awake()
         {
-            entitySystem = GameObject.Find("Entity").GetComponent<System.Entity>();
+            entitySystem = GameObject.Find("EntitySystem").GetComponent<System.EntitySystem>();
 
             citizen = GetComponent<Citizen>();
 

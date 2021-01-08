@@ -4,10 +4,10 @@ namespace MMH
 {
     namespace System
     {
-        public class Entity : MonoBehaviour
+        public class EntitySystem : MonoBehaviour
         {
-            private Map mapSystem;
-            private Pathfinding pathfindingSystem;
+            private MapSystem mapSystem;
+            private PathfindingSystem pathfindingSystem;
 
             private Data.Population population;
 
@@ -19,12 +19,11 @@ namespace MMH
 
             void Awake()
             {
-                mapSystem = GameObject.Find("Map").GetComponent<Map>();
-                pathfindingSystem = GameObject.Find("Pathfinding").GetComponent<Pathfinding>();
+                mapSystem = GameObject.Find("MapSystem").GetComponent<MapSystem>();
+                pathfindingSystem = GameObject.Find("PathfindingSystem").GetComponent<PathfindingSystem>();
 
                 entitiesObject = GameObject.Find("Entities");
 
-                gameObject.AddComponent<EntityFactory>();
                 nameGenerator = gameObject.AddComponent<NameGenerator>();
                 entityFactory = gameObject.AddComponent<EntityFactory>();
 

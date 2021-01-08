@@ -7,7 +7,7 @@ namespace MMH
 {
     namespace System
     {
-        public class Map : MonoBehaviour
+        public class MapSystem : MonoBehaviour
         {
             private WorldMap worldMap;
 
