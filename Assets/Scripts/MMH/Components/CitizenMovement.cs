@@ -8,8 +8,6 @@ namespace MMH
 
         private Citizen citizen;
 
-        private Rigidbody2D rigidBody2D;
-
         private Data.Path path;
 
 
@@ -19,8 +17,6 @@ namespace MMH
 
             citizen = GetComponent<Citizen>();
 
-            rigidBody2D = GetComponent<Rigidbody2D>();
-
             path = new Data.Path { Valid = false };
         }
 
@@ -29,9 +25,7 @@ namespace MMH
         {
             Debug.Log($"{citizen.Id.FullName} - {citizen.Entity.GridPosition}");
 
-            path = entitySystem.RequestPath(
-                citizen.Entity.GridPosition, new Vector2Int(4, 4)
-            );
+            path = entitySystem.RequestPath(citizen.Entity.GridPosition, new Vector2Int(4, 4));
 
             Debug.Log(path);
         }
@@ -39,11 +33,10 @@ namespace MMH
 
         void Update()
         {
-            Vector2 unscaledVelocity =
-                citizen.Entity.Speed *
-                citizen.Entity.Direction;
+            Vector2 unscaledVelocity = citizen.Entity.Speed * citizen.Entity.Direction;
+            Vector3 velocity = Time.deltaTime * new Vector3(unscaledVelocity.x, unscaledVelocity.y, 0);
 
-            rigidBody2D.velocity = Time.deltaTime * unscaledVelocity;
+            transform.position += velocity;
         }
 
 

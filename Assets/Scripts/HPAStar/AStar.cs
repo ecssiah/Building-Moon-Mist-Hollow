@@ -28,40 +28,36 @@ namespace HPAStar
 
             openSet.Enqueue(start, CalculateFCost(start, end));
 
-            int timer = 0;
-            int timeout = 1000;
-
-
-            while ((openSet.First != end) && (++timer < timeout))
+            while (openSet.Count > 0)
             {
                 Node targetNode = openSet.Dequeue();
                 closedSet.Add(targetNode);
 
-                foreach (KeyValuePair<int, Node> keyValuePair in Graph.Neighbors(targetNode))
-                {
-                    Node neighbor = keyValuePair.Value;
+                //foreach (KeyValuePair<int, Node> keyValuePair in Graph.Neighbors(targetNode))
+                //{
+                //    Node neighbor = keyValuePair.Value;
 
-                    float gCost = CalcuateGCost(targetNode, neighbor);
+                //    float gCost = CalcuateGCost(targetNode, neighbor);
 
-                    if (openSet.Contains(neighbor) && gCost < neighbor.GScore)
-                    {
-                        openSet.Remove(neighbor);
-                    }
+                //    if (openSet.Contains(neighbor) && gCost < neighbor.GScore)
+                //    {
+                //        openSet.Remove(neighbor);
+                //    }
 
-                    if (closedSet.Contains(neighbor) && gCost < neighbor.GScore)
-                    {
-                        closedSet.Remove(neighbor);
-                    }
+                //    if (closedSet.Contains(neighbor) && gCost < neighbor.GScore)
+                //    {
+                //        closedSet.Remove(neighbor);
+                //    }
 
-                    if (!openSet.Contains(neighbor) && !closedSet.Contains(neighbor))
-                    {
-                        neighbor.GScore = gCost;
-                        neighbor.FScore = CalculateFCost(neighbor, end);
-                        neighbor.Previous = targetNode;
+                //    if (!openSet.Contains(neighbor) && !closedSet.Contains(neighbor))
+                //    {
+                //        neighbor.GScore = gCost;
+                //        neighbor.FScore = CalculateFCost(neighbor, end);
+                //        neighbor.Previous = targetNode;
 
-                        openSet.Enqueue(neighbor, neighbor.FScore);
-                    }
-                }
+                //        openSet.Enqueue(neighbor, neighbor.FScore);
+                //    }
+                //}
             }
 
             return PathFrom(end);

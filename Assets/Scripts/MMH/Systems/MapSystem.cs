@@ -25,11 +25,7 @@ namespace MMH
 
                 roomBuilder = gameObject.AddComponent<RoomBuilder>();
                 roomBuilder.WorldMap = worldMap;
-            }
 
-
-            void Start()
-            {
                 InitData();
 
                 InitTiles();
@@ -229,27 +225,6 @@ namespace MMH
             }
 
 
-            private void SetupTestObstacles()
-            {
-                SetCellSolid(2, 0);
-                SetCellSolid(2, 2);
-                SetCellSolid(0, 2);
-                SetCellSolid(-2, 2);
-                SetCellSolid(-2, 0);
-                SetCellSolid(-2, -2);
-                SetCellSolid(0, -2);
-                SetCellSolid(2, -2);
-            }
-
-
-
-            public void Build()
-            {
-
-            }
-
-
-
             private void SetupBase()
             {
                 for (int x = -Info.Map.Size; x <= Info.Map.Size; x++)
@@ -380,9 +355,7 @@ namespace MMH
                     {
                         if (Util.Map.OnRectBoundary(x, y, Info.Map.WorldBoundary))
                         {
-                            tilemaps["Collision"].SetTile(
-                                new Vector3Int(x, y, 0), tiles["Collision_1"]
-                            );
+                            tilemaps["Collision"].SetTile(new Vector3Int(x, y, 0), tiles["Collision_1"]);
                         }
                     }
                 }
@@ -472,9 +445,7 @@ namespace MMH
 
             public void ClearSelection()
             {
-                tilemaps["Overlay"].SetTile(
-                    new Vector3Int(selectedCell.x, selectedCell.y, 0), null
-                );
+                tilemaps["Overlay"].SetTile(new Vector3Int(selectedCell.x, selectedCell.y, 0), null);
             }
 
 
