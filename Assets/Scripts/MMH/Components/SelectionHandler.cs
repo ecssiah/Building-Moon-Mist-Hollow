@@ -1,38 +1,41 @@
 ﻿using System;
 using UnityEngine;
 
-public class SelectionHandler : MonoBehaviour
+namespace MMH
 {
-    public Action<GameObject> BroadcastEntitySelection;
-    public Action<Vector2Int> BroadcastCellSelection;
-
-
-    public void Select()
+    public class SelectionHandler : MonoBehaviour
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
+        public Action<GameObject> BroadcastEntitySelection;
+        public Action<Vector2Int> BroadcastCellSelection;
 
-        if (hit.collider != null)
+
+        public void Select()
         {
-            bool isTarget = hit.collider.gameObject.CompareTag("Target");
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
 
-            if (isTarget)
+            if (hit.collider != null)
             {
-                BroadcastEntitySelection(hit.transform.parent.gameObject);
+                bool isTarget = hit.collider.gameObject.CompareTag("Target");
+
+                if (isTarget)
+                {
+                    BroadcastEntitySelection(hit.transform.parent.gameObject);
+                }
             }
-        }
-        else
-        {
-            Vector2Int isoGridPosition = MapUtil.ScreenToIsoGrid(Input.mousePosition);
-
-            bool inVerticalBounds = Math.Abs(isoGridPosition.x) <= MapInfo.Size;
-            bool inHorizontalBounds = Math.Abs(isoGridPosition.y) <= MapInfo.Size;
-
-            bool onMap = inVerticalBounds && inHorizontalBounds;
-
-            if (onMap)
+            else
             {
-                BroadcastCellSelection(isoGridPosition);
+                Vector2Int isoGridPosition = Util.Map.ScreenToIsoGrid(Input.mousePosition);
+
+                bool inVerticalBounds = Math.Abs(isoGridPosition.x) <= Info.Map.Size;
+                bool inHorizontalBounds = Math.Abs(isoGridPosition.y) <= Info.Map.Size;
+
+                bool onMap = inVerticalBounds && inHorizontalBounds;
+
+                if (onMap)
+                {
+                    BroadcastCellSelection(isoGridPosition);
+                }
             }
         }
     }

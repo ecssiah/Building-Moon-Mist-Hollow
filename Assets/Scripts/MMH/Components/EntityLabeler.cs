@@ -2,78 +2,81 @@
 using TMPro;
 using UnityEngine;
 
-public class EntityLabeler : MonoBehaviour
+namespace MMH
 {
-    private GameObject labelsObject;
-    private GameObject labelPrefab;
-
-    private List<GameObject> labels;
-    private List<GameObject> entities;
-
-
-    void Awake()
+    public class EntityLabeler : MonoBehaviour
     {
-        labels = new List<GameObject>();
-        labelsObject = GameObject.Find("Labels");
-        labelPrefab = Resources.Load<GameObject>("Prefabs/Label");
+        private GameObject labelsObject;
+        private GameObject labelPrefab;
 
-        entities = new List<GameObject>();
-    }
+        private List<GameObject> labels;
+        private List<GameObject> entities;
 
 
-    void Update()
-    {
-        for (int i = 0; i < entities.Count; i++)
+        void Awake()
         {
-            labels[i].transform.position = GetLabelPosition(entities[i].transform.position);
+            labels = new List<GameObject>();
+            labelsObject = GameObject.Find("Labels");
+            labelPrefab = Resources.Load<GameObject>("Prefabs/Label");
+
+            entities = new List<GameObject>();
         }
-    }
 
 
-    private GameObject CreateLabel(GameObject entity)
-    {
-        GameObject newLabel = Instantiate(
-            labelPrefab,
-            GetLabelPosition(entity.transform.position),
-            Quaternion.identity
-        );
-
-        TextMeshProUGUI textMesh = newLabel.GetComponent<TextMeshProUGUI>();
-        textMesh.text = entity.name;
-        textMesh.fontSize = 22;
-
-        newLabel.transform.SetParent(labelsObject.transform, true);
-
-        return newLabel;
-    }
-
-
-    private Vector3 GetLabelPosition(Vector3 entityPosition)
-    {
-        Vector3 screenPosition = MapUtil.WorldToScreen(entityPosition);
-        screenPosition.y += UIInfo.LabelYOffset * ViewUtil.CameraZoomRatio;
-
-        return screenPosition;
-    }
-
-
-    public void SelectEntity(GameObject entity)
-    {
-        Clear();
-
-        entities = new List<GameObject>() { entity };
-        labels = new List<GameObject>() { CreateLabel(entity) };
-    }
-
-
-    public void Clear()
-    {
-        entities = new List<GameObject>();
-        labels = new List<GameObject>();
-
-        foreach (Transform child in labelsObject.transform)
+        void Update()
         {
-            Destroy(child.gameObject);
+            for (int i = 0; i < entities.Count; i++)
+            {
+                labels[i].transform.position = GetLabelPosition(entities[i].transform.position);
+            }
+        }
+
+
+        private GameObject CreateLabel(GameObject entity)
+        {
+            GameObject newLabel = Instantiate(
+                labelPrefab,
+                GetLabelPosition(entity.transform.position),
+                Quaternion.identity
+            );
+
+            TextMeshProUGUI textMesh = newLabel.GetComponent<TextMeshProUGUI>();
+            textMesh.text = entity.name;
+            textMesh.fontSize = 22;
+
+            newLabel.transform.SetParent(labelsObject.transform, true);
+
+            return newLabel;
+        }
+
+
+        private Vector3 GetLabelPosition(Vector3 entityPosition)
+        {
+            Vector3 screenPosition = Util.Map.WorldToScreen(entityPosition);
+            screenPosition.y += Info.UI.LabelYOffset * Info.View.CameraZoomRatio;
+
+            return screenPosition;
+        }
+
+
+        public void SelectEntity(GameObject entity)
+        {
+            Clear();
+
+            entities = new List<GameObject>() { entity };
+            labels = new List<GameObject>() { CreateLabel(entity) };
+        }
+
+
+        public void Clear()
+        {
+            entities = new List<GameObject>();
+            labels = new List<GameObject>();
+
+            foreach (Transform child in labelsObject.transform)
+            {
+                Destroy(child.gameObject);
+            }
         }
     }
 }

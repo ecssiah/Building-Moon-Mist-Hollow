@@ -1,22 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Priority_Queue;
 
-
-public class Node : FastPriorityQueueNode
+namespace HPAStar
 {
-    public int Index;
-    public Vector2Int Position;
-
-    public float GScore;
-    public float FScore;
-
-    public Node Previous;
-
-
-    public override string ToString()
+    public class Node : FastPriorityQueueNode
     {
-        return $"{Index} : {Position.x},{Position.y}, G: {GScore} F: {FScore}";
+        public int Index;
+        public Vector2Int Position;
+
+        public float GScore;
+        public float FScore;
+
+        public Node Previous;
+
+
+        public override string ToString()
+        {
+            return $"{Index} : {Position.x},{Position.y}, G: {GScore} F: {FScore}";
+        }
     }
 }

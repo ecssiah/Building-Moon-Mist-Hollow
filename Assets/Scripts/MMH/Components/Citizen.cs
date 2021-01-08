@@ -1,19 +1,19 @@
 ﻿using UnityEngine;
 
-public class Citizen : MonoBehaviour
+namespace MMH
 {
-    public EntityData EntityData;
-
-    public IdData IdData;
-    public InventoryData InventoryData;
-
-    private CitizenAnimator citizenAnimator;
-    private CitizenMovement citizenMovement;
-
-
-    void Awake()
+    public class Citizen : MonoBehaviour
     {
-        citizenAnimator = gameObject.AddComponent<CitizenAnimator>();
-        citizenMovement = gameObject.AddComponent<CitizenMovement>();
+        public Data.Entity Entity;
+        public Data.Id Id;
+        public Data.Inventory Inventory;
+
+
+        void Awake()
+        {
+            gameObject.AddComponent<CitizenAnimator>();
+            gameObject.AddComponent<CitizenMovement>();
+        }
     }
 }
+

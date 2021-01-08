@@ -1,52 +1,55 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class NameGenerator : MonoBehaviour
+namespace MMH
 {
-    public string GetName(GroupType groupType)
+    public class NameGenerator : MonoBehaviour
     {
-        string initial = "";
-        string middle = "";
-        string final = "";
-
-        int initialIndex;
-        int middleIndex;
-        int finalIndex;
-
-        switch (groupType)
+        public string GetName(Type.Group groupType)
         {
-            case GroupType.Guy:
-                initialIndex = Random.Range(0, NameInfo.GuyInitialElements.Length);
-                middleIndex = Random.Range(0, NameInfo.GuyMiddleElements.Length);
-                finalIndex = Random.Range(0, NameInfo.GuyFinalElements.Length);
+            string initial = "";
+            string middle = "";
+            string final = "";
 
-                initial = NameInfo.GuyInitialElements[initialIndex];
-                middle = NameInfo.GuyMiddleElements[middleIndex];
-                final = NameInfo.GuyFinalElements[finalIndex];
+            int initialIndex;
+            int middleIndex;
+            int finalIndex;
 
-                break;
-            case GroupType.Kailt:
-                initialIndex = Random.Range(0, NameInfo.KailtInitialElements.Length);
-                middleIndex = Random.Range(0, NameInfo.KailtMiddleElements.Length);
-                finalIndex = Random.Range(0, NameInfo.KailtFinalElements.Length);
+            switch (groupType)
+            {
+                case Type.Group.Guy:
+                    initialIndex = Random.Range(0, Info.Name.GuyInitialElements.Length);
+                    middleIndex = Random.Range(0, Info.Name.GuyMiddleElements.Length);
+                    finalIndex = Random.Range(0, Info.Name.GuyFinalElements.Length);
 
-                initial = NameInfo.KailtInitialElements[initialIndex];
-                middle = NameInfo.KailtMiddleElements[middleIndex];
-                final = NameInfo.KailtFinalElements[finalIndex];
+                    initial = Info.Name.GuyInitialElements[initialIndex];
+                    middle = Info.Name.GuyMiddleElements[middleIndex];
+                    final = Info.Name.GuyFinalElements[finalIndex];
 
-                break;
-            case GroupType.Taylor:
-                initialIndex = Random.Range(0, NameInfo.TaylorInitialElements.Length);
-                middleIndex = Random.Range(0, NameInfo.TaylorMiddleElements.Length);
-                finalIndex = Random.Range(0, NameInfo.TaylorFinalElements.Length);
+                    break;
+                case Type.Group.Kailt:
+                    initialIndex = Random.Range(0, Info.Name.KailtInitialElements.Length);
+                    middleIndex = Random.Range(0, Info.Name.KailtMiddleElements.Length);
+                    finalIndex = Random.Range(0, Info.Name.KailtFinalElements.Length);
 
-                initial = NameInfo.TaylorInitialElements[initialIndex];
-                middle = NameInfo.TaylorMiddleElements[middleIndex];
-                final = NameInfo.TaylorFinalElements[finalIndex];
+                    initial = Info.Name.KailtInitialElements[initialIndex];
+                    middle = Info.Name.KailtMiddleElements[middleIndex];
+                    final = Info.Name.KailtFinalElements[finalIndex];
 
-                break;
+                    break;
+                case Type.Group.Taylor:
+                    initialIndex = Random.Range(0, Info.Name.TaylorInitialElements.Length);
+                    middleIndex = Random.Range(0, Info.Name.TaylorMiddleElements.Length);
+                    finalIndex = Random.Range(0, Info.Name.TaylorFinalElements.Length);
+
+                    initial = Info.Name.TaylorInitialElements[initialIndex];
+                    middle = Info.Name.TaylorMiddleElements[middleIndex];
+                    final = Info.Name.TaylorFinalElements[finalIndex];
+
+                    break;
+            }
+
+            return $"{initial}{middle}{final}";
         }
-
-        return $"{initial}{middle}{final}";
-    } 
+    }
 }

@@ -1,55 +1,57 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class CitizenMovement : MonoBehaviour
+namespace MMH
 {
-    private EntitySystem entitySystem;
-
-    private Citizen citizen;
-
-    private Rigidbody2D rigidBody2D;
-
-    private PathData pathData;
-
-
-    void Awake()
+    public class CitizenMovement : MonoBehaviour
     {
-        entitySystem = GameObject.Find("EntitySystem").GetComponent<EntitySystem>();
+        private System.Entity entitySystem;
 
-        citizen = GetComponent<Citizen>();
+        private Citizen citizen;
 
-        rigidBody2D = GetComponent<Rigidbody2D>();
+        private Rigidbody2D rigidBody2D;
 
-        pathData = new PathData { Valid = false };
+        private Data.Path path;
+
+
+        void Awake()
+        {
+            entitySystem = GameObject.Find("Entity").GetComponent<System.Entity>();
+
+            citizen = GetComponent<Citizen>();
+
+            rigidBody2D = GetComponent<Rigidbody2D>();
+
+            path = new Data.Path { Valid = false };
+        }
+
+
+        void Start()
+        {
+            Debug.Log($"{citizen.Id.FullName} - {citizen.Entity.GridPosition}");
+
+            path = entitySystem.RequestPath(
+                citizen.Entity.GridPosition, new Vector2Int(4, 4)
+            );
+
+            Debug.Log(path);
+        }
+
+
+        void Update()
+        {
+            Vector2 unscaledVelocity =
+                citizen.Entity.Speed *
+                citizen.Entity.Direction;
+
+            rigidBody2D.velocity = Time.deltaTime * unscaledVelocity;
+        }
+
+
+        private Vector2 DecideVelocity()
+        {
+            return new Vector2(0, 0);
+        }
     }
-
-
-    void Start()
-    {
-        Debug.Log(citizen.IdData.FullName);
-        Debug.Log(citizen.EntityData.GridPosition);
-
-        pathData = entitySystem.RequestPath(citizen.EntityData.GridPosition, new Vector2Int(4, 4));
-
-        Debug.Log(pathData);
-    }
-
-
-    void Update()
-    {
-        Vector2 unscaledVelocity =
-            citizen.EntityData.Speed *
-            citizen.EntityData.Direction;
-
-        rigidBody2D.velocity = Time.deltaTime * unscaledVelocity;
-    }
-
-
-    private Vector2 DecideVelocity()
-    {
-        return new Vector2(0, 0);
-    }
-
 }
+
+

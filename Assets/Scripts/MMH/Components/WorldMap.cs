@@ -1,57 +1,37 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class WorldMap : MonoBehaviour
+namespace MMH
 {
-    public RoomBuilder RoomBuilder;
-
-    public CellData[] Cells;
-
-    public bool ShowCollision;
-
-    public int Size;
-    public int Width { get => 2 * Size + 1; }
-
-    public List<RoomData> Rooms;
-    public List<RectInt> Placeholders;
-
-
-    void Awake()
+    public class WorldMap : MonoBehaviour
     {
-        RoomBuilder = gameObject.AddComponent<RoomBuilder>();
+        public RoomBuilder RoomBuilder;
 
-        Cells = new CellData[MapInfo.Width * MapInfo.Width];
+        public Data.Cell[] Cells;
 
-        ShowCollision = MapInfo.ShowCollision;
+        public bool ShowCollision;
 
-        Size = MapInfo.Size;
+        public int Size;
+        public int Width { get => 2 * Size + 1; }
 
-        Rooms = new List<RoomData>(MapInfo.NumberOfSeedRooms);
-        Placeholders = new List<RectInt>();
+        public List<Data.Room> Rooms;
+        public List<RectInt> Placeholders;
+
+
+        void Awake()
+        {
+            RoomBuilder = gameObject.AddComponent<RoomBuilder>();
+
+            Cells = new Data.Cell[Info.Map.Width * Info.Map.Width];
+
+            ShowCollision = Info.Map.ShowCollision;
+
+            Size = Info.Map.Size;
+
+            Rooms = new List<Data.Room>(Info.Map.NumberOfSeedRooms);
+            Placeholders = new List<RectInt>();
+        }
     }
-
-
-    public CellData GetCell(int x, int y)
-    {
-        return Cells[MapUtil.CoordsToIndex(x, y)];
-    }
-
-
-    public CellData GetCell(Vector2Int position)
-    {
-        return GetCell(position.x, position.y);
-    }
-
-
-    public void SetCell(int x, int y, CellData cellData)
-    {
-        Cells[MapUtil.CoordsToIndex(x, y)] = cellData;
-    }
-
-
-    public void SetCell(Vector2Int position, CellData cellData)
-    {
-        SetCell(position.x, position.y, cellData);
-    }
-
 }
+
+

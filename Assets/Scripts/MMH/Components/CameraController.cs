@@ -1,24 +1,27 @@
 ﻿using UnityEngine;
 
-public class CameraController : MonoBehaviour
+namespace MMH
 {
-    public float panSpeed = 24f;
-    public float zoomSpeed = 10f;
-
-
-    void Update()
+    public class CameraController : MonoBehaviour
     {
-        float dx = panSpeed * Time.deltaTime * Input.GetAxis("Horizontal");
-        float dy = panSpeed * Time.deltaTime * Input.GetAxis("Vertical");
+        public float panSpeed = 24f;
+        public float zoomSpeed = 10f;
 
-        Camera.main.transform.Translate(dx, dy, 0);
 
-        float dz = zoomSpeed * Time.deltaTime * Input.GetAxis("Zoom");
+        void Update()
+        {
+            float dx = panSpeed * Time.deltaTime * Input.GetAxis("Horizontal");
+            float dy = panSpeed * Time.deltaTime * Input.GetAxis("Vertical");
 
-        Camera.main.orthographicSize = Mathf.Clamp(
-            Camera.main.orthographicSize + dz,
-            ViewInfo.MinimumOrthographicSize,
-            ViewInfo.MaximumOrthographicSize
-        );
+            Camera.main.transform.Translate(dx, dy, 0);
+
+            float dz = zoomSpeed * Time.deltaTime * Input.GetAxis("Zoom");
+
+            Camera.main.orthographicSize = Mathf.Clamp(
+                Camera.main.orthographicSize + dz,
+                Info.View.MinimumOrthographicSize,
+                Info.View.MaximumOrthographicSize
+            );
+        }
     }
 }

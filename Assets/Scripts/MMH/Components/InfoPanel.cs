@@ -2,107 +2,94 @@
 using TMPro;
 using System;
 
-public class InfoPanel : MonoBehaviour
+namespace MMH
 {
-    private GameObject entityTab;
-    private GameObject cellTab;
-
-    private TextMeshProUGUI entityIdText;
-    private TextMeshProUGUI entityNameText;
-    private TextMeshProUGUI entityPopulationTypeText;
-    private TextMeshProUGUI entityGroupTypeText;
-
-    private TextMeshProUGUI cellSolidText;
-    private TextMeshProUGUI cellPositionText;
-    private TextMeshProUGUI cellGroundTypeText;
-    private TextMeshProUGUI cellBuildingTypeText;
-
-    private InfoType mode;
-    public InfoType Mode { get => mode; }
-
-
-    void Awake()
+    public class InfoPanel : MonoBehaviour
     {
-        SetupEntityTab();
-        SetupCellTab();
+        private GameObject entityTab;
+        private GameObject cellTab;
 
-        mode = InfoType.None;
-    }
+        private TextMeshProUGUI entityIdText;
+        private TextMeshProUGUI entityNameText;
+        private TextMeshProUGUI entityPopulationTypeText;
+        private TextMeshProUGUI entityGroupTypeText;
 
+        private TextMeshProUGUI cellSolidText;
+        private TextMeshProUGUI cellPositionText;
+        private TextMeshProUGUI cellGroundTypeText;
+        private TextMeshProUGUI cellBuildingTypeText;
 
-    private void SetupEntityTab()
-    {
-        entityTab = GameObject.Find("Entity Tab");
-        entityTab.SetActive(false);
-
-        entityIdText = UIUtil.SetLabel(
-           "Id", entityTab.transform.Find("Id")
-        );
-        entityNameText = UIUtil.SetLabel(
-            "Name", entityTab.transform.Find("Name")
-        );
-        entityPopulationTypeText = UIUtil.SetLabel(
-            "Population", entityTab.transform.Find("Population Type")
-        );
-        entityGroupTypeText = UIUtil.SetLabel(
-            "Group", entityTab.transform.Find("Group Type")
-        );
-    }
+        private Type.Info mode;
+        public Type.Info Mode { get => mode; }
 
 
-    private void SetupCellTab()
-    {
-        cellTab = GameObject.Find("Cell Tab");
-        cellTab.SetActive(false);
+        void Awake()
+        {
+            SetupEntityTab();
+            SetupCellTab();
 
-        cellSolidText = UIUtil.SetLabel(
-            "Solid", cellTab.transform.Find("Solid")
-        );
-        cellPositionText = UIUtil.SetLabel(
-            "Position", cellTab.transform.Find("Position")
-        );
-        cellGroundTypeText = UIUtil.SetLabel(
-            "Ground", cellTab.transform.Find("Ground Type")
-        );
-        cellBuildingTypeText = UIUtil.SetLabel(
-            "Wall", cellTab.transform.Find("Wall Type")
-        );
-    }
+            mode = Type.Info.None;
+        }
 
 
-    public void DisplayCitizen(Citizen citizen)
-    {
-        mode = InfoType.Citizen;
+        private void SetupEntityTab()
+        {
+            entityTab = GameObject.Find("Entity Tab");
+            entityTab.SetActive(false);
 
-        entityTab.SetActive(true);
-        cellTab.SetActive(false);
-
-        entityIdText.text = $"{citizen.IdData.IdNumber}";
-        entityNameText.text = citizen.IdData.FullName;
-        entityPopulationTypeText.text = $"{Enum.GetName(typeof(PopulationType), citizen.IdData.PopulationType)}";
-        entityGroupTypeText.text = $"{Enum.GetName(typeof(GroupType), citizen.IdData.GroupType)}";
-    }
+            entityIdText = Util.UI.SetLabel("Id", entityTab.transform.Find("Id"));
+            entityNameText = Util.UI.SetLabel("Name", entityTab.transform.Find("Name"));
+            entityPopulationTypeText = Util.UI.SetLabel("Population", entityTab.transform.Find("Population Type"));
+            entityGroupTypeText = Util.UI.SetLabel("Group", entityTab.transform.Find("Group Type"));
+        }
 
 
-    public void ActivateCellMode(CellData cellData)
-    {
-        mode = InfoType.Cell;
+        private void SetupCellTab()
+        {
+            cellTab = GameObject.Find("Cell Tab");
+            cellTab.SetActive(false);
 
-        entityTab.SetActive(false);
-        cellTab.SetActive(true);
-
-        cellSolidText.text = $"{cellData.Solid}";
-        cellPositionText.text = $"{cellData.Position}";
-        cellGroundTypeText.text = $"{Enum.GetName(typeof(GroundType), cellData.GroundType)}";
-        cellBuildingTypeText.text = $"{Enum.GetName(typeof(WallType), cellData.WallType)}";
-    }
+            cellSolidText = Util.UI.SetLabel("Solid", cellTab.transform.Find("Solid"));
+            cellPositionText = Util.UI.SetLabel("Position", cellTab.transform.Find("Position"));
+            cellGroundTypeText = Util.UI.SetLabel("Ground", cellTab.transform.Find("Ground Type"));
+            cellBuildingTypeText = Util.UI.SetLabel("Wall", cellTab.transform.Find("Wall Type"));
+        }
 
 
-    public void Deactivate()
-    {
-        mode = InfoType.None;
+        public void DisplayCitizen(Citizen citizen)
+        {
+            mode = Type.Info.Citizen;
 
-        entityTab.SetActive(false);
-        cellTab.SetActive(false);
+            entityTab.SetActive(true);
+            cellTab.SetActive(false);
+
+            entityIdText.text = $"{citizen.Id.Number}";
+            entityNameText.text = citizen.Id.FullName;
+            entityPopulationTypeText.text = $"{Enum.GetName(typeof(Type.Population), citizen.Id.PopulationType)}";
+            entityGroupTypeText.text = $"{Enum.GetName(typeof(Type.Group), citizen.Id.GroupType)}";
+        }
+
+
+        public void ActivateCellMode(Data.Cell cell)
+        {
+            mode = Type.Info.Cell;
+
+            entityTab.SetActive(false);
+            cellTab.SetActive(true);
+
+            cellSolidText.text = $"{cell.Solid}";
+            cellPositionText.text = $"{cell.Position}";
+            cellGroundTypeText.text = $"{Enum.GetName(typeof(Type.Ground), cell.GroundType)}";
+            cellBuildingTypeText.text = $"{Enum.GetName(typeof(Type.Wall), cell.WallType)}";
+        }
+
+
+        public void Deactivate()
+        {
+            mode = Type.Info.None;
+
+            entityTab.SetActive(false);
+            cellTab.SetActive(false);
+        }
     }
 }
