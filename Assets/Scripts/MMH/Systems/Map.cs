@@ -25,16 +25,16 @@ namespace MMH
 
                 roomBuilder = gameObject.AddComponent<RoomBuilder>();
                 roomBuilder.WorldMap = worldMap;
-
-                InitData();
-
-                InitTiles();
-                InitTilemaps();
             }
 
 
             void Start()
             {
+                InitData();
+
+                InitTiles();
+                InitTilemaps();
+
                 SetupMap();
 
                 ConstructBoundary();
@@ -74,7 +74,7 @@ namespace MMH
             {
                 tilemaps = new Dictionary<string, Tilemap>();
 
-                Tilemap[] tilemapsArray = GameObject.Find("WorldMap").GetComponentsInChildren<Tilemap>();
+                Tilemap[] tilemapsArray = GameObject.Find("Tilemaps").GetComponentsInChildren<Tilemap>();
 
                 foreach (Tilemap tilemap in tilemapsArray)
                 {
