@@ -100,7 +100,15 @@ namespace MMH
 
             public void SetPlaceholder(RectInt bounds)
             {
-                worldMap.Placeholders.Add(bounds);
+                RectInt adjustedBounds = new RectInt
+                {
+                    x = bounds.x - 1,
+                    y = bounds.y - 1,
+                    width = bounds.width,
+                    height = bounds.height,
+                };
+
+                worldMap.Placeholders.Add(adjustedBounds);
             }
 
 
@@ -273,6 +281,8 @@ namespace MMH
                 SetupGround(south1st, Type.Ground.Stone);
                 SetupGround(west1st, Type.Ground.Stone);
                 SetupGround(east1st, Type.Ground.Stone);
+
+
 
                 SetPlaceholder(mainEastWest);
                 SetPlaceholder(mainNorthSouth);

@@ -77,33 +77,33 @@ namespace MMH
         private Data.Room ExpandRoom(Data.Room room)
         {
             bool expanded = false;
-
             Data.Room expandedRoom = room;
 
-            List<int> directions = new List<int>(new int[] { 0, 1, 2, 3 });
+            List<Type.Direction> directions = new List<Type.Direction> {
+                Type.Direction.Down, Type.Direction.Up, Type.Direction.Left, Type.Direction.Right
+            };
 
             while (!expanded && directions.Count > 0)
             {
-                int directionIndex = Random.Range(0, directions.Count - 1);
-                int direction = directions[directionIndex];
+                int index = Random.Range(0, directions.Count - 1);
 
-                directions.RemoveAt(directionIndex);
+                Type.Direction direction = directions[index];
+
+                directions.RemoveAt(index);
 
                 switch (direction)
                 {
-                    case 0:
+                    case Type.Direction.Down:
                         expandedRoom.Bounds.xMin -= 1;
                         break;
-                    case 1:
+                    case Type.Direction.Left:
                         expandedRoom.Bounds.xMax += 1;
                         break;
-                    case 2:
+                    case Type.Direction.Up:
                         expandedRoom.Bounds.yMin -= 1;
                         break;
-                    case 3:
+                    case Type.Direction.Right:
                         expandedRoom.Bounds.yMax += 1;
-                        break;
-                    default:
                         break;
                 }
 
