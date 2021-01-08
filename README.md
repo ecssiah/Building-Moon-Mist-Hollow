@@ -3,6 +3,8 @@
 This repo contains the resources for the seezero Building Moon Mist Hollow
 Unity game development tutorials.
 
+https://www.youtube.com/watch?v=mSubTX1PzmE&feature=youtu.be
+
 *The premise:*
 
 You are the ruler of Moon Mist Hollow.
