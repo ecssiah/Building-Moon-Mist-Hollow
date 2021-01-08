@@ -25,12 +25,12 @@ namespace MMH
 
             void Update()
             {
-                if (UnityEngine.Input.GetKeyDown(KeyCode.Mouse0))
+                if (Input.GetKeyDown(KeyCode.Mouse0))
                 {
                     selectionHandler.Select();
                 }
 
-                if (UnityEngine.Input.GetKeyDown(KeyCode.Escape))
+                if (Input.GetKeyDown(KeyCode.Escape))
                 {
                     uiSystem.ClearSelection();
                     mapSystem.ClearSelection();

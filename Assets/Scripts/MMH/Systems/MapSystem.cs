@@ -100,7 +100,7 @@ namespace MMH
 
             public void SetPlaceholder(RectInt bounds)
             {
-                RectInt adjustedBounds = new RectInt
+                RectInt nonOverlappingBounds = new RectInt
                 {
                     x = bounds.x - 1,
                     y = bounds.y - 1,
@@ -108,7 +108,7 @@ namespace MMH
                     height = bounds.height,
                 };
 
-                worldMap.Placeholders.Add(adjustedBounds);
+                worldMap.Placeholders.Add(nonOverlappingBounds);
             }
 
 

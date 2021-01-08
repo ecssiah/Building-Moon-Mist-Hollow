@@ -4,7 +4,7 @@
     {
         public struct Entity
         {
-            public static readonly int NumberOfSeedCitizens = 2;
+            public static readonly int NumberOfSeedCitizens = 4;
         }
     }
 }
