@@ -70,6 +70,7 @@ namespace HPAStar
             MMH.Data.Path pathData = new MMH.Data.Path
             {
                 Valid = true,
+                Progress = 0f,
                 Nodes = new List<Node>(),
             };
 

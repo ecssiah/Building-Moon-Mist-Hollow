@@ -7,6 +7,7 @@ namespace MMH
         public struct Path
         {
             public bool Valid;
+            public float Progress;
             public List<HPAStar.Node> Nodes;
 
 
