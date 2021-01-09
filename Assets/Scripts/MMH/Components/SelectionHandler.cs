@@ -16,23 +16,13 @@ namespace MMH
 
             if (hit.collider != null)
             {
-                bool isTarget = hit.collider.gameObject.CompareTag("Target");
-
-                if (isTarget)
-                {
-                    BroadcastEntitySelection(hit.transform.parent.gameObject);
-                }
+                BroadcastEntitySelection(hit.transform.gameObject);
             }
             else
             {
                 Vector2Int isoGridPosition = Util.Map.ScreenToIsoGrid(Input.mousePosition);
 
-                bool inVerticalBounds = Math.Abs(isoGridPosition.x) <= Info.Map.Size;
-                bool inHorizontalBounds = Math.Abs(isoGridPosition.y) <= Info.Map.Size;
-
-                bool onMap = inVerticalBounds && inHorizontalBounds;
-
-                if (onMap)
+                if (Util.Map.OnMap(isoGridPosition))
                 {
                     BroadcastCellSelection(isoGridPosition);
                 }

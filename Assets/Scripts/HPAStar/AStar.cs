@@ -2,6 +2,7 @@
 using UnityEngine;
 using Priority_Queue;
 
+
 namespace HPAStar
 {
     public class AStar
@@ -9,7 +10,6 @@ namespace HPAStar
         public Graph Graph;
 
         private readonly FastPriorityQueue<Node> openSet;
-        private readonly List<Node> closedSet;
 
         private readonly int MaxPriorityQueueNodes = 1000;
 
@@ -17,50 +17,46 @@ namespace HPAStar
         public AStar()
         {
             openSet = new FastPriorityQueue<Node>(MaxPriorityQueueNodes);
-            closedSet = new List<Node>(MaxPriorityQueueNodes);
         }
 
 
         public MMH.Data.Path FindPath(Node start, Node end)
         {
-            openSet.Clear();
-            closedSet.Clear();
+            start.GScore = 0;
 
-            openSet.Enqueue(start, CalculateFCost(start, end));
+            openSet.Clear();
+            openSet.Enqueue(start, start.GScore);
 
             while (openSet.Count > 0)
             {
-                Node targetNode = openSet.Dequeue();
-                closedSet.Add(targetNode);
+                Node current = openSet.Dequeue();
 
-                //foreach (KeyValuePair<int, Node> keyValuePair in Graph.Neighbors(targetNode))
-                //{
-                //    Node neighbor = keyValuePair.Value;
+                if (current == end)
+                {
+                    return PathFrom(end);
+                }
 
-                //    float gCost = CalcuateGCost(targetNode, neighbor);
+                foreach (KeyValuePair<int, Node> keyValuePair in Graph.Neighbors(current))
+                {
+                    Node neighbor = keyValuePair.Value;
+                    float gCost = CalcuateGCost(current, neighbor);
 
-                //    if (openSet.Contains(neighbor) && gCost < neighbor.GScore)
-                //    {
-                //        openSet.Remove(neighbor);
-                //    }
+                    if (gCost < neighbor.GScore)
+                    {
+                        neighbor.Previous = current;
 
-                //    if (closedSet.Contains(neighbor) && gCost < neighbor.GScore)
-                //    {
-                //        closedSet.Remove(neighbor);
-                //    }
+                        neighbor.GScore = gCost;
+                        neighbor.FScore = CalculateFCost(neighbor, end);
 
-                //    if (!openSet.Contains(neighbor) && !closedSet.Contains(neighbor))
-                //    {
-                //        neighbor.GScore = gCost;
-                //        neighbor.FScore = CalculateFCost(neighbor, end);
-                //        neighbor.Previous = targetNode;
-
-                //        openSet.Enqueue(neighbor, neighbor.FScore);
-                //    }
-                //}
+                        if (!openSet.Contains(neighbor))
+                        {
+                            openSet.Enqueue(neighbor, neighbor.FScore);
+                        }
+                    }
+                }
             }
 
-            return PathFrom(end);
+            return new MMH.Data.Path { Valid = false };
         }
 
 
@@ -128,14 +124,7 @@ namespace HPAStar
 
         public Node BuildNode(int x, int y)
         {
-            Node node = new Node
-            {
-                Index = MMH.Util.Map.CoordsToIndex(x, y),
-                Position = new Vector2Int(x, y),
-                GScore = 0,
-                FScore = 0,
-                Previous = null,
-            };
+            Node node = new Node(x, y);
 
             Graph.AddNode(node);
 

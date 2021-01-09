@@ -5,13 +5,24 @@ namespace HPAStar
 {
     public class Node : FastPriorityQueueNode
     {
+        public Node Previous;
+
         public int Index;
         public Vector2Int Position;
 
         public float GScore;
         public float FScore;
 
-        public Node Previous;
+
+        public Node(int x, int y)
+        {
+            Previous = null;
+
+            Index = MMH.Util.Map.CoordsToIndex(x, y);
+            Position = new Vector2Int(x, y);
+            GScore = Mathf.Infinity;
+            FScore = Mathf.Infinity;
+        }
 
 
         public override string ToString()

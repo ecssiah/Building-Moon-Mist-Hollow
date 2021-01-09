@@ -22,10 +22,10 @@ namespace MMH
                 mapSystem = GameObject.Find("MapSystem").GetComponent<MapSystem>();
                 pathfindingSystem = GameObject.Find("PathfindingSystem").GetComponent<PathfindingSystem>();
 
-                entitiesObject = GameObject.Find("Entities");
-
                 nameGenerator = gameObject.AddComponent<NameGenerator>();
                 entityFactory = gameObject.AddComponent<EntityFactory>();
+
+                entitiesObject = GameObject.Find("Entities");
 
                 Physics2D.IgnoreLayerCollision(
                     LayerMask.NameToLayer("Citizens"),
