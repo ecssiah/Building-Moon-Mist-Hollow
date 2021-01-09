@@ -6,6 +6,7 @@ namespace HPAStar
     public class Graph
     {
         public Dictionary<int, Node> Nodes;
+
         public float[,] Adjacency;
 
 

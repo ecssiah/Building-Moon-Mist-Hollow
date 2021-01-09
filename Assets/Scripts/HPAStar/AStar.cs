@@ -10,6 +10,7 @@ namespace HPAStar
         public Graph Graph;
 
         private readonly FastPriorityQueue<Node> openSet;
+        private readonly Dictionary<Node, Node> previous;
 
         private readonly int MaxPriorityQueueNodes = 1000;
 
@@ -17,14 +18,18 @@ namespace HPAStar
         public AStar()
         {
             openSet = new FastPriorityQueue<Node>(MaxPriorityQueueNodes);
+            previous = new Dictionary<Node, Node>(MaxPriorityQueueNodes);
         }
 
 
         public MMH.Data.Path FindPath(Node start, Node end)
         {
-            start.GScore = 0;
-
             openSet.Clear();
+            previous.Clear();
+
+            Reset();
+
+            start.GScore = 0;
             openSet.Enqueue(start, start.GScore);
 
             while (openSet.Count > 0)
@@ -43,7 +48,7 @@ namespace HPAStar
 
                     if (gCost < neighbor.GScore)
                     {
-                        neighbor.Previous = current;
+                        previous[neighbor] = current;
 
                         neighbor.GScore = gCost;
                         neighbor.FScore = CalculateFCost(neighbor, end);
@@ -68,10 +73,15 @@ namespace HPAStar
                 Nodes = new List<Node>(),
             };
 
-            for (Node current = node; current != null; current = current.Previous)
+            Node current = node;
+
+            while (previous.ContainsKey(current))
             {
                 pathData.Nodes.Insert(0, current);
+                current = previous[current];
             }
+
+            pathData.Nodes.Insert(0, current);
 
             return pathData;
         }
@@ -158,6 +168,18 @@ namespace HPAStar
             }
 
             return null;
+        }
+
+
+        private void Reset()
+        {
+            foreach (KeyValuePair<int, Node> keyValue in Graph.Nodes)
+            {
+                Node node = keyValue.Value;
+
+                node.FScore = Mathf.Infinity;
+                node.GScore = Mathf.Infinity;
+            }
         }
     }
 }
