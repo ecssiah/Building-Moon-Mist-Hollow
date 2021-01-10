@@ -104,8 +104,8 @@ namespace MMH
                 {
                     x = bounds.x - 1,
                     y = bounds.y - 1,
-                    width = bounds.width,
-                    height = bounds.height,
+                    width = bounds.width + 1,
+                    height = bounds.height + 1,
                 };
 
                 worldMap.Placeholders.Add(nonOverlappingBounds);

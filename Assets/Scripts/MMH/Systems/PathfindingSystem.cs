@@ -48,7 +48,7 @@ namespace MMH
             {
                 if (!Util.Map.OnMap(position1) || !Util.Map.OnMap(position2))
                 {
-                    return new Data.Path { Valid = false };
+                    return new Data.Path();
                 }
 
                 Node startNode = aStar.GetNode(position1);
@@ -56,7 +56,7 @@ namespace MMH
 
                 if (startNode is null || endNode is null)
                 {
-                    return new Data.Path { Valid = false };
+                    return new Data.Path();
                 }
 
                 Data.Cell startCell = mapSystem.GetCell(startNode.Position);
@@ -64,7 +64,7 @@ namespace MMH
 
                 if (startCell.Solid || endCell.Solid)
                 {
-                    return new Data.Path { Valid = false };
+                    return new Data.Path();
                 }
 
                 return aStar.FindPath(startNode, endNode);

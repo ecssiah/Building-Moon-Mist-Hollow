@@ -6,9 +6,21 @@ namespace MMH
     {
         public struct Path
         {
-            public bool Valid;
             public float Progress;
             public List<HPAStar.Node> Nodes;
+
+            public bool Valid
+            {
+                get
+                {
+                    if (Nodes is null)
+                    {
+                        return false;
+                    }
+
+                    return Nodes.Count >= 1;
+                }
+            }
 
 
             public override string ToString()
