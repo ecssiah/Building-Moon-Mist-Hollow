@@ -26,12 +26,6 @@ namespace MMH
                 entityFactory = gameObject.AddComponent<EntityFactory>();
 
                 entitiesObject = GameObject.Find("Entities");
-
-                Physics2D.IgnoreLayerCollision(
-                    LayerMask.NameToLayer("Citizens"),
-                    LayerMask.NameToLayer("Citizens"),
-                    true
-                );
             }
 
 
