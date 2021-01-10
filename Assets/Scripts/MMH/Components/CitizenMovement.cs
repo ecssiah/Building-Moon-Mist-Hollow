@@ -23,9 +23,27 @@ namespace MMH
 
         void Start()
         {
-            Vector2Int targetPosition = Random.Range(0, 2) == 0 ?
-                new Vector2Int(-Info.Map.Size + 1, -Info.Map.Size + 1) :
-                new Vector2Int(Info.Map.Size - 1, Info.Map.Size - 1);
+            Vector2Int targetPosition;
+            int roll = Random.Range(0, 4);
+
+            switch(roll)
+            {
+                case 0:
+                    targetPosition = new Vector2Int(-Info.Map.Size + 1, -Info.Map.Size + 1);
+                    break;
+                case 1:
+                    targetPosition = new Vector2Int(Info.Map.Size - 1, -Info.Map.Size + 1);
+                    break;
+                case 2:
+                    targetPosition = new Vector2Int(-Info.Map.Size + 1, Info.Map.Size - 1);
+                    break;
+                case 3:
+                    targetPosition = new Vector2Int(Info.Map.Size - 1, Info.Map.Size - 1);
+                    break;
+                default:
+                    targetPosition = new Vector2Int(0, 0);
+                    break;
+            }
 
             path = entitySystem.RequestPath(citizen.Entity.GridPosition, targetPosition);
 
