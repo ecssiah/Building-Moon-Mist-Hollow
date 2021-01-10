@@ -68,7 +68,7 @@ namespace MMH
                     GameObject = citizenGameObject,
                     Speed = 0f,
                     Position = new Vector2(position.x, position.y),
-                    Direction = new Vector2(1, 0),
+                    Direction = new Vector2(0, 0),
                 };
 
                 citizen.Id = new Data.Id

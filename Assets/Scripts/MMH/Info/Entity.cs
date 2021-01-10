@@ -4,9 +4,9 @@
     {
         public struct Entity
         {
-            public static readonly int NumberOfSeedCitizens = 42;
+            public static readonly int NumberOfSeedCitizens = 100;
 
-            public static readonly float DefaultWalkSpeed = 3f;
+            public static readonly float DefaultWalkSpeed = 1.0f;
         }
     }
 }

@@ -32,7 +32,7 @@ namespace MMH
             string groupType = Enum.GetName(typeof(Type.Group), citizen.Id.GroupType);
 
             frameNumber = 0;
-            frameRate = 1 / 10f;
+            frameRate = 1 / 6f;
 
             frames = new Dictionary<Type.Animation, Sprite[]>
             {
@@ -57,7 +57,7 @@ namespace MMH
             {
                 timer -= frameRate;
 
-                Sprite[] frames = GetCurrentFrames();
+                Sprite[] frames = CurrentFrames;
 
                 frameNumber = (frameNumber + 1) % frames.Length;
 
@@ -66,33 +66,35 @@ namespace MMH
         }
 
 
-        private Sprite[] GetCurrentFrames()
+        private Sprite[] CurrentFrames
         {
-            if (citizen.Entity.Direction.x > 0)
+            get
             {
-                if (citizen.Entity.Speed > 0)
+                if (citizen.Entity.Velocity.x > 0 && citizen.Entity.Velocity.y > 0)
+                {
+                    return frames[Type.Animation.WalkDown];
+                }
+                else if (citizen.Entity.Velocity.x < 0 && citizen.Entity.Velocity.y < 0)
+                {
+                    return frames[Type.Animation.WalkUp];
+                }
+                else if (citizen.Entity.Velocity.y > 0)
+                {
+                    return frames[Type.Animation.WalkRight];
+                }
+                else if (citizen.Entity.Velocity.x > 0)
+                {
+                    return frames[Type.Animation.WalkLeft];
+                }
+                else if (citizen.Entity.Velocity.y < 0)
+                {
+                    return frames[Type.Animation.WalkLeft];
+                }
+                else if (citizen.Entity.Velocity.x < 0)
                 {
                     return frames[Type.Animation.WalkRight];
                 }
                 else
-                {
-                    return frames[Type.Animation.IdleRight];
-                }
-            }
-            else if (citizen.Entity.Direction.x < 0)
-            {
-                if (citizen.Entity.Speed > 0)
-                {
-                    return frames[Type.Animation.WalkLeft];
-                }
-                else
-                {
-                    return frames[Type.Animation.IdleLeft];
-                }
-            }
-            else
-            {
-                if (citizen.Entity.Speed > 0)
                 {
                     if (citizen.Entity.Direction.y > 0)
                     {
@@ -100,23 +102,22 @@ namespace MMH
                     }
                     else if (citizen.Entity.Direction.y < 0)
                     {
-                        return frames[Type.Animation.WalkDown];
+                        return frames[Type.Animation.WalkUp];
                     }
-                }
-                else
-                {
-                    if (citizen.Entity.Direction.y > 0)
+                    else if (citizen.Entity.Direction.x > 0)
                     {
-                        return frames[Type.Animation.IdleUp];
+                        return frames[Type.Animation.WalkUp];
                     }
-                    else if (citizen.Entity.Direction.y < 0)
+                    else if (citizen.Entity.Direction.x < 0)
                     {
-                        return frames[Type.Animation.IdleDown];
+                        return frames[Type.Animation.WalkUp];
+                    }
+                    else
+                    {
+                        return frames[Type.Animation.WalkUp];
                     }
                 }
             }
-
-            return frames[Type.Animation.IdleDown];
         }
     }
 }

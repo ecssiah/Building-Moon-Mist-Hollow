@@ -23,9 +23,11 @@ namespace MMH
 
         void Start()
         {
-            path = entitySystem.RequestPath(
-                citizen.Entity.GridPosition, new Vector2Int(0, 0)
-            );
+            Vector2Int targetPosition = Random.Range(0, 2) == 0 ?
+                new Vector2Int(-Info.Map.Size + 1, -Info.Map.Size + 1) :
+                new Vector2Int(Info.Map.Size - 1, Info.Map.Size - 1);
+
+            path = entitySystem.RequestPath(citizen.Entity.GridPosition, targetPosition);
 
             if (path.Valid)
             {
@@ -50,22 +52,18 @@ namespace MMH
 
         private void Decide()
         {
-            path.Progress += Time.deltaTime * citizen.Entity.Speed;
-
-            if (path.Progress >= 1f)
-            {
-                path.Progress = 0f;
-            }
-
             citizen.Entity.Position = Vector2.MoveTowards(
-                citizen.Entity.Position,
-                path.Nodes[0].Position,
-                Time.deltaTime * citizen.Entity.Speed
+                citizen.Entity.Position, path.Nodes[0].Position, Time.deltaTime * citizen.Entity.Speed
             );
 
             if (Vector2.Distance(citizen.Entity.Position, path.Nodes[0].Position) < .001f)
             {
                 path.Nodes.RemoveAt(0);
+
+                if (path.Valid)
+                {
+                    citizen.Entity.Direction = citizen.Entity.Position - path.Nodes[0].Position;
+                }
             }
         }
 

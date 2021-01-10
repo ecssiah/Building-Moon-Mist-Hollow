@@ -69,7 +69,6 @@ namespace HPAStar
         {
             MMH.Data.Path pathData = new MMH.Data.Path
             {
-                Progress = 0f,
                 Nodes = new List<Node>(),
             };
 
