@@ -96,25 +96,33 @@ namespace MMH
                 }
                 else
                 {
-                    if (citizen.Entity.Direction.y > 0)
+                    if (citizen.Entity.Direction.x > 0 && citizen.Entity.Direction.y > 0)
                     {
-                        return frames[Type.Animation.WalkUp];
+                        return frames[Type.Animation.IdleDown];
                     }
-                    else if (citizen.Entity.Direction.y < 0)
+                    else if (citizen.Entity.Direction.x < 0 && citizen.Entity.Direction.y < 0)
                     {
-                        return frames[Type.Animation.WalkUp];
+                        return frames[Type.Animation.IdleUp];
+                    }
+                    else if (citizen.Entity.Direction.y > 0)
+                    {
+                        return frames[Type.Animation.IdleRight];
                     }
                     else if (citizen.Entity.Direction.x > 0)
                     {
-                        return frames[Type.Animation.WalkUp];
+                        return frames[Type.Animation.IdleLeft];
+                    }
+                    else if (citizen.Entity.Direction.y < 0)
+                    {
+                        return frames[Type.Animation.IdleLeft];
                     }
                     else if (citizen.Entity.Direction.x < 0)
                     {
-                        return frames[Type.Animation.WalkUp];
+                        return frames[Type.Animation.IdleRight];
                     }
                     else
                     {
-                        return frames[Type.Animation.WalkUp];
+                        return frames[Type.Animation.IdleDown];
                     }
                 }
             }

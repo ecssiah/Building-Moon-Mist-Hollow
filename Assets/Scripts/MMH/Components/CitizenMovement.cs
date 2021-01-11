@@ -64,6 +64,7 @@ namespace MMH
             else
             {
                 citizen.Entity.Speed = 0f;
+                citizen.Entity.Direction = Vector2.zero;
             }
         }
 

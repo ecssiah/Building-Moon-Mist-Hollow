@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 namespace MMH
 {
@@ -9,31 +7,27 @@ namespace MMH
     {
         public class MapSystem : MonoBehaviour
         {
+            private RenderSystem renderSystem;
+
             private WorldMap worldMap;
 
-            private RoomBuilder roomBuilder;
-
             private Vector2Int selectedCell;
-
-            private Dictionary<string, Tile> tiles;
-            private Dictionary<string, Tilemap> tilemaps;
 
 
             void Awake()
             {
-                worldMap = gameObject.AddComponent<WorldMap>();
+                renderSystem = GameObject.Find("RenderSystem").GetComponent<RenderSystem>();
 
-                roomBuilder = gameObject.AddComponent<RoomBuilder>();
-                roomBuilder.WorldMap = worldMap;
+                worldMap = gameObject.AddComponent<WorldMap>();
 
                 InitData();
 
-                InitTiles();
-                InitTilemaps();
+                SetupBase();
+                SetupPaths();
 
-                SetupMap();
+                RoomBuilder.LayoutRooms(worldMap);
+                SetupRooms();
 
-                ConstructBoundary();
                 ConstructMap();
             }
 
@@ -55,63 +49,9 @@ namespace MMH
             }
 
 
-            private void InitTiles()
-            {
-                tiles = new Dictionary<string, Tile>();
-
-                foreach (Tile tile in Resources.LoadAll<Tile>("Tiles"))
-                {
-                    tiles[tile.name] = tile;
-                }
-            }
-
-
-            private void InitTilemaps()
-            {
-                tilemaps = new Dictionary<string, Tilemap>();
-
-                Tilemap[] tilemapsArray = GameObject.Find("Tilemaps").GetComponentsInChildren<Tilemap>();
-
-                foreach (Tilemap tilemap in tilemapsArray)
-                {
-                    tilemaps[tilemap.name] = tilemap;
-                }
-
-                TilemapRenderer collisionRenderer = tilemaps["Collision"].GetComponent<TilemapRenderer>();
-
-                collisionRenderer.enabled = worldMap.ShowCollision;
-            }
-
-
-
-            private void SetupMap()
-            {
-                SetupBase();
-                SetupPaths();
-
-                roomBuilder.LayoutRooms();
-
-                SetupRooms();
-            }
-
-
 
             // Setup Methods
-
-            public void SetPlaceholder(RectInt bounds)
-            {
-                RectInt nonOverlappingBounds = new RectInt
-                {
-                    x = bounds.x - 1,
-                    y = bounds.y - 1,
-                    width = bounds.width + 1,
-                    height = bounds.height + 1,
-                };
-
-                worldMap.Placeholders.Add(nonOverlappingBounds);
-            }
-
-
+           
             public void SetCellSolid(int x, int y, bool solid = true)
             {
                 SetCellSolid(new Vector2Int(x, y), solid);
@@ -282,8 +222,6 @@ namespace MMH
                 SetupGround(west1st, Type.Ground.Stone);
                 SetupGround(east1st, Type.Ground.Stone);
 
-
-
                 SetPlaceholder(mainEastWest);
                 SetPlaceholder(mainNorthSouth);
 
@@ -334,78 +272,23 @@ namespace MMH
             {
                 foreach (Data.Cell cell in worldMap.Cells)
                 {
-                    if (cell.Solid)
-                    {
-                        ConstructSolid(cell.Position);
-                    }
-
                     if (cell.GroundType != Type.Ground.None)
                     {
-                        ConstructGround(cell.Position, cell.GroundType);
+                        renderSystem.SetTile(cell.Position, cell.GroundType);
                     }
 
                     if (cell.WallType != Type.Wall.None)
                     {
-                        ConstructWall(cell.Position, cell.WallType);
+                        renderSystem.SetTile(cell.Position, cell.WallType);
                     }
 
                     if (cell.OverlayType != Type.Overlay.None)
                     {
-                        ConstructOverlay(cell.Position, cell.OverlayType);
+                        renderSystem.SetTile(cell.Position, cell.OverlayType);
                     }
                 }
             }
 
-
-            private void ConstructBoundary()
-            {
-                for (int x = Info.Map.WorldBoundary.xMin; x <= Info.Map.WorldBoundary.xMax; x++)
-                {
-                    for (int y = Info.Map.WorldBoundary.yMin; y <= Info.Map.WorldBoundary.yMax; y++)
-                    {
-                        if (Util.Map.OnRectBoundary(x, y, Info.Map.WorldBoundary))
-                        {
-                            tilemaps["Collision"].SetTile(new Vector3Int(x, y, 0), tiles["Collision_1"]);
-                        }
-                    }
-                }
-            }
-
-
-            private void ConstructSolid(Vector2Int position)
-            {
-                tilemaps["Collision"].SetTile(
-                    new Vector3Int(position.x, position.y, 0),
-                    tiles[Info.Tile.overlayTileNames[Type.Overlay.Collision]]
-                );
-            }
-
-
-            private void ConstructGround(Vector2Int position, Type.Ground cellType)
-            {
-                tilemaps["Ground"].SetTile(
-                    new Vector3Int(position.x, position.y, 0),
-                    tiles[Info.Tile.groundTileNames[cellType]]
-                );
-            }
-
-
-            private void ConstructWall(Vector2Int position, Type.Wall wallType)
-            {
-                tilemaps["Walls"].SetTile(
-                    new Vector3Int(position.x, position.y, 3),
-                    tiles[Info.Tile.wallTileNames[wallType]]
-                );
-            }
-
-
-            private void ConstructOverlay(Vector2Int position, Type.Overlay overlayType)
-            {
-                tilemaps["Overlay"].SetTile(
-                    new Vector3Int(position.x, position.y, 0),
-                    tiles[Info.Tile.overlayTileNames[overlayType]]
-                );
-            }
 
 
             // Get Methods
@@ -440,6 +323,20 @@ namespace MMH
             }
 
 
+            public void SetPlaceholder(RectInt bounds)
+            {
+                RectInt nonOverlappingBounds = new RectInt
+                {
+                    x = bounds.x - 1,
+                    y = bounds.y - 1,
+                    width = bounds.width + 1,
+                    height = bounds.height + 1,
+                };
+
+                worldMap.Placeholders.Add(nonOverlappingBounds);
+            }
+
+
 
             // Selection Methods
 
@@ -447,15 +344,13 @@ namespace MMH
             {
                 selectedCell = position;
 
-                var selectedPosition = new Vector2Int(position.x, position.y);
-
-                ConstructOverlay(selectedPosition, Type.Overlay.Selection);
+                renderSystem.SetTile(position, Type.Overlay.Selection);
             }
 
 
             public void ClearSelection()
             {
-                tilemaps["Overlay"].SetTile(new Vector3Int(selectedCell.x, selectedCell.y, 0), null);
+                renderSystem.ClearTile(selectedCell, "Overlay");
             }
 
 

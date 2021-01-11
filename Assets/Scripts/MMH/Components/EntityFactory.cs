@@ -6,13 +6,13 @@ namespace MMH
     {
         private static GameObject citizenPrefab;
 
-        private float currentZValue;
+        private float nextEntityHeight;
 
         void Awake()
         {
             citizenPrefab = Resources.Load<GameObject>("Prefabs/Citizen");
 
-            currentZValue = 0;
+            nextEntityHeight = 0;
         }
 
 
@@ -20,10 +20,10 @@ namespace MMH
         {
             Vector2 worldPosition = Util.Map.IsoToWorld(position);
 
-            currentZValue += 0.001f;
+            nextEntityHeight += Info.Entity.HeightSpacing;
 
             GameObject newCitizenObject = Instantiate(
-                citizenPrefab, new Vector3(worldPosition.x, worldPosition.y, currentZValue), Quaternion.identity
+                citizenPrefab, new Vector3(worldPosition.x, worldPosition.y, nextEntityHeight), Quaternion.identity
             );
 
             newCitizenObject.name = name;
