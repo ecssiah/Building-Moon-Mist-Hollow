@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace MMH
 {
-    public class NameGenerator : MonoBehaviour
+    public static class NameGenerator
     {
-        public string GetName(Type.Group groupType)
+        public static string GetName(Type.Group groupType)
         {
             string initial = "";
             string middle = "";

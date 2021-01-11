@@ -11,10 +11,10 @@ namespace MMH
 
             private Data.Population population;
 
-            private NameGenerator nameGenerator;
-            private EntityFactory entityFactory;
-
             private GameObject entitiesObject;
+            private GameObject citizenPrefabObject;
+
+            private float nextEntityHeight;
 
 
             void Awake()
@@ -22,10 +22,9 @@ namespace MMH
                 mapSystem = GameObject.Find("MapSystem").GetComponent<MapSystem>();
                 pathfindingSystem = GameObject.Find("PathfindingSystem").GetComponent<PathfindingSystem>();
 
-                nameGenerator = gameObject.AddComponent<NameGenerator>();
-                entityFactory = gameObject.AddComponent<EntityFactory>();
-
                 entitiesObject = GameObject.Find("Entities");
+
+                citizenPrefabObject = Resources.Load<GameObject>("Prefabs/Citizen");
             }
 
 
@@ -49,11 +48,9 @@ namespace MMH
             {
                 Type.Group groupType = Util.Misc.RandomEnumValue<Type.Group>();
 
-                string citizenName = nameGenerator.GetName(groupType);
+                string citizenName = NameGenerator.GetName(groupType);
 
-                GameObject citizenGameObject = entityFactory.CreateCitizenObject(
-                    citizenName, position, entitiesObject
-                );
+                GameObject citizenGameObject = CreateCitizenObject(citizenName, position, entitiesObject);
 
                 Citizen citizen = citizenGameObject.AddComponent<Citizen>();
 
@@ -72,6 +69,29 @@ namespace MMH
                     PopulationType = Type.Population.Citizen,
                     GroupType = groupType,
                 };
+            }
+
+
+            private GameObject CreateCitizenObject(string name, Vector2Int position, GameObject parent = null)
+            {
+                Vector2 worldPosition = Util.Map.IsoToWorld(position);
+
+                nextEntityHeight -= Info.Entity.HeightSpacing;
+
+                GameObject newCitizenObject = Instantiate(
+                    citizenPrefabObject,
+                    new Vector3(worldPosition.x, worldPosition.y, nextEntityHeight),
+                    Quaternion.identity
+                );
+
+                newCitizenObject.name = name;
+
+                if (parent != null)
+                {
+                    newCitizenObject.transform.parent = parent.transform;
+                }
+
+                return newCitizenObject;
             }
 
 

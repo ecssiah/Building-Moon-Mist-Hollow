@@ -75,7 +75,7 @@ namespace MMH
                 citizen.Entity.Position, path.Nodes[0].Position, Time.deltaTime * citizen.Entity.Speed
             );
 
-            if (Vector2.Distance(citizen.Entity.Position, path.Nodes[0].Position) < .001f)
+            if (Vector2.Distance(citizen.Entity.Position, path.Nodes[0].Position) < .01f)
             {
                 path.Nodes.RemoveAt(0);
 

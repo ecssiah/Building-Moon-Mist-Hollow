@@ -20,19 +20,19 @@ namespace MMH
 
                 worldMap = gameObject.AddComponent<WorldMap>();
 
-                InitData();
-
+                SetupCells();
                 SetupBase();
                 SetupPaths();
 
                 RoomBuilder.LayoutRooms(worldMap);
+
                 SetupRooms();
 
                 ConstructMap();
             }
 
 
-            private void InitData()
+            private void SetupCells()
             {
                 selectedCell = new Vector2Int();
 
@@ -191,6 +191,7 @@ namespace MMH
                     -Info.Map.Size, -Info.Map.PathWidth / 2,
                     Info.Map.Width, Info.Map.PathWidth
                 );
+
                 RectInt mainNorthSouth = new RectInt(
                     -Info.Map.PathWidth / 2, -Info.Map.Size,
                     Info.Map.PathWidth, Info.Map.Width
@@ -200,6 +201,7 @@ namespace MMH
                     -Info.Map.Size, Info.Map.Size / 2 - Info.Map.PathWidth / 2,
                     Info.Map.Width, Info.Map.PathWidth / 2
                 );
+
                 RectInt south1st = new RectInt(
                     -Info.Map.Size, -Info.Map.Size / 2 - Info.Map.PathWidth / 2,
                     Info.Map.Width, Info.Map.PathWidth / 2
@@ -209,26 +211,31 @@ namespace MMH
                     -Info.Map.Size / 2 - Info.Map.PathWidth / 2, -Info.Map.Size,
                     Info.Map.PathWidth / 2, Info.Map.Width
                 );
+
                 RectInt east1st = new RectInt(
                     Info.Map.Size / 2 - Info.Map.PathWidth / 2, -Info.Map.Size,
                     Info.Map.PathWidth / 2, Info.Map.Width
                 );
 
                 SetupGround(mainEastWest, Type.Ground.Stone);
-                SetupGround(mainNorthSouth, Type.Ground.Stone);
-
-                SetupGround(north1st, Type.Ground.Stone);
-                SetupGround(south1st, Type.Ground.Stone);
-                SetupGround(west1st, Type.Ground.Stone);
-                SetupGround(east1st, Type.Ground.Stone);
-
                 SetPlaceholder(mainEastWest);
+
+                SetupGround(mainNorthSouth, Type.Ground.Stone);
                 SetPlaceholder(mainNorthSouth);
 
+                SetupGround(north1st, Type.Ground.Stone);
                 SetPlaceholder(north1st);
+
+                SetupGround(south1st, Type.Ground.Stone);
                 SetPlaceholder(south1st);
+
+                SetupGround(west1st, Type.Ground.Stone);
                 SetPlaceholder(west1st);
+
+                SetupGround(east1st, Type.Ground.Stone);
                 SetPlaceholder(east1st);
+
+
             }
 
 
