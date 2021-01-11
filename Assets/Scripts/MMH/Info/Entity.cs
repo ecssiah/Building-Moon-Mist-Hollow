@@ -8,7 +8,7 @@
 
             public static readonly float DefaultWalkSpeed = 1.2f;
 
-            public static readonly float HeightSpacing = 0.006f;
+            public static readonly float HeightSpacing = 0.001f;
         }
     }
 }

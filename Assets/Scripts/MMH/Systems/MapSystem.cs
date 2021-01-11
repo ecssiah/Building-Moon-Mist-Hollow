@@ -17,7 +17,7 @@ namespace MMH
             void Awake()
             {
                 renderSystem = GameObject.Find("RenderSystem").GetComponent<RenderSystem>();
-
+    
                 worldMap = gameObject.AddComponent<WorldMap>();
 
                 SetupCells();

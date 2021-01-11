@@ -16,36 +16,12 @@ namespace MMH
             entitySystem = GameObject.Find("EntitySystem").GetComponent<System.EntitySystem>();
 
             citizen = GetComponent<Citizen>();
-
-            path = new Data.Path();
         }
 
 
         void Start()
         {
-            Vector2Int targetPosition;
-            int roll = Random.Range(0, 4);
-
-            switch(roll)
-            {
-                case 0:
-                    targetPosition = new Vector2Int(-Info.Map.Size + 1, -Info.Map.Size + 1);
-                    break;
-                case 1:
-                    targetPosition = new Vector2Int(Info.Map.Size - 1, -Info.Map.Size + 1);
-                    break;
-                case 2:
-                    targetPosition = new Vector2Int(-Info.Map.Size + 1, Info.Map.Size - 1);
-                    break;
-                case 3:
-                    targetPosition = new Vector2Int(Info.Map.Size - 1, Info.Map.Size - 1);
-                    break;
-                default:
-                    targetPosition = new Vector2Int(0, 0);
-                    break;
-            }
-
-            path = entitySystem.RequestPath(citizen.Entity.GridPosition, targetPosition);
+            path = entitySystem.RequestPath(citizen.Entity.GridPosition, new Vector2Int(7, 4));
 
             if (path.Valid)
             {
@@ -56,33 +32,30 @@ namespace MMH
 
         void Update()
         {
-            if (path.Valid)
-            {
-                Decide();
-                Move();
-            }
-            else
-            {
-                citizen.Entity.Speed = 0f;
-                citizen.Entity.Direction = Vector2.zero;
-            }
+            Decide();
+            Move();
         }
 
 
         private void Decide()
         {
+            if (path.Valid)
+            {
+                FollowPath();
+            }
+        }
+
+
+        private void FollowPath()
+        {
             citizen.Entity.Position = Vector2.MoveTowards(
                 citizen.Entity.Position, path.Nodes[0].Position, Time.deltaTime * citizen.Entity.Speed
             );
+            citizen.Entity.Direction = citizen.Entity.Position - path.Nodes[0].Position;
 
             if (Vector2.Distance(citizen.Entity.Position, path.Nodes[0].Position) < .01f)
             {
                 path.Nodes.RemoveAt(0);
-
-                if (path.Valid)
-                {
-                    citizen.Entity.Direction = citizen.Entity.Position - path.Nodes[0].Position;
-                }
             }
         }
 

@@ -6,7 +6,7 @@ namespace MMH
     {
         public struct Map
         {
-            public static readonly int Size = 24;
+            public static readonly int Size = 16;
             public static readonly int Width = 2 * Size + 1;
 
             public static readonly bool ShowCollision = false;
