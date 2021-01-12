@@ -14,6 +14,14 @@ namespace MMH
             gameObject.AddComponent<CitizenAnimator>();
             gameObject.AddComponent<CitizenMovement>();
         }
+
+
+        public override string ToString()
+        {
+            string output = $"{Id.FullName} - {Entity.Position}";
+
+            return output;
+        }
     }
 }
 

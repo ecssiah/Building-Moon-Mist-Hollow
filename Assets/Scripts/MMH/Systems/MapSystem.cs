@@ -318,6 +318,19 @@ namespace MMH
             }
 
 
+            public Data.Cell GetFreeCell()
+            {
+                Data.Cell cellData = GetCell(Util.Map.GetRandomMapPosition());
+
+                while (cellData.Solid)
+                {
+                    cellData = GetCell(Util.Map.GetRandomMapPosition());
+                }
+
+                return cellData;
+            }
+
+
             public void SetCell(int x, int y, Data.Cell cellData)
             {
                 worldMap.Cells[Util.Map.CoordsToIndex(x, y)] = cellData;

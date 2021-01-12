@@ -14,8 +14,6 @@ namespace MMH
             private GameObject entitiesObject;
             private GameObject citizenPrefabObject;
 
-            private float nextEntityHeight;
-
 
             void Awake()
             {
@@ -23,7 +21,6 @@ namespace MMH
                 pathfindingSystem = GameObject.Find("PathfindingSystem").GetComponent<PathfindingSystem>();
 
                 entitiesObject = GameObject.Find("Entities");
-
                 citizenPrefabObject = Resources.Load<GameObject>("Prefabs/Citizen");
             }
 
@@ -32,14 +29,9 @@ namespace MMH
             {
                 for (int i = 0; i < Info.Entity.NumberOfSeedCitizens; i++)
                 {
-                    Vector2Int position = Util.Map.GetRandomMapPosition();
+                    Data.Cell cellData = mapSystem.GetFreeCell();
 
-                    while (mapSystem.GetCell(position).Solid)
-                    {
-                        position = Util.Map.GetRandomMapPosition();
-                    }
-
-                    GenerateCitizen(position);
+                    GenerateCitizen(cellData.Position);
                 }
             }
 
@@ -48,10 +40,7 @@ namespace MMH
             {
                 Type.Group groupType = Util.Misc.RandomEnumValue<Type.Group>();
 
-                string citizenName = NameGenerator.GetName(groupType);
-
-                GameObject citizenGameObject = CreateCitizenObject(citizenName, position, entitiesObject);
-
+                GameObject citizenGameObject = GenerateCitizenObject(position);
                 Citizen citizen = citizenGameObject.AddComponent<Citizen>();
 
                 citizen.Entity = new Data.Entity
@@ -59,37 +48,31 @@ namespace MMH
                     GameObject = citizenGameObject,
                     Speed = 0f,
                     Position = new Vector2(position.x, position.y),
-                    Direction = new Vector2(0, 0),
+                    Direction = Vector2.zero,
                 };
 
                 citizen.Id = new Data.Id
                 {
-                    FullName = citizenName,
+                    FullName = NameGenerator.GetName(groupType),
                     Number = population.NextId++,
                     PopulationType = Type.Population.Citizen,
                     GroupType = groupType,
                 };
+
+                citizenGameObject.name = citizen.Id.FullName;
+                citizenGameObject.transform.parent = entitiesObject.transform;
             }
 
 
-            private GameObject CreateCitizenObject(string name, Vector2Int position, GameObject parent = null)
+            private GameObject GenerateCitizenObject(Vector2Int position)
             {
                 Vector2 worldPosition = Util.Map.IsoToWorld(position);
 
-                nextEntityHeight -= Info.Entity.HeightSpacing;
-
                 GameObject newCitizenObject = Instantiate(
                     citizenPrefabObject,
-                    new Vector3(worldPosition.x, worldPosition.y, nextEntityHeight),
+                    new Vector3(worldPosition.x, worldPosition.y, 0),
                     Quaternion.identity
                 );
-
-                newCitizenObject.name = name;
-
-                if (parent != null)
-                {
-                    newCitizenObject.transform.parent = parent.transform;
-                }
 
                 return newCitizenObject;
             }

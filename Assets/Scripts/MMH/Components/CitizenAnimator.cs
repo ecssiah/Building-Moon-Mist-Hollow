@@ -70,29 +70,32 @@ namespace MMH
         {
             get
             {
-                if (citizen.Entity.Velocity.x > 0 && citizen.Entity.Velocity.y > 0)
+                if (citizen.Entity.Speed > 0)
                 {
-                    return frames[Type.Animation.WalkDown];
-                }
-                else if (citizen.Entity.Velocity.x < 0 && citizen.Entity.Velocity.y < 0)
-                {
-                    return frames[Type.Animation.WalkUp];
-                }
-                else if (citizen.Entity.Velocity.y > 0)
-                {
-                    return frames[Type.Animation.WalkRight];
-                }
-                else if (citizen.Entity.Velocity.x > 0)
-                {
-                    return frames[Type.Animation.WalkLeft];
-                }
-                else if (citizen.Entity.Velocity.y < 0)
-                {
-                    return frames[Type.Animation.WalkLeft];
-                }
-                else if (citizen.Entity.Velocity.x < 0)
-                {
-                    return frames[Type.Animation.WalkRight];
+                    if (citizen.Entity.Velocity.x > 0 && citizen.Entity.Velocity.y > 0)
+                    {
+                        return frames[Type.Animation.WalkDown];
+                    }
+                    else if (citizen.Entity.Velocity.x < 0 && citizen.Entity.Velocity.y < 0)
+                    {
+                        return frames[Type.Animation.WalkUp];
+                    }
+                    else if (citizen.Entity.Velocity.y > 0)
+                    {
+                        return frames[Type.Animation.WalkRight];
+                    }
+                    else if (citizen.Entity.Velocity.x > 0)
+                    {
+                        return frames[Type.Animation.WalkLeft];
+                    }
+                    else if (citizen.Entity.Velocity.y < 0)
+                    {
+                        return frames[Type.Animation.WalkLeft];
+                    }
+                    else if (citizen.Entity.Velocity.x < 0)
+                    {
+                        return frames[Type.Animation.WalkRight];
+                    }
                 }
                 else
                 {
@@ -120,11 +123,9 @@ namespace MMH
                     {
                         return frames[Type.Animation.IdleRight];
                     }
-                    else
-                    {
-                        return frames[Type.Animation.IdleDown];
-                    }
                 }
+
+                return frames[Type.Animation.IdleDown];
             }
         }
     }

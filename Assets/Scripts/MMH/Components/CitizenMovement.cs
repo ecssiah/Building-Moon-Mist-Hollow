@@ -21,7 +21,7 @@ namespace MMH
 
         void Start()
         {
-            path = entitySystem.RequestPath(citizen.Entity.GridPosition, new Vector2Int(7, 4));
+            path = entitySystem.RequestPath(citizen.Entity.GridPosition, Vector2Int.zero);
 
             if (path.Valid)
             {
@@ -32,17 +32,12 @@ namespace MMH
 
         void Update()
         {
-            Decide();
-            Move();
-        }
-
-
-        private void Decide()
-        {
             if (path.Valid)
             {
                 FollowPath();
             }
+
+            Move();
         }
 
 

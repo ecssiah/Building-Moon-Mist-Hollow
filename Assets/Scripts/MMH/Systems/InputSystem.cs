@@ -52,7 +52,7 @@ namespace MMH
             public void OnCellSelection(Vector2Int cellPosition)
             {
                 uiSystem.ClearSelection();
-                mapSystem.ClearSelection();
+                mapSystem.ClearSelection(); 
 
                 uiSystem.SelectCell(cellPosition);
                 mapSystem.SelectCell(cellPosition);
