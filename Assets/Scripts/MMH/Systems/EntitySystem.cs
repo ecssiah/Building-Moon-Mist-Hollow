@@ -15,7 +15,7 @@ namespace MMH
             private GameObject citizenPrefabObject;
 
 
-            void Awake()
+            private void Awake()
             {
                 mapSystem = GameObject.Find("MapSystem").GetComponent<MapSystem>();
                 pathfindingSystem = GameObject.Find("PathfindingSystem").GetComponent<PathfindingSystem>();
@@ -25,7 +25,7 @@ namespace MMH
             }
 
 
-            void Start()
+            private void Start()
             {
                 for (int i = 0; i < Info.Entity.NumberOfSeedCitizens; i++)
                 {
@@ -47,8 +47,8 @@ namespace MMH
                 {
                     GameObject = citizenGameObject,
                     Speed = 0f,
-                    Position = new Vector2(position.x, position.y),
-                    Direction = Vector2.zero,
+                    Position = new Vector2Int(position.x, position.y),
+                    Direction = Type.Direction.S,
                 };
 
                 citizen.Id = new Data.Id

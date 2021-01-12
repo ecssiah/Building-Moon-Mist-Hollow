@@ -21,7 +21,7 @@ namespace MMH
 
         void Start()
         {
-            path = entitySystem.RequestPath(citizen.Entity.GridPosition, Vector2Int.zero);
+            path = entitySystem.RequestPath(citizen.Entity.Position, Vector2Int.zero);
 
             if (path.Valid)
             {
@@ -36,30 +36,29 @@ namespace MMH
             {
                 FollowPath();
             }
-
-            Move();
         }
 
 
         private void FollowPath()
         {
-            citizen.Entity.Position = Vector2.MoveTowards(
-                citizen.Entity.Position, path.Nodes[0].Position, Time.deltaTime * citizen.Entity.Speed
-            );
-            citizen.Entity.Direction = citizen.Entity.Position - path.Nodes[0].Position;
-
-            if (Vector2.Distance(citizen.Entity.Position, path.Nodes[0].Position) < .01f)
+            if (path.Progress < 1.0f)
             {
+                path.Progress += Time.deltaTime;
+
+                Vector2 isoPosition = Vector2.Lerp(
+                    citizen.Entity.Position, path.Nodes[0].Position, path.Progress
+                );
+
+                transform.position = Util.Map.IsoToWorld(isoPosition);
+            }
+            else
+            {
+                path.Progress = 0f;
+
+                citizen.Entity.Position = path.Nodes[0].Position;
+
                 path.Nodes.RemoveAt(0);
             }
-        }
-
-
-        private void Move()
-        {
-            Vector2 worldPosition = Util.Map.IsoToWorld(citizen.Entity.Position);
-
-            transform.position = worldPosition;
         }
     }
 }

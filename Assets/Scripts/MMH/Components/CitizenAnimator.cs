@@ -32,7 +32,7 @@ namespace MMH
             string groupType = Enum.GetName(typeof(Type.Group), citizen.Id.GroupType);
 
             frameNumber = 0;
-            frameRate = 1 / 6f;
+            frameRate = 1 / 10f;
 
             frames = new Dictionary<Type.Animation, Sprite[]>
             {
@@ -70,62 +70,25 @@ namespace MMH
         {
             get
             {
-                if (citizen.Entity.Speed > 0)
-                {
-                    if (citizen.Entity.Velocity.x > 0 && citizen.Entity.Velocity.y > 0)
-                    {
-                        return frames[Type.Animation.WalkDown];
-                    }
-                    else if (citizen.Entity.Velocity.x < 0 && citizen.Entity.Velocity.y < 0)
-                    {
-                        return frames[Type.Animation.WalkUp];
-                    }
-                    else if (citizen.Entity.Velocity.y > 0)
-                    {
-                        return frames[Type.Animation.WalkRight];
-                    }
-                    else if (citizen.Entity.Velocity.x > 0)
-                    {
-                        return frames[Type.Animation.WalkLeft];
-                    }
-                    else if (citizen.Entity.Velocity.y < 0)
-                    {
-                        return frames[Type.Animation.WalkLeft];
-                    }
-                    else if (citizen.Entity.Velocity.x < 0)
-                    {
-                        return frames[Type.Animation.WalkRight];
-                    }
-                }
-                else
-                {
-                    if (citizen.Entity.Direction.x > 0 && citizen.Entity.Direction.y > 0)
-                    {
-                        return frames[Type.Animation.IdleDown];
-                    }
-                    else if (citizen.Entity.Direction.x < 0 && citizen.Entity.Direction.y < 0)
-                    {
-                        return frames[Type.Animation.IdleUp];
-                    }
-                    else if (citizen.Entity.Direction.y > 0)
-                    {
-                        return frames[Type.Animation.IdleRight];
-                    }
-                    else if (citizen.Entity.Direction.x > 0)
-                    {
-                        return frames[Type.Animation.IdleLeft];
-                    }
-                    else if (citizen.Entity.Direction.y < 0)
-                    {
-                        return frames[Type.Animation.IdleLeft];
-                    }
-                    else if (citizen.Entity.Direction.x < 0)
-                    {
-                        return frames[Type.Animation.IdleRight];
-                    }
-                }
+                bool moving = citizen.Entity.Speed > 0;
+                Type.Direction direction = citizen.Entity.Direction;
 
-                return frames[Type.Animation.IdleDown];
+                switch (direction)
+                {
+                    case Type.Direction.N:
+                    case Type.Direction.NW:
+                    case Type.Direction.W:
+                        return frames[moving ? Type.Animation.WalkLeft : Type.Animation.IdleLeft];
+                    case Type.Direction.S:
+                    case Type.Direction.SE:
+                    case Type.Direction.E:
+                        return frames[moving ? Type.Animation.WalkRight : Type.Animation.IdleRight];
+                    case Type.Direction.NE:
+                        return frames[moving ? Type.Animation.WalkUp : Type.Animation.IdleUp];
+                    case Type.Direction.SW:
+                    default:
+                        return frames[moving ? Type.Animation.WalkDown : Type.Animation.IdleDown];
+                }
             }
         }
     }

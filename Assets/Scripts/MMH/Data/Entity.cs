@@ -9,14 +9,10 @@ namespace MMH
         {
             public GameObject GameObject;
 
-            public Vector2 Position;
-
-            public Vector2Int GridPosition => new Vector2Int((int)Position.x, (int)Position.y);
+            public Vector2Int Position;
 
             public float Speed;
-            public Vector2 Direction;
-
-            public Vector2 Velocity => Speed * Direction;
+            public Type.Direction Direction;
         }
     }
 }

@@ -186,6 +186,45 @@ namespace MMH
                         return new Vector2Int(bounds.xMin + 1, bounds.yMin);
                 }
             }
+
+
+            public static Type.Direction CardinalDirection(Vector2 direction)
+            {
+                if (direction.x == 0 && direction.y > 0)
+                {
+                    return Type.Direction.N;
+                }
+                else if (direction.x == 0 && direction.y < 0)
+                {
+                    return Type.Direction.S;
+                }
+                else if (direction.y == 0 && direction.x > 0)
+                {
+                    return Type.Direction.E;
+                }
+                else if (direction.y == 0 && direction.x < 0)
+                {
+                    return Type.Direction.W;
+                }
+                else if (direction.x > 0 && direction.y > 0)
+                {
+                    return Type.Direction.NE;
+                }
+                else if (direction.x < 0 && direction.y > 0)
+                {
+                    return Type.Direction.NW;
+                }
+                else if (direction.x > 0 && direction.y < 0)
+                {
+                    return Type.Direction.SE;
+                }
+                else if (direction.x < 0 && direction.y < 0)
+                {
+                    return Type.Direction.SW;
+                }
+
+                return Type.Direction.S;
+            }
         }
     }
 }

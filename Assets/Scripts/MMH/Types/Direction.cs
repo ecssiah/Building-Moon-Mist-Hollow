@@ -4,10 +4,14 @@
     {
         public enum Direction
         {
-            Up,
-            Down,
-            Left,
-            Right,
+            E,
+            NE,
+            N,
+            NW,
+            W,
+            SW,
+            S,
+            SE,
         }
     }
 }
