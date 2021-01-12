@@ -1,14 +1,11 @@
-﻿namespace MMH
+﻿namespace MMH.Type
 {
-    namespace Type
+    public enum Ground
     {
-        public enum Ground
-        {
-            None,
-            Grass,
-            Stone,
-            Wood,
-            Water,
-        }
+        None,
+        Grass,
+        Stone,
+        Wood,
+        Water,
     }
 }

@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MMH
+namespace MMH.Data
 {
-    namespace Data
+    [Serializable]
+    public struct Inventory
     {
-        [Serializable]
-        public struct Inventory
-        {
-            public List<Item> Items;
-        }
-
+        public List<Item> Items;
     }
 }
 

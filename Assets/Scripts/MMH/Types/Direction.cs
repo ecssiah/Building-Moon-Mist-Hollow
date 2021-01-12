@@ -1,17 +1,14 @@
-﻿namespace MMH
+﻿namespace MMH.Type
 {
-    namespace Type
+    public enum Direction
     {
-        public enum Direction
-        {
-            E,
-            NE,
-            N,
-            NW,
-            W,
-            SW,
-            S,
-            SE,
-        }
+        E,
+        NE,
+        N,
+        NW,
+        W,
+        SW,
+        S,
+        SE,
     }
 }

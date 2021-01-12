@@ -1,12 +1,9 @@
-﻿namespace MMH
+﻿namespace MMH.Type
 {
-    namespace Type
+    public enum Wall
     {
-        public enum Wall
-        {
-            None,
-            WoodWall,
-            StoneWall,
-        }
+        None,
+        WoodWall,
+        StoneWall,
     }
 }

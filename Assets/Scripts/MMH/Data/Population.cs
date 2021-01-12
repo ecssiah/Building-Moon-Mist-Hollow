@@ -1,13 +1,10 @@
 ﻿using System;
 
-namespace MMH
+namespace MMH.Data
 {
-    namespace Data
+    [Serializable]
+    public struct Population
     {
-        [Serializable]
-        public struct Population
-        {
-            public int NextId;
-        }
+        public int NextId;
     }
 }

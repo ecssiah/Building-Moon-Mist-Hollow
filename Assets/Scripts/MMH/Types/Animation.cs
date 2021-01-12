@@ -1,17 +1,14 @@
-﻿namespace MMH
+﻿namespace MMH.Type
 {
-    namespace Type
+    public enum Animation
     {
-        public enum Animation
-        {
-            IdleUp,
-            IdleDown,
-            IdleRight,
-            IdleLeft,
-            WalkUp,
-            WalkDown,
-            WalkRight,
-            WalkLeft,
-        }
+        IdleUp,
+        IdleDown,
+        IdleRight,
+        IdleLeft,
+        WalkUp,
+        WalkDown,
+        WalkRight,
+        WalkLeft,
     }
 }

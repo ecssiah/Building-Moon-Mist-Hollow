@@ -1,11 +1,8 @@
-﻿namespace MMH
+﻿namespace MMH.Info
 {
-    namespace Info
+    public struct UI
     {
-        public struct UI
-        {
-            public static readonly float LabelYOffset = 136f;
-            public static readonly int LabelFontSize = 32;
-        }
+        public static readonly float LabelYOffset = 136f;
+        public static readonly int LabelFontSize = 32;
     }
 }

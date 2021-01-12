@@ -22,11 +22,6 @@ namespace MMH
         void Start()
         {
             path = entitySystem.RequestPath(citizen.Entity.Position, Vector2Int.zero);
-
-            if (path.Valid)
-            {
-                citizen.Entity.Speed = Info.Entity.DefaultWalkSpeed;
-            }
         }
 
 

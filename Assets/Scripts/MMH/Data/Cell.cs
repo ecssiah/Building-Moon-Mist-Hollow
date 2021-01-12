@@ -1,20 +1,17 @@
 ﻿using System;
 using UnityEngine;
 
-namespace MMH
+namespace MMH.Data
 {
-    namespace Data
+    [Serializable]
+    public struct Cell
     {
-        [Serializable]
-        public struct Cell
-        {
-            public Vector2Int Position;
+        public Vector2Int Position;
 
-            public bool Solid;
+        public bool Solid;
 
-            public Type.Ground GroundType;
-            public Type.Wall WallType;
-            public Type.Overlay OverlayType;
-        }
+        public Type.Ground GroundType;
+        public Type.Wall WallType;
+        public Type.Overlay OverlayType;
     }
 }

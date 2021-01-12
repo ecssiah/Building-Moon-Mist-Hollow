@@ -1,12 +1,9 @@
-﻿namespace MMH
+﻿namespace MMH.Type
 {
-    namespace Type
+    public enum Group
     {
-        public enum Group
-        {
-            Guy,
-            Taylor,
-            Kailt,
-        }
+        Guy,
+        Taylor,
+        Kailt,
     }
 }

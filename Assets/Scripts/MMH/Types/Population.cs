@@ -1,12 +1,9 @@
-﻿namespace MMH
+﻿namespace MMH.Type
 {
-    namespace Type
+    public enum Population
     {
-        public enum Population
-        {
-            Citizen,
-            Resident,
-            Criminal,
-        }
+        Citizen,
+        Resident,
+        Criminal,
     }
 }

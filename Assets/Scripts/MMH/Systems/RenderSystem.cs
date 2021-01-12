@@ -3,79 +3,76 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace MMH
+namespace MMH.System
 {
-    namespace System
+    public class RenderSystem : MonoBehaviour
     {
-        public class RenderSystem : MonoBehaviour
+        private Dictionary<string, Tile> tiles;
+        private Dictionary<string, Tilemap> tilemaps;
+
+
+        void Awake()
         {
-            private Dictionary<string, Tile> tiles;
-            private Dictionary<string, Tilemap> tilemaps;
+            InitTiles();
+            InitTilemaps();
+        }
 
 
-            void Awake()
+        private void InitTiles()
+        {
+            tiles = new Dictionary<string, Tile>();
+
+            foreach (Tile tile in Resources.LoadAll<Tile>("Tiles"))
             {
-                InitTiles();
-                InitTilemaps();
+                tiles[tile.name] = tile;
+            }
+        }
+
+
+        private void InitTilemaps()
+        {
+            tilemaps = new Dictionary<string, Tilemap>();
+
+            Tilemap[] tilemapsArray = GameObject.Find("Tilemaps").GetComponentsInChildren<Tilemap>();
+
+            foreach (Tilemap tilemap in tilemapsArray)
+            {
+                tilemaps[tilemap.name] = tilemap;
             }
 
-
-            private void InitTiles()
-            {
-                tiles = new Dictionary<string, Tile>();
-
-                foreach (Tile tile in Resources.LoadAll<Tile>("Tiles"))
-                {
-                    tiles[tile.name] = tile;
-                }
-            }
+            TilemapRenderer collisionRenderer = tilemaps["Collision"].GetComponent<TilemapRenderer>();
+            collisionRenderer.enabled = Info.Map.ShowCollision;
+        }
 
 
-            private void InitTilemaps()
-            {
-                tilemaps = new Dictionary<string, Tilemap>();
+        public void SetTile(Vector2Int position, Type.Ground groundType)
+        {
+            tilemaps["Ground"].SetTile(
+                new Vector3Int(position.x, position.y, 0),
+                tiles[Info.Tile.groundTileNames[groundType]]
+            );
+        }
 
-                Tilemap[] tilemapsArray = GameObject.Find("Tilemaps").GetComponentsInChildren<Tilemap>();
+        public void SetTile(Vector2Int position, Type.Wall wallType)
+        {
+            tilemaps["Walls"].SetTile(
+                new Vector3Int(position.x, position.y, 3),
+                tiles[Info.Tile.wallTileNames[wallType]]
+            );
+        }
 
-                foreach (Tilemap tilemap in tilemapsArray)
-                {
-                    tilemaps[tilemap.name] = tilemap;
-                }
-
-                TilemapRenderer collisionRenderer = tilemaps["Collision"].GetComponent<TilemapRenderer>();
-                collisionRenderer.enabled = Info.Map.ShowCollision;
-            }
-
-
-            public void SetTile(Vector2Int position, Type.Ground groundType)
-            {
-                tilemaps["Ground"].SetTile(
-                    new Vector3Int(position.x, position.y, 0),
-                    tiles[Info.Tile.groundTileNames[groundType]]
-                );
-            }
-
-            public void SetTile(Vector2Int position, Type.Wall wallType)
-            {
-                tilemaps["Walls"].SetTile(
-                    new Vector3Int(position.x, position.y, 3),
-                    tiles[Info.Tile.wallTileNames[wallType]]
-                );
-            }
-
-            public void SetTile(Vector2Int position, Type.Overlay overlayType)
-            {
-                tilemaps["Overlay"].SetTile(
-                    new Vector3Int(position.x, position.y, 0),
-                    tiles[Info.Tile.overlayTileNames[overlayType]]
-                );
-            }
+        public void SetTile(Vector2Int position, Type.Overlay overlayType)
+        {
+            tilemaps["Overlay"].SetTile(
+                new Vector3Int(position.x, position.y, 0),
+                tiles[Info.Tile.overlayTileNames[overlayType]]
+            );
+        }
 
 
-            public void ClearTile(Vector2Int position, string layer)
-            {
-                tilemaps[layer].SetTile(new Vector3Int(position.x, position.y, 0), null);
-            }
+        public void ClearTile(Vector2Int position, string layer)
+        {
+            tilemaps[layer].SetTile(new Vector3Int(position.x, position.y, 0), null);
         }
     }
 }

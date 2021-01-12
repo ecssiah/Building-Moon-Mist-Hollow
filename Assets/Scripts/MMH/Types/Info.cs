@@ -1,12 +1,9 @@
-﻿namespace MMH
+﻿namespace MMH.Type
 {
-    namespace Type
+    public enum Info
     {
-        public enum Info
-        {
-            None,
-            Citizen,
-            Cell,
-        }
+        None,
+        Citizen,
+        Cell,
     }
 }

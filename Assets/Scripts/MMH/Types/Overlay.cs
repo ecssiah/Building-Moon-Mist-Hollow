@@ -1,12 +1,9 @@
-﻿namespace MMH
+﻿namespace MMH.Type
 {
-    namespace Type
+    public enum Overlay
     {
-        public enum Overlay
-        {
-            None,
-            Selection,
-            Collision,
-        }
+        None,
+        Selection,
+        Collision,
     }
 }

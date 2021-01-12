@@ -1,43 +1,40 @@
 ﻿using System.Collections.Generic;
 
-namespace MMH
+namespace MMH.Data
 {
-    namespace Data
+    public struct Path
     {
-        public struct Path
+        public float Progress;
+
+        public List<HPAStar.Node> Nodes;
+
+        public bool Valid
         {
-            public float Progress;
-
-            public List<HPAStar.Node> Nodes;
-
-            public bool Valid
+            get
             {
-                get
+                if (Nodes is null)
                 {
-                    if (Nodes is null)
-                    {
-                        return false;
-                    }
+                    return false;
+                }
 
-                    return Nodes.Count >= 1;
+                return Nodes.Count >= 1;
+            }
+        }
+
+
+        public override string ToString()
+        {
+            string output = $"Path: {Valid}";
+
+            if (Valid)
+            {
+                for (int i = 0; i < Nodes.Count; i++)
+                {
+                    output += $" - {Nodes[i].Position}";
                 }
             }
 
-
-            public override string ToString()
-            {
-                string output = $"Path: {Valid}";
-
-                if (Valid)
-                {
-                    for (int i = 0; i < Nodes.Count; i++)
-                    {
-                        output += $" - {Nodes[i].Position}";
-                    }
-                }
-
-                return output;
-            }
+            return output;
         }
     }
 }

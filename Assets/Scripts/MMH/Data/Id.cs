@@ -1,15 +1,12 @@
-﻿namespace MMH
+﻿namespace MMH.Data
 {
-    namespace Data
+    public struct Id
     {
-        public struct Id
-        {
-            public int Number;
+        public int Number;
 
-            public string FullName;
+        public string FullName;
 
-            public Type.Population PopulationType;
-            public Type.Group GroupType;
-        }
+        public Type.Population PopulationType;
+        public Type.Group GroupType;
     }
 }

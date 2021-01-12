@@ -1,18 +1,14 @@
 ﻿using UnityEngine;
 
-
-namespace MMH
+namespace MMH.Data
 {
-    namespace Data
+    public struct Entity
     {
-        public struct Entity
-        {
-            public GameObject GameObject;
+        public GameObject GameObject;
 
-            public Vector2Int Position;
+        public Vector2Int Position;
 
-            public float Speed;
-            public Type.Direction Direction;
-        }
+        public float Speed;
+        public Type.Direction Direction;
     }
 }

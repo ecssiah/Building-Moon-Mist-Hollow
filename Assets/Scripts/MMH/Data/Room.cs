@@ -2,22 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MMH
+namespace MMH.Data
 {
-    namespace Data
+    [Serializable]
+    public struct Room
     {
-        [Serializable]
-        public struct Room
-        {
-            public RectInt Bounds;
+        public RectInt Bounds;
 
-            public bool Fill;
+        public bool Fill;
 
-            public Type.Ground GroundType;
-            public Type.Wall WallType;
-            public Type.Overlay OverlayType;
+        public Type.Ground GroundType;
+        public Type.Wall WallType;
+        public Type.Overlay OverlayType;
 
-            public List<Entrance> Entrances;
-        }
+        public List<Entrance> Entrances;
     }
 }

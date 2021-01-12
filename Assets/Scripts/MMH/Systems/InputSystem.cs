@@ -1,78 +1,75 @@
 ﻿using UnityEngine;
 
-namespace MMH
+namespace MMH.System
 {
-    namespace System
+    public class InputSystem : MonoBehaviour
     {
-        public class InputSystem : MonoBehaviour
+        private UISystem uiSystem;
+        private MapSystem mapSystem;
+
+        private SelectionHandler selectionHandler;
+
+
+        void Awake()
         {
-            private UISystem uiSystem;
-            private MapSystem mapSystem;
+            uiSystem = GameObject.Find("UISystem").GetComponent<UISystem>();
+            mapSystem = GameObject.Find("MapSystem").GetComponent<MapSystem>();
 
-            private SelectionHandler selectionHandler;
+            selectionHandler = gameObject.AddComponent<SelectionHandler>();
+            selectionHandler.BroadcastEntitySelection = OnEntitySelection;
+            selectionHandler.BroadcastCellSelection = OnCellSelection;
+        }
 
 
-            void Awake()
+        void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Mouse0))
             {
-                uiSystem = GameObject.Find("UISystem").GetComponent<UISystem>();
-                mapSystem = GameObject.Find("MapSystem").GetComponent<MapSystem>();
-
-                selectionHandler = gameObject.AddComponent<SelectionHandler>();
-                selectionHandler.BroadcastEntitySelection = OnEntitySelection;
-                selectionHandler.BroadcastCellSelection = OnCellSelection;
+                selectionHandler.Select();
             }
 
-
-            void Update()
-            {
-                if (Input.GetKeyDown(KeyCode.Mouse0))
-                {
-                    selectionHandler.Select();
-                }
-
-                if (Input.GetKeyDown(KeyCode.Escape))
-                {
-                    uiSystem.ClearSelection();
-                    mapSystem.ClearSelection();
-                }
-
-                UpdateCamera();
-            }
-
-
-            public void OnEntitySelection(GameObject entity)
+            if (Input.GetKeyDown(KeyCode.Escape))
             {
                 uiSystem.ClearSelection();
                 mapSystem.ClearSelection();
-
-                uiSystem.SelectEntity(entity);
             }
 
-
-            public void OnCellSelection(Vector2Int cellPosition)
-            {
-                uiSystem.ClearSelection();
-                mapSystem.ClearSelection(); 
-
-                uiSystem.SelectCell(cellPosition);
-                mapSystem.SelectCell(cellPosition);
-            }
+            UpdateCamera();
+        }
 
 
-            private void UpdateCamera()
-            {
-                float dx = Info.View.CameraPanSpeed * Time.deltaTime * Input.GetAxis("Horizontal");
-                float dy = Info.View.CameraPanSpeed * Time.deltaTime * Input.GetAxis("Vertical");
-                float dz = Info.View.CameraZoomSpeed * Time.deltaTime * Input.GetAxis("Zoom");
+        public void OnEntitySelection(GameObject entity)
+        {
+            uiSystem.ClearSelection();
+            mapSystem.ClearSelection();
 
-                Camera.main.transform.Translate(dx, dy, 0);
+            uiSystem.SelectEntity(entity);
+        }
 
-                Camera.main.orthographicSize = Mathf.Clamp(
-                    Camera.main.orthographicSize + dz,
-                    Info.View.MinimumOrthographicSize,
-                    Info.View.MaximumOrthographicSize
-                );
-            }
+
+        public void OnCellSelection(Vector2Int cellPosition)
+        {
+            uiSystem.ClearSelection();
+            mapSystem.ClearSelection();
+
+            uiSystem.SelectCell(cellPosition);
+            mapSystem.SelectCell(cellPosition);
+        }
+
+
+        private void UpdateCamera()
+        {
+            float dx = Info.View.CameraPanSpeed * Time.deltaTime * Input.GetAxis("Horizontal");
+            float dy = Info.View.CameraPanSpeed * Time.deltaTime * Input.GetAxis("Vertical");
+            float dz = Info.View.CameraZoomSpeed * Time.deltaTime * Input.GetAxis("Zoom");
+
+            Camera.main.transform.Translate(dx, dy, 0);
+
+            Camera.main.orthographicSize = Mathf.Clamp(
+                Camera.main.orthographicSize + dz,
+                Info.View.MinimumOrthographicSize,
+                Info.View.MaximumOrthographicSize
+            );
         }
     }
 }

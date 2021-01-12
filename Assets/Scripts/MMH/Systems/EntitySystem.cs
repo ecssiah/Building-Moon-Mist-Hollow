@@ -1,87 +1,84 @@
 ﻿using UnityEngine;
 
-namespace MMH
+namespace MMH.System
 {
-    namespace System
+    public class EntitySystem : MonoBehaviour
     {
-        public class EntitySystem : MonoBehaviour
+        private MapSystem mapSystem;
+        private PathfindingSystem pathfindingSystem;
+
+        private Data.Population population;
+
+        private GameObject entitiesObject;
+        private GameObject citizenPrefabObject;
+
+
+        private void Awake()
         {
-            private MapSystem mapSystem;
-            private PathfindingSystem pathfindingSystem;
+            mapSystem = GameObject.Find("MapSystem").GetComponent<MapSystem>();
+            pathfindingSystem = GameObject.Find("PathfindingSystem").GetComponent<PathfindingSystem>();
 
-            private Data.Population population;
+            entitiesObject = GameObject.Find("Entities");
+            citizenPrefabObject = Resources.Load<GameObject>("Prefabs/Citizen");
+        }
 
-            private GameObject entitiesObject;
-            private GameObject citizenPrefabObject;
 
-
-            private void Awake()
+        private void Start()
+        {
+            for (int i = 0; i < Info.Entity.NumberOfSeedCitizens; i++)
             {
-                mapSystem = GameObject.Find("MapSystem").GetComponent<MapSystem>();
-                pathfindingSystem = GameObject.Find("PathfindingSystem").GetComponent<PathfindingSystem>();
+                Data.Cell cellData = mapSystem.GetFreeCell();
 
-                entitiesObject = GameObject.Find("Entities");
-                citizenPrefabObject = Resources.Load<GameObject>("Prefabs/Citizen");
+                GenerateCitizen(cellData.Position);
             }
+        }
 
 
-            private void Start()
+        private void GenerateCitizen(Vector2Int position)
+        {
+            Type.Group groupType = Util.Misc.RandomEnumValue<Type.Group>();
+
+            GameObject citizenGameObject = GenerateCitizenObject(position);
+            Citizen citizen = citizenGameObject.AddComponent<Citizen>();
+
+            citizen.Entity = new Data.Entity
             {
-                for (int i = 0; i < Info.Entity.NumberOfSeedCitizens; i++)
-                {
-                    Data.Cell cellData = mapSystem.GetFreeCell();
+                GameObject = citizenGameObject,
+                Speed = 0f,
+                Position = new Vector2Int(position.x, position.y),
+                Direction = Type.Direction.S,
+            };
 
-                    GenerateCitizen(cellData.Position);
-                }
-            }
-
-
-            private void GenerateCitizen(Vector2Int position)
+            citizen.Id = new Data.Id
             {
-                Type.Group groupType = Util.Misc.RandomEnumValue<Type.Group>();
+                FullName = NameGenerator.GetName(groupType),
+                Number = population.NextId++,
+                PopulationType = Type.Population.Citizen,
+                GroupType = groupType,
+            };
 
-                GameObject citizenGameObject = GenerateCitizenObject(position);
-                Citizen citizen = citizenGameObject.AddComponent<Citizen>();
-
-                citizen.Entity = new Data.Entity
-                {
-                    GameObject = citizenGameObject,
-                    Speed = 0f,
-                    Position = new Vector2Int(position.x, position.y),
-                    Direction = Type.Direction.S,
-                };
-
-                citizen.Id = new Data.Id
-                {
-                    FullName = NameGenerator.GetName(groupType),
-                    Number = population.NextId++,
-                    PopulationType = Type.Population.Citizen,
-                    GroupType = groupType,
-                };
-
-                citizenGameObject.name = citizen.Id.FullName;
-                citizenGameObject.transform.parent = entitiesObject.transform;
-            }
+            citizenGameObject.name = citizen.Id.FullName;
+            citizenGameObject.transform.parent = entitiesObject.transform;
+        }
 
 
-            private GameObject GenerateCitizenObject(Vector2Int position)
-            {
-                Vector2 worldPosition = Util.Map.IsoToWorld(position);
+        private GameObject GenerateCitizenObject(Vector2Int position)
+        {
+            Vector2 worldPosition = Util.Map.IsoToWorld(position);
 
-                GameObject newCitizenObject = Instantiate(
-                    citizenPrefabObject,
-                    new Vector3(worldPosition.x, worldPosition.y, 0),
-                    Quaternion.identity
-                );
+            GameObject newCitizenObject = Instantiate(
+                citizenPrefabObject,
+                new Vector3(worldPosition.x, worldPosition.y, 0),
+                Quaternion.identity
+            );
 
-                return newCitizenObject;
-            }
+            return newCitizenObject;
+        }
 
 
-            public Data.Path RequestPath(Vector2Int start, Vector2Int end)
-            {
-                return pathfindingSystem.FindPath(start, end);
-            }
+        public Data.Path RequestPath(Vector2Int start, Vector2Int end)
+        {
+            return pathfindingSystem.FindPath(start, end);
         }
     }
 }

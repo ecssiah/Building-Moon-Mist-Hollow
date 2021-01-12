@@ -1,17 +1,14 @@
 ﻿using System;
 
-namespace MMH
+namespace MMH.Data
 {
-    namespace Data
+    [Serializable]
+    public struct Item
     {
-        [Serializable]
-        public struct Item
-        {
-            public string Name;
-            public float Value;
-            public float Condition;
-            public float Weight;
-        }
+        public string Name;
+        public float Value;
+        public float Condition;
+        public float Weight;
     }
 }
 

@@ -1,22 +1,18 @@
 ﻿using TMPro;
 using UnityEngine;
 
-
-namespace MMH
+namespace MMH.Util
 {
-    namespace Util
+    public struct UI
     {
-        public struct UI
+        public static TextMeshProUGUI SetLabel(string label, Transform transform)
         {
-            public static TextMeshProUGUI SetLabel(string label, Transform transform)
-            {
-                TextMeshProUGUI textMesh = transform.Find("Data").GetComponent<TextMeshProUGUI>();
-                TextMeshProUGUI labelMesh = transform.Find("Label").GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI textMesh = transform.Find("Data").GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI labelMesh = transform.Find("Label").GetComponent<TextMeshProUGUI>();
 
-                labelMesh.text = label;
+            labelMesh.text = label;
 
-                return textMesh;
-            }
+            return textMesh;
         }
     }
 }

@@ -1,14 +1,11 @@
 ﻿using System;
 using UnityEngine;
 
-namespace MMH
+namespace MMH.Data
 {
-    namespace Data
+    [Serializable]
+    public struct Entrance
     {
-        [Serializable]
-        public struct Entrance
-        {
-            public RectInt Bounds;
-        }
+        public RectInt Bounds;
     }
 }
