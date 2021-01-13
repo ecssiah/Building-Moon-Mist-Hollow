@@ -1,14 +1,11 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace MMH
 {
     public class SelectionHandler : MonoBehaviour
     {
-        public Action<GameObject> BroadcastEntitySelection;
-        public Action<Vector2Int> BroadcastCellSelection;
-
-
         void Update()
         {
             if (Input.GetKeyDown(KeyCode.Mouse0))
@@ -25,7 +22,9 @@ namespace MMH
 
             if (hit.collider != null)
             {
-                BroadcastEntitySelection(hit.transform.gameObject);
+                ExecuteEvents.Execute<Handler.ISelectionHandler>(
+                    gameObject, null, (x, y) => x.SelectEntity(hit.transform.gameObject)
+                );
             }
             else
             {
@@ -33,7 +32,9 @@ namespace MMH
 
                 if (Util.Map.OnMap(isoGridPosition))
                 {
-                    BroadcastCellSelection(isoGridPosition);
+                    ExecuteEvents.Execute<Handler.ISelectionHandler>(
+                        gameObject, null, (x, y) => x.SelectCell(isoGridPosition)
+                    );
                 }
             }
         }

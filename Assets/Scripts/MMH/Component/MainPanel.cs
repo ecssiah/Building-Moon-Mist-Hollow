@@ -24,14 +24,13 @@ namespace MMH
             settingsTab.SetActive(false);
         }
 
+
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Tab))
             {
-                bool success = ExecuteEvents.Execute<Handler.IMainPanelMessage>(
-                    gameObject,
-                    null,
-                    (x, y) => x.ToggleActive()
+                ExecuteEvents.Execute<Handler.IMainPanelMessage>(
+                    gameObject, null, (x, y) => x.ToggleActive()
                 );
             }
         }

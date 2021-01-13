@@ -3,33 +3,27 @@ using UnityEngine.EventSystems;
 
 namespace MMH.System
 {
-    public class InputSystem : MonoBehaviour
+    public class InputSystem : MonoBehaviour, Handler.ISelectionHandler
     {
         private UISystem uiSystem;
         private MapSystem mapSystem;
-
-        private SelectionHandler selectionHandler;
-
 
         void Awake()
         {
             uiSystem = GameObject.Find("UISystem").GetComponent<UISystem>();
             mapSystem = GameObject.Find("MapSystem").GetComponent<MapSystem>();
 
-            selectionHandler = gameObject.AddComponent<SelectionHandler>();
-            selectionHandler.BroadcastEntitySelection = OnEntitySelection;
-            selectionHandler.BroadcastCellSelection = OnCellSelection;
+            gameObject.AddComponent<SelectionHandler>();
         }
 
 
         void Update()
         {
-            UpdateSelection();
             UpdateCamera();
         }
 
 
-        public void OnEntitySelection(GameObject entity)
+        public void SelectEntity(GameObject entity)
         {
             mapSystem.ClearSelection();
 
@@ -38,7 +32,7 @@ namespace MMH.System
         }
 
 
-        public void OnCellSelection(Vector2Int cellPosition)
+        public void SelectCell(Vector2Int cellPosition)
         {
             mapSystem.ClearSelection();
             mapSystem.SelectCell(cellPosition);
@@ -48,13 +42,10 @@ namespace MMH.System
         }
 
 
-        private void UpdateSelection()
+        public void ClearSelection()
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                uiSystem.ClearSelection();
-                mapSystem.ClearSelection();
-            }
+            uiSystem.ClearSelection();
+            mapSystem.ClearSelection();
         }
 
 

@@ -4,12 +4,13 @@ using UnityEngine.EventSystems;
 
 namespace MMH.System
 {
-    public class UISystem : MonoBehaviour
+    public class UISystem : MonoBehaviour, Handler.ISelectionHandler
     {
         private MapSystem mapSystem;
 
         private InfoPanel infoPanel;
 
+        private SelectionHandler selectionHandler;
         private EntityLabeler entityLabeler;
 
 
@@ -18,7 +19,9 @@ namespace MMH.System
             mapSystem = GameObject.Find("MapSystem").GetComponent<MapSystem>();
 
             infoPanel = gameObject.AddComponent<InfoPanel>();
+
             _ = gameObject.AddComponent<MainPanel>();
+            _ = gameObject.AddComponent<SelectionHandler>();
 
             entityLabeler = gameObject.AddComponent<EntityLabeler>();
         }
