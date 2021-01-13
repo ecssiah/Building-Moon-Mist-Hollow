@@ -1,22 +1,14 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace MMH
-{
-    public interface UIMessageTarget : IEventSystemHandler
-    {
-        void ToggleMainPanel();
-    }
-}
 
 namespace MMH.System
 {
-    public class UISystem : MonoBehaviour, UIMessageTarget
+    public class UISystem : MonoBehaviour
     {
         private MapSystem mapSystem;
 
         private InfoPanel infoPanel;
-        private MainPanel mainPanel;
 
         private EntityLabeler entityLabeler;
 
@@ -26,15 +18,9 @@ namespace MMH.System
             mapSystem = GameObject.Find("MapSystem").GetComponent<MapSystem>();
 
             infoPanel = gameObject.AddComponent<InfoPanel>();
-            mainPanel = gameObject.AddComponent<MainPanel>();
+            _ = gameObject.AddComponent<MainPanel>();
 
             entityLabeler = gameObject.AddComponent<EntityLabeler>();
-        }
-
-
-        public void ToggleMainPanel()
-        {
-            mainPanel.ToggleActive();
         }
 
 

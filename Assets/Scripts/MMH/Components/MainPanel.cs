@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 namespace MMH
 {
-    public class MainPanel : MonoBehaviour
+    public class MainPanel : MonoBehaviour, Handler.IUIMessages
     {
         private GameObject panelObject;
 
@@ -29,14 +29,16 @@ namespace MMH
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                bool success = ExecuteEvents.Execute<UIMessageTarget>(gameObject, null, (x, y) => x.ToggleMainPanel());
-
-                Debug.Log(success);
+                bool success = ExecuteEvents.Execute<Handler.IUIMessages>(
+                    gameObject,
+                    null,
+                    (x, y) => x.ToggleMainPanel()
+                );
             }
         }
 
 
-        public void ToggleActive()
+        public void ToggleMainPanel()
         {
             panelObject.SetActive(!panelObject.activeInHierarchy);
         }

@@ -9,7 +9,16 @@ namespace MMH
         public Action<Vector2Int> BroadcastCellSelection;
 
 
-        public void Select()
+        void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                Select();
+            }
+        }
+
+
+        private void Select()
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
