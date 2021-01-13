@@ -1,11 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
+
 
 namespace MMH
 {
-    public class MainPanel : MonoBehaviour, Handler.IUIMessages
+    public class MainPanel : MonoBehaviour, Handler.IMainPanelMessage
     {
         private GameObject panelObject;
 
@@ -29,16 +28,16 @@ namespace MMH
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                bool success = ExecuteEvents.Execute<Handler.IUIMessages>(
+                bool success = ExecuteEvents.Execute<Handler.IMainPanelMessage>(
                     gameObject,
                     null,
-                    (x, y) => x.ToggleMainPanel()
+                    (x, y) => x.ToggleActive()
                 );
             }
         }
 
 
-        public void ToggleMainPanel()
+        public void ToggleActive()
         {
             panelObject.SetActive(!panelObject.activeInHierarchy);
         }

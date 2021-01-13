@@ -5,8 +5,8 @@ using UnityEngine.EventSystems;
 
 namespace MMH.Handler
 {
-    public interface IUIMessages : IEventSystemHandler
+    public interface IMainPanelMessage : IEventSystemHandler
     {
-        void ToggleMainPanel();
+        void ToggleActive();
     }
 }

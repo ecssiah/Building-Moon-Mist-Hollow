@@ -31,20 +31,20 @@ namespace MMH.System
 
         public void OnEntitySelection(GameObject entity)
         {
-            uiSystem.ClearSelection();
             mapSystem.ClearSelection();
 
+            uiSystem.ClearSelection();
             uiSystem.SelectEntity(entity);
         }
 
 
         public void OnCellSelection(Vector2Int cellPosition)
         {
-            uiSystem.ClearSelection();
             mapSystem.ClearSelection();
-
-            uiSystem.SelectCell(cellPosition);
             mapSystem.SelectCell(cellPosition);
+
+            uiSystem.ClearSelection();
+            uiSystem.SelectCell(cellPosition);
         }
 
 
