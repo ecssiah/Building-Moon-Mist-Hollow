@@ -9,6 +9,7 @@ namespace MMH.Handler
     {
         void SelectEntity(GameObject entityObject);
         void SelectCell(Vector2Int cellPosition);
+
         void ClearSelection();
     }
 }

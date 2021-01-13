@@ -10,12 +10,22 @@ namespace MMH
         {
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
-                Select();
+                PrimarySelect();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Mouse1))
+            {
+                SecondarySelect();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                Cancel();
             }
         }
 
 
-        private void Select()
+        private void PrimarySelect()
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
@@ -37,6 +47,20 @@ namespace MMH
                     );
                 }
             }
+        }
+
+
+        private void SecondarySelect()
+        {
+            Debug.Log("Secondary Selection");
+        }
+
+
+        private void Cancel()
+        {
+            ExecuteEvents.Execute<Handler.ISelectionHandler>(
+                gameObject, null, (x, y) => x.ClearSelection()
+            );
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace MMH.System
 {
@@ -13,13 +12,8 @@ namespace MMH.System
             uiSystem = GameObject.Find("UISystem").GetComponent<UISystem>();
             mapSystem = GameObject.Find("MapSystem").GetComponent<MapSystem>();
 
+            gameObject.AddComponent<CameraController>();
             gameObject.AddComponent<SelectionHandler>();
-        }
-
-
-        void Update()
-        {
-            UpdateCamera();
         }
 
 
@@ -46,22 +40,6 @@ namespace MMH.System
         {
             uiSystem.ClearSelection();
             mapSystem.ClearSelection();
-        }
-
-
-        private void UpdateCamera()
-        {
-            float dx = Info.View.CameraPanSpeed * Time.deltaTime * Input.GetAxis("Horizontal");
-            float dy = Info.View.CameraPanSpeed * Time.deltaTime * Input.GetAxis("Vertical");
-            float dz = Info.View.CameraZoomSpeed * Time.deltaTime * Input.GetAxis("Zoom");
-
-            Camera.main.transform.Translate(dx, dy, 0);
-
-            Camera.main.orthographicSize = Mathf.Clamp(
-                Camera.main.orthographicSize + dz,
-                Info.View.MinimumOrthographicSize,
-                Info.View.MaximumOrthographicSize
-            );
         }
     }
 }

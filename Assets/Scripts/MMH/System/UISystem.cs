@@ -10,7 +10,6 @@ namespace MMH.System
 
         private InfoPanel infoPanel;
 
-        private SelectionHandler selectionHandler;
         private EntityLabeler entityLabeler;
 
 
@@ -19,9 +18,7 @@ namespace MMH.System
             mapSystem = GameObject.Find("MapSystem").GetComponent<MapSystem>();
 
             infoPanel = gameObject.AddComponent<InfoPanel>();
-
             _ = gameObject.AddComponent<MainPanel>();
-            _ = gameObject.AddComponent<SelectionHandler>();
 
             entityLabeler = gameObject.AddComponent<EntityLabeler>();
         }
