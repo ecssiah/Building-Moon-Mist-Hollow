@@ -76,12 +76,12 @@ namespace MMH
                 switch (direction)
                 {
                     case Type.Direction.N:
-                    case Type.Direction.NW:
                     case Type.Direction.W:
+                    case Type.Direction.NW:
                         return frames[moving ? Type.Animation.WalkLeft : Type.Animation.IdleLeft];
                     case Type.Direction.S:
-                    case Type.Direction.SE:
                     case Type.Direction.E:
+                    case Type.Direction.SE:
                         return frames[moving ? Type.Animation.WalkRight : Type.Animation.IdleRight];
                     case Type.Direction.NE:
                         return frames[moving ? Type.Animation.WalkUp : Type.Animation.IdleUp];

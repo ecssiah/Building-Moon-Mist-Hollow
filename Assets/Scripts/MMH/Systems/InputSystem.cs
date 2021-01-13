@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace MMH.System
 {
@@ -23,17 +24,7 @@ namespace MMH.System
 
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Mouse0))
-            {
-                selectionHandler.Select();
-            }
-
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                uiSystem.ClearSelection();
-                mapSystem.ClearSelection();
-            }
-
+            UpdateSelection();
             UpdateCamera();
         }
 
@@ -54,6 +45,21 @@ namespace MMH.System
 
             uiSystem.SelectCell(cellPosition);
             mapSystem.SelectCell(cellPosition);
+        }
+
+
+        private void UpdateSelection()
+        {
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                selectionHandler.Select();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                uiSystem.ClearSelection();
+                mapSystem.ClearSelection();
+            }
         }
 
 

@@ -11,7 +11,7 @@
             };
 
         public static readonly string[] KailtFinalElements = {
-                "", "", "caleh", "si", "slt", "treh", "ehteh", "teh", "itl", "acq"
+                "", "", "calh", "si", "ls", "treh", "teh", "teh", "ix", "acq"
             };
 
         public static readonly string[] GuyInitialElements = {

@@ -4,30 +4,18 @@ namespace MMH
 {
     public class CitizenMovement : MonoBehaviour
     {
-        private System.EntitySystem entitySystem;
-
         private Citizen citizen;
-
-        private Data.Path path;
 
 
         void Awake()
         {
-            entitySystem = GameObject.Find("EntitySystem").GetComponent<System.EntitySystem>();
-
             citizen = GetComponent<Citizen>();
-        }
-
-
-        void Start()
-        {
-            path = entitySystem.RequestPath(citizen.Entity.Position, Vector2Int.zero);
         }
 
 
         void Update()
         {
-            if (path.Valid)
+            if (citizen.Path.Valid)
             {
                 FollowPath();
             }
@@ -36,23 +24,34 @@ namespace MMH
 
         private void FollowPath()
         {
-            if (path.Progress < 1.0f)
+            if (citizen.Path.Progress < 1.0f)
             {
-                path.Progress += Time.deltaTime;
+                citizen.Path.Progress += Time.deltaTime;
 
                 Vector2 isoPosition = Vector2.Lerp(
-                    citizen.Entity.Position, path.Nodes[0].Position, path.Progress
+                    citizen.Entity.Position, citizen.Path.Nodes[0].Position, citizen.Path.Progress
                 );
 
                 transform.position = Util.Map.IsoToWorld(isoPosition);
             }
             else
             {
-                path.Progress = 0f;
+                citizen.Entity.Position = citizen.Path.Nodes[0].Position;
 
-                citizen.Entity.Position = path.Nodes[0].Position;
+                citizen.Path.Progress = 0f;
+                citizen.Path.Nodes.RemoveAt(0);
 
-                path.Nodes.RemoveAt(0);
+                if (citizen.Path.Nodes.Count > 0)
+                {
+                    citizen.Entity.Speed = Info.Entity.DefaultWalkSpeed;
+                    citizen.Entity.Direction = Util.Map.CardinalDirection(
+                        citizen.Path.Nodes[0].Position - citizen.Entity.Position
+                    );
+                }
+                else
+                {
+                    citizen.Entity.Speed = 0;
+                }
             }
         }
     }

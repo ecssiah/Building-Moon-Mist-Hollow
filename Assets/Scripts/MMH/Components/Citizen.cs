@@ -8,6 +8,8 @@ namespace MMH
         public Data.Entity Entity;
         public Data.Inventory Inventory;
 
+        public Data.Path Path;
+
 
         void Awake()
         {

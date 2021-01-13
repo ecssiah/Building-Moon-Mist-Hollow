@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 namespace MMH.System
@@ -10,6 +12,8 @@ namespace MMH.System
         private WorldMap worldMap;
 
         private Vector2Int selectedCell;
+
+        private List<Data.PointOfInterest> pointsOfInterest;
 
 
         void Awake()
@@ -26,7 +30,26 @@ namespace MMH.System
 
             SetupRooms();
 
+            SetupPointsOfInterest();
+
             ConstructMap();
+        }
+
+
+        private void SetupPointsOfInterest()
+        {
+            pointsOfInterest = new List<Data.PointOfInterest>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                Data.PointOfInterest pointOfInterest = new Data.PointOfInterest
+                {
+                    Position = GetFreeCell().Position,
+                    Name = "The Spot",
+                };
+
+                pointsOfInterest.Add(pointOfInterest);
+            }
         }
 
 
@@ -326,6 +349,12 @@ namespace MMH.System
             }
 
             return cellData;
+        }
+
+
+        public Data.PointOfInterest GetPointOfInterest()
+        {
+            return pointsOfInterest[UnityEngine.Random.Range(0, pointsOfInterest.Count)];
         }
 
 
