@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 namespace MMH
 {
-    public class MainPanel : MonoBehaviour, Handler.IMainPanelMessage
+    public class MainPanel : MonoBehaviour
     {
         private GameObject panelObject;
 
@@ -25,18 +25,7 @@ namespace MMH
         }
 
 
-        void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Tab))
-            {
-                ExecuteEvents.Execute<Handler.IMainPanelMessage>(
-                    gameObject, null, (x, y) => x.ToggleActive()
-                );
-            }
-        }
-
-
-        public void ToggleActive()
+        public void Toggle()
         {
             panelObject.SetActive(!panelObject.activeInHierarchy);
         }

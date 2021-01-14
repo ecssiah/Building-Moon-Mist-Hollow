@@ -32,7 +32,7 @@ namespace MMH
 
             if (hit.collider != null)
             {
-                ExecuteEvents.Execute<Handler.ISelectionHandler>(
+                ExecuteEvents.Execute<Handler.IUIEventHandler>(
                     gameObject, null, (x, y) => x.SelectEntity(hit.transform.gameObject)
                 );
             }
@@ -42,7 +42,7 @@ namespace MMH
 
                 if (Util.Map.OnMap(isoGridPosition))
                 {
-                    ExecuteEvents.Execute<Handler.ISelectionHandler>(
+                    ExecuteEvents.Execute<Handler.IUIEventHandler>(
                         gameObject, null, (x, y) => x.SelectCell(isoGridPosition)
                     );
                 }
@@ -58,7 +58,7 @@ namespace MMH
 
         private void Cancel()
         {
-            ExecuteEvents.Execute<Handler.ISelectionHandler>(
+            ExecuteEvents.Execute<Handler.IUIEventHandler>(
                 gameObject, null, (x, y) => x.ClearSelection()
             );
         }
