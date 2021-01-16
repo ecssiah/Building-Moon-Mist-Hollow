@@ -40,6 +40,8 @@ namespace MMH
                 Quaternion.identity
             );
 
+            newLabel.name = $"Label: {entity.name}";
+
             TextMeshProUGUI textMesh = newLabel.GetComponent<TextMeshProUGUI>();
             textMesh.text = entity.name;
             textMesh.fontSize = Info.UI.LabelFontSize;
