@@ -5,6 +5,8 @@ namespace MMH.System
 {
     public class UISystem : MonoBehaviour, Handler.IUIEventHandler
     {
+        private Data.UI uiData;
+
         private MapSystem mapSystem;
 
         private MainPanel mainPanel;
@@ -15,6 +17,11 @@ namespace MMH.System
 
         void Awake()
         {
+            uiData = new Data.UI
+            {
+                Mode = Type.UIMode.None
+            };
+
             mapSystem = GameObject.Find("MapSystem").GetComponent<MapSystem>();
 
             mainPanel = gameObject.AddComponent<MainPanel>();
@@ -32,12 +39,16 @@ namespace MMH.System
             if (Input.GetKeyDown(KeyCode.Tab))
             {
                 mainPanel.Toggle();
+
+                uiData.Mode = mainPanel.Active ? Type.UIMode.Main : Type.UIMode.None;
             }
         }
 
 
         public void SelectEntity(GameObject entity)
         {
+            if (uiData.Mode == Type.UIMode.Main) return;
+
             ClearSelection();
             mapSystem.ClearSelection();
 
@@ -49,6 +60,8 @@ namespace MMH.System
 
         public void SelectCell(Vector2Int cellPosition)
         {
+            if (uiData.Mode == Type.UIMode.Main) return;
+
             ClearSelection();
             mapSystem.ClearSelection();
 
@@ -56,7 +69,7 @@ namespace MMH.System
 
             Data.Cell cellData = mapSystem.GetCell(cellPosition);
             infoPanel.ActivateCellMode(cellData);
-        }
+         }
 
 
         public void ClearSelection()

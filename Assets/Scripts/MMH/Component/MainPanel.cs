@@ -9,20 +9,25 @@ namespace MMH
         private GameObject panelObject;
 
         private GameObject rulerTab;
-        private GameObject adminTab;
+        private GameObject populationTab;
         private GameObject settingsTab;
+        private GameObject adminTab;
+
+        public bool Active => panelObject.activeInHierarchy;
 
         void Awake()
         {
             panelObject = GameObject.Find("Main Panel");
 
             rulerTab = GameObject.Find("Ruler Tab");
-            adminTab = GameObject.Find("Admin Tab");
+            populationTab = GameObject.Find("Population Tab");
             settingsTab = GameObject.Find("Settings Tab");
+            adminTab = GameObject.Find("Admin Tab");
 
             panelObject.SetActive(false);
 
             rulerTab.SetActive(false);
+            populationTab.SetActive(false);
             adminTab.SetActive(false);
             settingsTab.SetActive(false);
         }
