@@ -8,6 +8,7 @@ namespace MMH
     {
         private GameObject panelObject;
 
+        private GameObject rulerTab;
         private GameObject adminTab;
         private GameObject settingsTab;
 
@@ -15,11 +16,13 @@ namespace MMH
         {
             panelObject = GameObject.Find("Main Panel");
 
+            rulerTab = GameObject.Find("Ruler Tab");
             adminTab = GameObject.Find("Admin Tab");
             settingsTab = GameObject.Find("Settings Tab");
 
             panelObject.SetActive(false);
 
+            rulerTab.SetActive(false);
             adminTab.SetActive(false);
             settingsTab.SetActive(false);
         }
