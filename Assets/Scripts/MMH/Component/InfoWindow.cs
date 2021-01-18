@@ -4,7 +4,7 @@ using System;
 
 namespace MMH
 {
-    public class InfoPanel : MonoBehaviour
+    public class InfoWindow : MonoBehaviour
     {
         private GameObject entityTab;
         private GameObject cellTab;

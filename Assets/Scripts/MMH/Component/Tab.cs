@@ -4,17 +4,21 @@ using UnityEngine;
 
 public class Tab : MonoBehaviour
 {
-    private bool _active;
-    public bool Active => _active;
+    protected bool _active;
+    public bool Active
+    {
+        get => _active;
+        set
+        {
+            _active = value;
+            gameObject.SetActive(_active);
+        }
+    }
 
     private string _name;
-    public string Name => _name;
-
-    public Tab(string name)
+    public string Name
     {
-        _active = true;
-        _name = name;
-
-        gameObject.SetActive(_active);
+        get => _name;
+        set => _name = value;
     }
 }

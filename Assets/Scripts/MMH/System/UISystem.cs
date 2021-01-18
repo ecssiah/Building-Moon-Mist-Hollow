@@ -9,8 +9,8 @@ namespace MMH.System
 
         private MapSystem mapSystem;
 
-        private MainPanel mainPanel;
-        private InfoPanel infoPanel;
+        private MainMenu mainMenu;
+        private InfoWindow infoWindow;
 
         private EntityLabeler entityLabeler;
 
@@ -24,8 +24,8 @@ namespace MMH.System
 
             mapSystem = GameObject.Find("MapSystem").GetComponent<MapSystem>();
 
-            mainPanel = gameObject.AddComponent<MainPanel>();
-            infoPanel = gameObject.AddComponent<InfoPanel>();
+            mainMenu = GameObject.Find("Main Menu").AddComponent<MainMenu>();
+            infoWindow = gameObject.AddComponent<InfoWindow>();
 
             entityLabeler = gameObject.AddComponent<EntityLabeler>();
 
@@ -57,10 +57,10 @@ namespace MMH.System
             switch (uiMode)
             {
                 case Type.UIMode.None:
-                    mainPanel.Active = false;
+                    mainMenu.Active = false;
                     break;
                 case Type.UIMode.Main:
-                    mainPanel.Active = true;
+                    mainMenu.Active = true;
                     break;
             }
         }
@@ -73,9 +73,10 @@ namespace MMH.System
             ClearSelection();
             mapSystem.ClearSelection();
 
-            Citizen citizen = entity.GetComponent<Citizen>();
             entityLabeler.SelectEntity(entity);
-            infoPanel.DisplayCitizen(citizen);
+
+            Citizen citizen = entity.GetComponent<Citizen>();
+            infoWindow.DisplayCitizen(citizen);
         }
 
 
@@ -89,7 +90,7 @@ namespace MMH.System
             mapSystem.SelectCell(cellPosition);
 
             Data.Cell cellData = mapSystem.GetCell(cellPosition);
-            infoPanel.ActivateCellMode(cellData);
+            infoWindow.ActivateCellMode(cellData);
          }
 
 
@@ -98,7 +99,7 @@ namespace MMH.System
             mapSystem.ClearSelection();
 
             entityLabeler.Clear();
-            infoPanel.Deactivate();
+            infoWindow.Deactivate();
         }
     }
 }
