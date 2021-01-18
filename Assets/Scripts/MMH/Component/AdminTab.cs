@@ -2,17 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AdminTab : MonoBehaviour
+public class AdminTab : Tab
 {
-    // Start is called before the first frame update
-    void Start()
+    public override void Awake()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        base.Awake();
     }
 }

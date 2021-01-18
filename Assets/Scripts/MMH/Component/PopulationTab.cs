@@ -2,17 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PopulationTab : MonoBehaviour
+public class PopulationTab : Tab
 {
-    // Start is called before the first frame update
-    void Start()
+    public override void Awake()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        base.Awake();
     }
 }

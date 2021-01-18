@@ -21,4 +21,10 @@ public class Tab : MonoBehaviour
         get => _name;
         set => _name = value;
     }
+
+
+    public virtual void Awake()
+    {
+        Active = false;
+    }
 }

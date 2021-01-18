@@ -9,9 +9,9 @@ namespace MMH
     {
         private TextMeshProUGUI testTextContent;
 
-        void Awake()
+        public override void Awake()
         {
-            Active = false;
+            Active = true;
 
             testTextContent = gameObject.AddComponent<TextMeshProUGUI>();
             testTextContent.text = "I'm testing heeeerrreee!";
