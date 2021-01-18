@@ -13,7 +13,11 @@ namespace MMH
         private GameObject settingsTab;
         private GameObject adminTab;
 
-        public bool Active => panelObject.activeInHierarchy;
+        public bool Active
+        {
+            get => panelObject.activeInHierarchy;
+            set => panelObject.SetActive(value);
+        }
 
         void Awake()
         {
@@ -30,12 +34,6 @@ namespace MMH
             populationTab.SetActive(false);
             adminTab.SetActive(false);
             settingsTab.SetActive(false);
-        }
-
-
-        public void Toggle()
-        {
-            panelObject.SetActive(!panelObject.activeInHierarchy);
         }
     }
 }

@@ -38,9 +38,30 @@ namespace MMH.System
         {
             if (Input.GetKeyDown(KeyCode.Tab))
             {
-                mainPanel.Toggle();
+                if (uiData.Mode == Type.UIMode.None)
+                {
+                    SetMode(Type.UIMode.Main);
+                }
+                else if (uiData.Mode == Type.UIMode.Main)
+                {
+                    SetMode(Type.UIMode.None);
+                }
+            }
+        }
 
-                uiData.Mode = mainPanel.Active ? Type.UIMode.Main : Type.UIMode.None;
+
+        public void SetMode(Type.UIMode uiMode)
+        {
+            uiData.Mode = uiMode;
+
+            switch (uiMode)
+            {
+                case Type.UIMode.None:
+                    mainPanel.Active = false;
+                    break;
+                case Type.UIMode.Main:
+                    mainPanel.Active = true;
+                    break;
             }
         }
 
