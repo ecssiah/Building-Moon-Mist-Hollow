@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace MMH.System
@@ -19,8 +20,15 @@ namespace MMH.System
             mapSystem = GameObject.Find("MapSystem").GetComponent<MapSystem>();
             pathfindingSystem = GameObject.Find("PathfindingSystem").GetComponent<PathfindingSystem>();
 
+            population = new Data.Population
+            {
+                NextId = 0,
+                Colonists = new List<Colonist>(),
+            };
+
             entitiesObject = GameObject.Find("Entities");
             colonistPrefab = Resources.Load<GameObject>("Prefabs/Colonist");
+
         }
 
 
@@ -60,6 +68,8 @@ namespace MMH.System
 
             colonistGameObject.name = colonist.Id.FullName;
             colonistGameObject.transform.parent = entitiesObject.transform;
+
+            population.Colonists.Add(colonist);
         }
 
 
@@ -91,7 +101,13 @@ namespace MMH.System
             }
             else if (behaviorName == "Gather Home")
             {
-                print("Gather!");
+                foreach (Colonist colonist in population.Colonists)
+                {
+                    colonist.Path = RequestPath(
+                        colonist.Entity.Position,
+                        mapSystem.GetColonyBase(colonist.Id.GroupType).Position
+                    );
+                }
             }
         }
     }

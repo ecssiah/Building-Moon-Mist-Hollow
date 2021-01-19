@@ -385,6 +385,16 @@ namespace MMH.System
         }
 
 
+        public Data.ColonyBase GetColonyBase(Type.Group groupType)
+        {
+            return mapData.ColonyBases[groupType];
+        }
+
+
+
+        // Set Methods
+
+
         public void SetCell(int x, int y, Data.Cell cellData)
         {
             mapData.Cells[Util.Map.CoordsToIndex(x, y)] = cellData;
