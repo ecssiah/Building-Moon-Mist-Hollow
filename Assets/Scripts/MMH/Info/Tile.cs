@@ -5,7 +5,7 @@ namespace MMH.Info
     public struct Tile
     {
         public static readonly Dictionary<Type.Ground, string> groundTileNames;
-        public static readonly Dictionary<Type.Wall, string> wallTileNames;
+        public static readonly Dictionary<Type.Structure, string> wallTileNames;
         public static readonly Dictionary<Type.Overlay, string> overlayTileNames;
 
 
@@ -19,10 +19,13 @@ namespace MMH.Info
                 [Type.Ground.Wood] = "Wood_A"
             };
 
-            wallTileNames = new Dictionary<Type.Wall, string>
+            wallTileNames = new Dictionary<Type.Structure, string>
             {
-                [Type.Wall.StoneWall] = "Brick_C",
-                [Type.Wall.WoodWall] = "Wood_A",
+                [Type.Structure.Stone_Wall] = "Brick_C",
+                [Type.Structure.Wood_Wall] = "Wood_A",
+                [Type.Structure.Guy_Flag] = "Guy_Flag_Tile",
+                [Type.Structure.Kailt_Flag] = "Kailt_Flag_Tile",
+                [Type.Structure.Taylor_Flag] = "Taylor_Flag_Tile",
             };
 
             overlayTileNames = new Dictionary<Type.Overlay, string>

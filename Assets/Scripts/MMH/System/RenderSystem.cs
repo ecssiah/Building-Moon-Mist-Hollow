@@ -53,7 +53,7 @@ namespace MMH.System
             );
         }
 
-        public void SetTile(Vector2Int position, Type.Wall wallType)
+        public void SetTile(Vector2Int position, Type.Structure wallType)
         {
             tilemaps["Walls"].SetTile(
                 new Vector3Int(position.x, position.y, 3),

@@ -11,7 +11,7 @@ namespace MMH.Data
         public bool Solid;
 
         public Type.Ground GroundType;
-        public Type.Wall WallType;
+        public Type.Structure WallType;
         public Type.Overlay OverlayType;
     }
 }

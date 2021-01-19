@@ -46,6 +46,22 @@ namespace MMH.System
                 {
                     SetMode(Type.UIMode.None);
                 }
+                else if (uiData.Mode == Type.UIMode.Admin)
+                {
+                    SetMode(Type.UIMode.None);
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.BackQuote))
+            {
+                if (uiData.Mode == Type.UIMode.Admin)
+                {
+                    SetMode(Type.UIMode.None);
+                }
+                else
+                {
+                    SetMode(Type.UIMode.Admin);
+                }
             }
         }
 
@@ -58,10 +74,17 @@ namespace MMH.System
             {
                 case Type.UIMode.None:
                     mainMenu.Active = false;
+                    mainMenu.SelectSection(Type.MainMenuSection.None);
                     break;
                 case Type.UIMode.Main:
                     mainMenu.Active = true;
                     break;
+                case Type.UIMode.Admin:
+                    {
+                        mainMenu.Active = true;
+                        mainMenu.SelectSection(Type.MainMenuSection.Admin);
+                        break;
+                    }
             }
         }
 
@@ -91,7 +114,7 @@ namespace MMH.System
 
             Data.Cell cellData = mapSystem.GetCell(cellPosition);
             infoWindow.ActivateCellMode(cellData);
-         }
+        }
 
 
         public void ClearSelection()

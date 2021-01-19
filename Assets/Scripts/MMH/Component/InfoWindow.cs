@@ -80,7 +80,7 @@ namespace MMH
             cellSolidText.text = $"{cell.Solid}";
             cellPositionText.text = $"{cell.Position}";
             cellGroundTypeText.text = $"{Enum.GetName(typeof(Type.Ground), cell.GroundType)}";
-            cellBuildingTypeText.text = $"{Enum.GetName(typeof(Type.Wall), cell.WallType)}";
+            cellBuildingTypeText.text = $"{Enum.GetName(typeof(Type.Structure), cell.WallType)}";
         }
 
 

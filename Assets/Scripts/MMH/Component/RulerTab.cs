@@ -11,10 +11,10 @@ namespace MMH
 
         public override void Awake()
         {
-            Active = true;
+            Active = false;
 
             testTextContent = gameObject.AddComponent<TextMeshProUGUI>();
-            testTextContent.text = "I'm testing heeeerrreee!";
+            testTextContent.text = "Ruler";
         }
 
 

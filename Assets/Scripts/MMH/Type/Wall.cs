@@ -1,9 +1,12 @@
 ﻿namespace MMH.Type
 {
-    public enum Wall
+    public enum Structure
     {
         None,
-        WoodWall,
-        StoneWall,
+        Wood_Wall,
+        Stone_Wall,
+        Taylor_Flag,
+        Guy_Flag,
+        Kailt_Flag,
     }
 }

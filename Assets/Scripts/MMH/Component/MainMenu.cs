@@ -13,7 +13,6 @@ namespace MMH
         private PopulationTab populationTab;
         private RulerTab rulerTab;
         private SettingsTab settingsTab;
-
         private AdminTab adminTab;
 
         public bool Active
@@ -29,7 +28,6 @@ namespace MMH
             _mainMenuGameObject.SetActive(false);
 
             _mainMenuSection = Type.MainMenuSection.None;
-
         }
 
 
@@ -38,7 +36,6 @@ namespace MMH
             populationTab = GameObject.Find("Population Tab").AddComponent<PopulationTab>();
             rulerTab = GameObject.Find("Ruler Tab").AddComponent<RulerTab>();
             settingsTab = GameObject.Find("Settings Tab").AddComponent<SettingsTab>();
-
             adminTab = GameObject.Find("Admin Tab").AddComponent<AdminTab>();
 
             Button populationButton = GameObject.Find("Population Button").GetComponent<Button>();
@@ -52,7 +49,7 @@ namespace MMH
         }
 
 
-        private void SelectSection(Type.MainMenuSection mainMenuSection)
+        public void SelectSection(Type.MainMenuSection mainMenuSection)
         {
             _mainMenuSection = mainMenuSection;
 
@@ -72,6 +69,10 @@ namespace MMH
                 case Type.MainMenuSection.Settings:
                     settingsTab.Active = true;
                     break;
+                case Type.MainMenuSection.Admin:
+                    adminTab.Active = true;
+                    break;
+                case Type.MainMenuSection.None:
                 default:
                     break;
             }

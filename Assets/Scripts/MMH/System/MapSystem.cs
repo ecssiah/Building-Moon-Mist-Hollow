@@ -139,13 +139,13 @@ namespace MMH.System
         }
 
 
-        public void SetupWall(int x, int y, Type.Wall wallType)
+        public void SetupWall(int x, int y, Type.Structure wallType)
         {
             SetupWall(new Vector2Int(x, y), wallType);
         }
 
 
-        public void SetupWall(Vector2Int position, Type.Wall wallType)
+        public void SetupWall(Vector2Int position, Type.Structure wallType)
         {
             if (Util.Map.OnMap(position))
             {
@@ -159,7 +159,7 @@ namespace MMH.System
         }
 
 
-        public void SetupWall(RectInt bounds, Type.Wall wallType, bool fill = false, bool solid = true)
+        public void SetupWall(RectInt bounds, Type.Structure wallType, bool fill = false, bool solid = true)
         {
             for (int x = bounds.xMin; x < bounds.xMax; x++)
             {
@@ -305,7 +305,7 @@ namespace MMH.System
                     renderSystem.SetTile(cell.Position, cell.GroundType);
                 }
 
-                if (cell.WallType != Type.Wall.None)
+                if (cell.WallType != Type.Structure.None)
                 {
                     renderSystem.SetTile(cell.Position, cell.WallType);
                 }

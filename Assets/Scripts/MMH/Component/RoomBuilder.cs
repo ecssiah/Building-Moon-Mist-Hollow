@@ -25,7 +25,7 @@ namespace MMH
                 {
                     Bounds = bounds,
                     GroundType = Type.Ground.Wood,
-                    WallType = Type.Wall.StoneWall,
+                    WallType = Type.Structure.Stone_Wall,
                 };
 
                 worldMap.Rooms.Add(room);

@@ -41,6 +41,10 @@ SpriteAtlas:
     - {fileID: 21300000, guid: 977f7004e66024e0ca32e6b0ebad4a5c, type: 3}
     - {fileID: 21300000, guid: 620e2749a371545b29848aa41ee131fa, type: 3}
     - {fileID: 21300000, guid: 3b378835e82b44c4eb8c97d6c606679d, type: 3}
+    - {fileID: 21300000, guid: 88c2c4898fd4241ca983b5a493dcec18, type: 3}
+    - {fileID: 21300000, guid: 33990f354b52047fbbcb74aa1ad56260, type: 3}
+    - {fileID: 21300000, guid: 173c29a78a7114756939f357049ae8a7, type: 3}
+    - {fileID: 21300000, guid: 408999d660d6647eb9e778be91d3fa21, type: 3}
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
@@ -52,7 +56,11 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 02548ea3a373a4c9696c4dbf80a2e1fc, type: 3}
   - {fileID: 21300000, guid: 977f7004e66024e0ca32e6b0ebad4a5c, type: 3}
   - {fileID: 21300000, guid: 3b378835e82b44c4eb8c97d6c606679d, type: 3}
+  - {fileID: 21300000, guid: 33990f354b52047fbbcb74aa1ad56260, type: 3}
+  - {fileID: 21300000, guid: 408999d660d6647eb9e778be91d3fa21, type: 3}
+  - {fileID: 21300000, guid: 173c29a78a7114756939f357049ae8a7, type: 3}
   - {fileID: 21300000, guid: 620e2749a371545b29848aa41ee131fa, type: 3}
+  - {fileID: 21300000, guid: 88c2c4898fd4241ca983b5a493dcec18, type: 3}
   - {fileID: 21300000, guid: ee5b26ab5d2744783aac3b154524f164, type: 3}
   - {fileID: 21300000, guid: 7e03b1ad52aa04c32b6ae613c0cbcf72, type: 3}
   m_PackedSpriteNamesToIndex:
@@ -64,7 +72,11 @@ SpriteAtlas:
   - Water
   - Water_Deep
   - Wood_A
+  - Taylor_Flag_Tile
+  - Kailt_Flag_Tile
+  - Guy_Flag_Tile
   - Water_Middle
+  - Template_Tile
   - Dirt_Grass_C
   - Selection_1
   m_Tag: Tile Atlas
