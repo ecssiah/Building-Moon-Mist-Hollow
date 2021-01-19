@@ -17,7 +17,7 @@ namespace MMH
         {
             labels = new List<GameObject>();
             labelsObject = GameObject.Find("Labels");
-            labelPrefab = Resources.Load<GameObject>("Prefabs/Label");
+            labelPrefab = Resources.Load<GameObject>("Prefabs/UI/Label");
 
             entities = new List<GameObject>();
         }
