@@ -52,7 +52,7 @@ namespace MMH
             cellSolidText = Util.UI.SetLabel("Solid", cellTab.transform.Find("Solid"));
             cellPositionText = Util.UI.SetLabel("Position", cellTab.transform.Find("Position"));
             cellGroundTypeText = Util.UI.SetLabel("Ground", cellTab.transform.Find("Ground Type"));
-            cellBuildingTypeText = Util.UI.SetLabel("Wall", cellTab.transform.Find("Wall Type"));
+            cellBuildingTypeText = Util.UI.SetLabel("Structure", cellTab.transform.Find("Structure Type"));
         }
 
 

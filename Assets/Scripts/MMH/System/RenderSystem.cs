@@ -24,7 +24,6 @@ namespace MMH.System
 
             foreach (Tile tile in Resources.LoadAll<Tile>("Tiles"))
             {
-                print(tile.name);
                 tiles[tile.name] = tile;
             }
         }

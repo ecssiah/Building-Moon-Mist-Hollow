@@ -126,19 +126,19 @@ namespace MMH.System
         }
 
 
-        public void SetupStructure(int x, int y, Type.Structure structureType)
+        public void SetupStructure(int x, int y, Type.Structure structureType, bool solid = true)
         {
-            SetupStructure(new Vector2Int(x, y), structureType);
+            SetupStructure(new Vector2Int(x, y), structureType, solid);
         }
 
 
-        public void SetupStructure(Vector2Int position, Type.Structure structureType)
+        public void SetupStructure(Vector2Int position, Type.Structure structureType, bool solid = true)
         {
             if (Util.Map.OnMap(position))
             {
                 Data.Cell cellData = GetCell(position);
 
-                cellData.Solid = true;
+                cellData.Solid = solid;
                 cellData.StructureType = structureType;
 
                 SetCell(position, cellData);
@@ -321,7 +321,7 @@ namespace MMH.System
                         break;
                 }
 
-                SetupStructure(colonyBaseData.Position, structureType);
+                SetupStructure(colonyBaseData.Position, structureType, false);
             }
         }
 

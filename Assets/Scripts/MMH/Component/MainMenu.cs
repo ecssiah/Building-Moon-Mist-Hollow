@@ -8,6 +8,10 @@ namespace MMH
     {
         public Type.MainMenuSection Section { get; private set; }
 
+        private Button populationButton;
+        private Button rulerButton;
+        private Button settingsButton;
+
         private PopulationTab populationTab;
         private RulerTab rulerTab;
         private SettingsTab settingsTab;
@@ -35,14 +39,20 @@ namespace MMH
 
         void Start()
         {
-            Button populationButton = GameObject.Find("Population Button").GetComponent<Button>();
-            populationButton.onClick.AddListener(delegate { SelectSection(Type.MainMenuSection.Population); });
+            populationButton = GameObject.Find("Population Button").GetComponent<Button>();
+            populationButton.onClick.AddListener(
+                delegate { SelectSection(Type.MainMenuSection.Population); }
+            );
 
-            Button rulerButton = GameObject.Find("Ruler Button").GetComponent<Button>();
-            rulerButton.onClick.AddListener(delegate { SelectSection(Type.MainMenuSection.Ruler); });
+            rulerButton = GameObject.Find("Ruler Button").GetComponent<Button>();
+            rulerButton.onClick.AddListener(
+                delegate { SelectSection(Type.MainMenuSection.Ruler); }
+            );
 
-            Button settingsButton = GameObject.Find("Settings Button").GetComponent<Button>();
-            settingsButton.onClick.AddListener(delegate { SelectSection(Type.MainMenuSection.Settings); });
+            settingsButton = GameObject.Find("Settings Button").GetComponent<Button>();
+            settingsButton.onClick.AddListener(
+                delegate { SelectSection(Type.MainMenuSection.Settings); }
+            );
 
             Active = false;
         }
@@ -60,15 +70,19 @@ namespace MMH
             switch (Section)
             {
                 case Type.MainMenuSection.Population:
+                    populationButton.Select();
                     populationTab.Active = true;
                     break;
                 case Type.MainMenuSection.Ruler:
+                    rulerButton.Select();
                     rulerTab.Active = true;
                     break;
                 case Type.MainMenuSection.Settings:
+                    settingsButton.Select();
                     settingsTab.Active = true;
                     break;
                 case Type.MainMenuSection.Admin:
+                    EventSystem.current.SetSelectedGameObject(null);
                     adminTab.Active = true;
                     break;
                 case Type.MainMenuSection.None:
