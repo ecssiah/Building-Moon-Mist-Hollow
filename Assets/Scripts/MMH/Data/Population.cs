@@ -7,5 +7,7 @@ namespace MMH.Data
     public struct Population
     {
         public int NextId;
+
+        public List<Colonist> Colonists;
     }
 }

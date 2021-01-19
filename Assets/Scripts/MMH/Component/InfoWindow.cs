@@ -56,17 +56,17 @@ namespace MMH
         }
 
 
-        public void DisplayCitizen(Citizen citizen)
+        public void DisplayColonist(Colonist colonist)
         {
-            mode = Type.Info.Citizen;
+            mode = Type.Info.Colonist;
 
             entityTab.SetActive(true);
             cellTab.SetActive(false);
 
-            entityIdText.text = $"{citizen.Id.Number}";
-            entityNameText.text = citizen.Id.FullName;
-            entityPopulationTypeText.text = $"{Enum.GetName(typeof(Type.Population), citizen.Id.PopulationType)}";
-            entityGroupTypeText.text = $"{Enum.GetName(typeof(Type.Group), citizen.Id.GroupType)}";
+            entityIdText.text = $"{colonist.Id.Number}";
+            entityNameText.text = colonist.Id.FullName;
+            entityPopulationTypeText.text = $"{Enum.GetName(typeof(Type.Population), colonist.Id.PopulationType)}";
+            entityGroupTypeText.text = $"{Enum.GetName(typeof(Type.Group), colonist.Id.GroupType)}";
         }
 
 

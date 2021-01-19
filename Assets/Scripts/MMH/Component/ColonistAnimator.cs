@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace MMH
 {
-    public class CitizenAnimator : MonoBehaviour
+    public class ColonistAnimator : MonoBehaviour
     {
-        private Citizen citizen;
+        private Colonist colonist;
 
         private SpriteRenderer spriteRenderer;
 
@@ -19,8 +19,7 @@ namespace MMH
 
         void Awake()
         {
-            citizen = GetComponent<Citizen>();
-
+            colonist = GetComponent<Colonist>();
             spriteRenderer = GetComponent<SpriteRenderer>();
 
             timer = 0f;
@@ -29,22 +28,22 @@ namespace MMH
 
         void Start()
         {
-            string groupType = Enum.GetName(typeof(Type.Group), citizen.Id.GroupType);
+            string groupType = Enum.GetName(typeof(Type.Group), colonist.Id.GroupType);
 
             frameNumber = 0;
             frameRate = 1 / 10f;
 
             frames = new Dictionary<Type.Animation, Sprite[]>
             {
-                [Type.Animation.IdleUp] = Resources.LoadAll<Sprite>($"Citizens/{groupType}/Back/Idle"),
-                [Type.Animation.IdleDown] = Resources.LoadAll<Sprite>($"Citizens/{groupType}/Front/Idle"),
-                [Type.Animation.IdleLeft] = Resources.LoadAll<Sprite>($"Citizens/{groupType}/Left/Idle"),
-                [Type.Animation.IdleRight] = Resources.LoadAll<Sprite>($"Citizens/{groupType}/Right/Idle"),
+                [Type.Animation.IdleUp] = Resources.LoadAll<Sprite>($"Colonists/{groupType}/Back/Idle"),
+                [Type.Animation.IdleDown] = Resources.LoadAll<Sprite>($"Colonists/{groupType}/Front/Idle"),
+                [Type.Animation.IdleLeft] = Resources.LoadAll<Sprite>($"Colonists/{groupType}/Left/Idle"),
+                [Type.Animation.IdleRight] = Resources.LoadAll<Sprite>($"Colonists/{groupType}/Right/Idle"),
 
-                [Type.Animation.WalkUp] = Resources.LoadAll<Sprite>($"Citizens/{groupType}/Back/Walk"),
-                [Type.Animation.WalkDown] = Resources.LoadAll<Sprite>($"Citizens/{groupType}/Front/Walk"),
-                [Type.Animation.WalkLeft] = Resources.LoadAll<Sprite>($"Citizens/{groupType}/Left/Walk"),
-                [Type.Animation.WalkRight] = Resources.LoadAll<Sprite>($"Citizens/{groupType}/Right/Walk")
+                [Type.Animation.WalkUp] = Resources.LoadAll<Sprite>($"Colonists/{groupType}/Back/Walk"),
+                [Type.Animation.WalkDown] = Resources.LoadAll<Sprite>($"Colonists/{groupType}/Front/Walk"),
+                [Type.Animation.WalkLeft] = Resources.LoadAll<Sprite>($"Colonists/{groupType}/Left/Walk"),
+                [Type.Animation.WalkRight] = Resources.LoadAll<Sprite>($"Colonists/{groupType}/Right/Walk")
             };
         }
 
@@ -70,8 +69,8 @@ namespace MMH
         {
             get
             {
-                bool moving = citizen.Entity.Speed > 0;
-                Type.Direction direction = citizen.Entity.Direction;
+                bool moving = colonist.Entity.Speed > 0;
+                Type.Direction direction = colonist.Entity.Direction;
 
                 switch (direction)
                 {

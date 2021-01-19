@@ -7,23 +7,27 @@ namespace MMH
 {
     public class RulerTab : Tab
     {
+        private System.EntitySystem entitySystem;
+
         private TextMeshProUGUI label;
         private TMP_Dropdown dropdown;
 
         private GameObject ruleListObject;
 
-        private List<string> citizenBehaviors;
+        private List<string> colonistBehaviors;
 
         public override void Awake()
         {
+            entitySystem = GameObject.Find("EntitySystem").GetComponent<System.EntitySystem>();
+
             Active = false;
 
-            ruleListObject = transform.Find("Citizen Behavior").gameObject;
+            ruleListObject = transform.Find("Colonist Behavior").gameObject;
 
             label = ruleListObject.transform.Find("Label").GetComponent<TextMeshProUGUI>();
-            label.text = "Citizen Behavior";
+            label.text = "Colonist Behavior";
 
-            citizenBehaviors = new List<string>
+            colonistBehaviors = new List<string>
             {
                 "Wander Out",
                 "Gather Home"
@@ -31,16 +35,16 @@ namespace MMH
 
             dropdown = ruleListObject.transform.Find("Dropdown").GetComponent<TMP_Dropdown>();
             dropdown.ClearOptions();
-            dropdown.AddOptions(citizenBehaviors);
+            dropdown.AddOptions(colonistBehaviors);
             dropdown.onValueChanged.AddListener(
-                delegate { OnCitizenBehaviorChange(); }
+                delegate { OnColonistBehaviorChange(); }
             );
         }
 
 
-        private void OnCitizenBehaviorChange()
+        private void OnColonistBehaviorChange()
         {
-            print(citizenBehaviors[dropdown.value]);
+            entitySystem.OnColonistBehaviorChange(colonistBehaviors[dropdown.value]);
         }
 
 

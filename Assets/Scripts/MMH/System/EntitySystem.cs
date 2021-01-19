@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace MMH.System
 {
-    public class EntitySystem : MonoBehaviour
+    public class EntitySystem : MonoBehaviour, Handler.IEntityEventHandler
     {
         private MapSystem mapSystem;
         private PathfindingSystem pathfindingSystem;
@@ -11,7 +11,7 @@ namespace MMH.System
         private Data.Population population;
 
         private GameObject entitiesObject;
-        private GameObject citizenPrefabObject;
+        private GameObject colonistPrefab;
 
 
         private void Awake()
@@ -20,37 +20,37 @@ namespace MMH.System
             pathfindingSystem = GameObject.Find("PathfindingSystem").GetComponent<PathfindingSystem>();
 
             entitiesObject = GameObject.Find("Entities");
-            citizenPrefabObject = Resources.Load<GameObject>("Prefabs/Citizen");
+            colonistPrefab = Resources.Load<GameObject>("Prefabs/Colonist");
         }
 
 
         private void Start()
         {
-            for (int i = 0; i < Info.Entity.NumberOfSeedCitizens; i++)
+            for (int i = 0; i < Info.Entity.NumberOfSeedColonists; i++)
             {
                 Data.Cell cellData = mapSystem.GetFreeCell();
 
-                GenerateCitizen(cellData.Position);
+                GenerateColonist(cellData.Position);
             }
         }
 
 
-        private void GenerateCitizen(Vector2Int position)
+        private void GenerateColonist(Vector2Int position)
         {
             Type.Group groupType = Util.Misc.RandomEnumValue<Type.Group>();
 
-            GameObject citizenGameObject = GenerateCitizenObject(position);
-            Citizen citizen = citizenGameObject.AddComponent<Citizen>();
+            GameObject colonistGameObject = GenerateColonistObject(position);
+            Colonist colonist = colonistGameObject.AddComponent<Colonist>();
 
-            citizen.Entity = new Data.Entity
+            colonist.Entity = new Data.Entity
             {
-                GameObject = citizenGameObject,
+                GameObject = colonistGameObject,
                 Speed = 0f,
                 Position = new Vector2Int(position.x, position.y),
                 Direction = Type.Direction.S,
             };
 
-            citizen.Id = new Data.Id
+            colonist.Id = new Data.Id
             {
                 FullName = NameGenerator.GetName(groupType),
                 Number = population.NextId++,
@@ -58,28 +58,41 @@ namespace MMH.System
                 GroupType = groupType,
             };
 
-            citizenGameObject.name = citizen.Id.FullName;
-            citizenGameObject.transform.parent = entitiesObject.transform;
+            colonistGameObject.name = colonist.Id.FullName;
+            colonistGameObject.transform.parent = entitiesObject.transform;
         }
 
 
-        private GameObject GenerateCitizenObject(Vector2Int position)
+        private GameObject GenerateColonistObject(Vector2Int position)
         {
             Vector2 worldPosition = Util.Map.IsoToWorld(position);
 
-            GameObject newCitizenObject = Instantiate(
-                citizenPrefabObject,
+            GameObject colonistObject = Instantiate(
+                colonistPrefab,
                 new Vector3(worldPosition.x, worldPosition.y, 0),
                 Quaternion.identity
             );
 
-            return newCitizenObject;
+            return colonistObject;
         }
 
 
         public Data.Path RequestPath(Vector2Int start, Vector2Int end)
         {
             return pathfindingSystem.FindPath(start, end);
+        }
+
+
+        public void OnColonistBehaviorChange(string behaviorName)
+        {
+            if (behaviorName == "Wander Out")
+            {
+                print("Wander!");
+            }
+            else if (behaviorName == "Gather Home")
+            {
+                print("Gather!");
+            }
         }
     }
 }

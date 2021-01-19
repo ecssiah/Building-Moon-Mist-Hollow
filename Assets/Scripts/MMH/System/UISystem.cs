@@ -89,8 +89,8 @@ namespace MMH.System
 
             entityLabeler.SelectEntity(entity);
 
-            Citizen citizen = entity.GetComponent<Citizen>();
-            infoWindow.DisplayCitizen(citizen);
+            Colonist colonist = entity.GetComponent<Colonist>();
+            infoWindow.DisplayColonist(colonist);
         }
 
 

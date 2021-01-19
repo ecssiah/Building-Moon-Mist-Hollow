@@ -2,19 +2,15 @@
 
 namespace MMH
 {
-    public class Citizen : MonoBehaviour
+    public class Colonist : EntityBase
     {
         public Data.Id Id;
-        public Data.Entity Entity;
         public Data.Inventory Inventory;
 
-        public Data.Path Path;
-
-
-        void Awake()
+        public override void Awake()
         {
-            gameObject.AddComponent<CitizenAnimator>();
-            gameObject.AddComponent<CitizenMovement>();
+            gameObject.AddComponent<ColonistAnimator>();
+            gameObject.AddComponent<ColonistMovement>();
         }
 
 
