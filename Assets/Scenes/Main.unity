@@ -332,6 +332,11 @@ PrefabInstance:
       propertyPath: m_Navigation.m_Mode
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6416558258665257212, guid: d76539f841cc649f3908689c57168dd4,
+        type: 3}
+      propertyPath: m_Transition
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6416558258665257213, guid: d76539f841cc649f3908689c57168dd4,
         type: 3}
       propertyPath: m_LocalPosition.x

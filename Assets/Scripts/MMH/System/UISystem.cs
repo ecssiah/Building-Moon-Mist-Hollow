@@ -50,16 +50,7 @@ namespace MMH.System
 
             if (Input.GetKeyDown(KeyCode.BackQuote))
             {
-                if (uiData.Mode == Type.UIMode.Admin)
-                {
-                    SetMode(Type.UIMode.None);
-
-                    mainMenu.SelectSection(Type.MainMenuSection.None);
-                }
-                else
-                {
-                    SetMode(Type.UIMode.Admin);
-                }
+                SetMode(Type.UIMode.Admin);
             }
         }
 
