@@ -19,7 +19,7 @@ namespace MMH.System
         {
             uiData = new Data.UI
             {
-                Mode = Type.UIMode.None
+                Mode = Type.UIMode.None,
             };
 
             mapSystem = GameObject.Find("MapSystem").GetComponent<MapSystem>();
@@ -42,11 +42,7 @@ namespace MMH.System
                 {
                     SetMode(Type.UIMode.Main);
                 }
-                else if (uiData.Mode == Type.UIMode.Main)
-                {
-                    SetMode(Type.UIMode.None);
-                }
-                else if (uiData.Mode == Type.UIMode.Admin)
+                else
                 {
                     SetMode(Type.UIMode.None);
                 }
@@ -57,6 +53,8 @@ namespace MMH.System
                 if (uiData.Mode == Type.UIMode.Admin)
                 {
                     SetMode(Type.UIMode.None);
+
+                    mainMenu.SelectSection(Type.MainMenuSection.None);
                 }
                 else
                 {
@@ -73,18 +71,20 @@ namespace MMH.System
             switch (uiMode)
             {
                 case Type.UIMode.None:
+                    if (mainMenu.Section == Type.MainMenuSection.Admin)
+                    {
+                        mainMenu.SelectSection(Type.MainMenuSection.None);
+                    }
+
                     mainMenu.Active = false;
-                    mainMenu.SelectSection(Type.MainMenuSection.None);
                     break;
                 case Type.UIMode.Main:
                     mainMenu.Active = true;
                     break;
                 case Type.UIMode.Admin:
-                    {
-                        mainMenu.Active = true;
-                        mainMenu.SelectSection(Type.MainMenuSection.Admin);
-                        break;
-                    }
+                    mainMenu.Active = true;
+                    mainMenu.SelectSection(Type.MainMenuSection.Admin);
+                    break;
             }
         }
 
