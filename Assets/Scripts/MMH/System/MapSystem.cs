@@ -9,47 +9,34 @@ namespace MMH.System
     {
         private RenderSystem renderSystem;
 
-        private WorldMap worldMap;
+        private Data.Map mapData;
 
         private Vector2Int selectedCell;
-
-        private List<Data.PointOfInterest> pointsOfInterest;
 
 
         void Awake()
         {
             renderSystem = GameObject.Find("RenderSystem").GetComponent<RenderSystem>();
 
-            worldMap = gameObject.AddComponent<WorldMap>();
+            mapData = new Data.Map
+            {
+                Size = Info.Map.Size,
+                Placeholders = new List<RectInt>(),
+                Cells = new Data.Cell[Info.Map.Width * Info.Map.Width],
+                Rooms = new List<Data.Room>(Info.Map.NumberOfSeedRooms),
+                ColonyBases = new Dictionary<Type.Group, Data.ColonyBase>(),
+            };
 
             SetupCells();
             SetupBase();
             SetupPaths();
 
-            RoomBuilder.LayoutRooms(worldMap);
+            RoomBuilder.LayoutRooms(mapData);
 
             SetupRooms();
-
-            SetupPointsOfInterest();
+            SetupColonyBases();
 
             ConstructMap();
-        }
-
-
-        private void SetupPointsOfInterest()
-        {
-            pointsOfInterest = new List<Data.PointOfInterest>();
-
-            for (int i = 0; i < 10; i++)
-            {
-                Data.PointOfInterest pointOfInterest = new Data.PointOfInterest
-                {
-                    Position = GetFreeCell().Position,
-                    Name = "The Spot",
-                };
-
-                pointsOfInterest.Add(pointOfInterest);
-            }
         }
 
 
@@ -139,27 +126,27 @@ namespace MMH.System
         }
 
 
-        public void SetupWall(int x, int y, Type.Structure wallType)
+        public void SetupStructure(int x, int y, Type.Structure structureType)
         {
-            SetupWall(new Vector2Int(x, y), wallType);
+            SetupStructure(new Vector2Int(x, y), structureType);
         }
 
 
-        public void SetupWall(Vector2Int position, Type.Structure wallType)
+        public void SetupStructure(Vector2Int position, Type.Structure structureType)
         {
             if (Util.Map.OnMap(position))
             {
                 Data.Cell cellData = GetCell(position);
 
                 cellData.Solid = true;
-                cellData.WallType = wallType;
+                cellData.StructureType = structureType;
 
                 SetCell(position, cellData);
             }
         }
 
 
-        public void SetupWall(RectInt bounds, Type.Structure wallType, bool fill = false, bool solid = true)
+        public void SetupStructure(RectInt bounds, Type.Structure structureType, bool fill = false, bool solid = true)
         {
             for (int x = bounds.xMin; x < bounds.xMax; x++)
             {
@@ -167,7 +154,7 @@ namespace MMH.System
                 {
                     if (fill || Util.Map.OnRectBoundary(x, y, bounds))
                     {
-                        SetupWall(x, y, wallType);
+                        SetupStructure(x, y, structureType);
 
                         if (solid) SetCellSolid(x, y);
                     }
@@ -255,14 +242,12 @@ namespace MMH.System
 
             SetupGround(east1st, Type.Ground.Stone);
             SetPlaceholder(east1st);
-
-
         }
 
 
         private void SetupRooms()
         {
-            foreach (Data.Room room in worldMap.Rooms)
+            foreach (Data.Room room in mapData.Rooms)
             {
                 SetupRoom(room);
             }
@@ -283,7 +268,7 @@ namespace MMH.System
                     {
                         if (room.Fill || Util.Map.OnRectBoundary(x, y, room.Bounds))
                         {
-                            SetupWall(cellPosition, room.WallType);
+                            SetupStructure(cellPosition, room.StructureType);
                         }
                     }
 
@@ -293,21 +278,69 @@ namespace MMH.System
         }
 
 
+        private void SetupColonyBases()
+        {
+            Data.ColonyBase guyColonyBase = new Data.ColonyBase
+            {
+                GroupType = Type.Group.Guy,
+                Position = GetFreeCell().Position,
+            };
+
+            Data.ColonyBase kailtColonyBase = new Data.ColonyBase
+            {
+                GroupType = Type.Group.Kailt,
+                Position = GetFreeCell().Position,
+            };
+
+            Data.ColonyBase taylorColonyBase = new Data.ColonyBase
+            {
+                GroupType = Type.Group.Taylor,
+                Position = GetFreeCell().Position,
+            };
+
+            mapData.ColonyBases[Type.Group.Guy] = guyColonyBase;
+            mapData.ColonyBases[Type.Group.Kailt] = kailtColonyBase;
+            mapData.ColonyBases[Type.Group.Taylor] = taylorColonyBase;
+
+            foreach (KeyValuePair<Type.Group, Data.ColonyBase> keyValue in mapData.ColonyBases)
+            {
+                Data.ColonyBase colonyBaseData = keyValue.Value;
+
+                Type.Structure structureType = Type.Structure.None;
+
+                switch (colonyBaseData.GroupType)
+                {
+                    case Type.Group.Guy:
+                        structureType = Type.Structure.Guy_Flag;
+                        break;
+                    case Type.Group.Kailt:
+                        structureType = Type.Structure.Kailt_Flag;
+                        break;
+                    case Type.Group.Taylor:
+                        structureType = Type.Structure.Taylor_Flag;
+                        break;
+                }
+
+                SetupStructure(colonyBaseData.Position, structureType);
+            }
+        }
+
+
 
         // Construction Methods
 
         public void ConstructMap()
         {
-            foreach (Data.Cell cell in worldMap.Cells)
+            foreach (Data.Cell cell in mapData.Cells)
             {
                 if (cell.GroundType != Type.Ground.None)
                 {
                     renderSystem.SetTile(cell.Position, cell.GroundType);
                 }
 
-                if (cell.WallType != Type.Structure.None)
+                if (cell.StructureType != Type.Structure.None)
                 {
-                    renderSystem.SetTile(cell.Position, cell.WallType);
+                    renderSystem.SetTile(cell.Position, cell.StructureType);
                 }
 
                 if (cell.OverlayType != Type.Overlay.None)
@@ -323,7 +356,7 @@ namespace MMH.System
 
         public Data.Cell GetCell(int x, int y)
         {
-            return worldMap.Cells[Util.Map.CoordsToIndex(x, y)];
+            return mapData.Cells[Util.Map.CoordsToIndex(x, y)];
         }
 
 
@@ -335,7 +368,7 @@ namespace MMH.System
 
         public Data.Cell[] GetCells()
         {
-            return worldMap.Cells;
+            return mapData.Cells;
         }
 
 
@@ -352,15 +385,9 @@ namespace MMH.System
         }
 
 
-        public Data.PointOfInterest GetPointOfInterest()
-        {
-            return pointsOfInterest[UnityEngine.Random.Range(0, pointsOfInterest.Count)];
-        }
-
-
         public void SetCell(int x, int y, Data.Cell cellData)
         {
-            worldMap.Cells[Util.Map.CoordsToIndex(x, y)] = cellData;
+            mapData.Cells[Util.Map.CoordsToIndex(x, y)] = cellData;
         }
 
 
@@ -380,7 +407,7 @@ namespace MMH.System
                 height = bounds.height + 1,
             };
 
-            worldMap.Placeholders.Add(nonOverlappingBounds);
+            mapData.Placeholders.Add(nonOverlappingBounds);
         }
 
 
@@ -408,7 +435,7 @@ namespace MMH.System
         {
             using (StreamWriter file = File.CreateText($"Assets/Resources/Data/{name}.json"))
             {
-                string jsonCellsText = JsonUtility.ToJson(worldMap, true);
+                string jsonCellsText = JsonUtility.ToJson(mapData, true);
 
                 file.Write(jsonCellsText);
             }
@@ -421,7 +448,7 @@ namespace MMH.System
             {
                 string jsonText = reader.ReadToEnd();
 
-                worldMap = JsonUtility.FromJson<WorldMap>(jsonText);
+                mapData = JsonUtility.FromJson<Data.Map>(jsonText);
             }
         }
     }

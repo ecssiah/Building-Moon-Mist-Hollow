@@ -24,6 +24,7 @@ namespace MMH.System
 
             foreach (Tile tile in Resources.LoadAll<Tile>("Tiles"))
             {
+                print(tile.name);
                 tiles[tile.name] = tile;
             }
         }
@@ -53,11 +54,11 @@ namespace MMH.System
             );
         }
 
-        public void SetTile(Vector2Int position, Type.Structure wallType)
+        public void SetTile(Vector2Int position, Type.Structure structureType)
         {
-            tilemaps["Walls"].SetTile(
+            tilemaps["Structure"].SetTile(
                 new Vector3Int(position.x, position.y, 3),
-                tiles[Info.Tile.wallTileNames[wallType]]
+                tiles[Info.Tile.structureTileNames[structureType]]
             );
         }
 

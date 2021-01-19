@@ -72,9 +72,9 @@ SpriteAtlas:
   - Water
   - Water_Deep
   - Wood_A
-  - Taylor_Flag_Tile
-  - Kailt_Flag_Tile
-  - Guy_Flag_Tile
+  - Taylor_Flag
+  - Kailt_Flag
+  - Guy_Flag
   - Water_Middle
   - Template_Tile
   - Dirt_Grass_C

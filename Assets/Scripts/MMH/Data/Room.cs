@@ -12,7 +12,7 @@ namespace MMH.Data
         public bool Fill;
 
         public Type.Ground GroundType;
-        public Type.Structure WallType;
+        public Type.Structure StructureType;
         public Type.Overlay OverlayType;
 
         public List<Entrance> Entrances;
