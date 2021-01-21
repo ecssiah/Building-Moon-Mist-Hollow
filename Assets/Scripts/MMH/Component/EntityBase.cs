@@ -20,5 +20,11 @@ namespace MMH
         {
 
         }
+
+
+        public virtual void Update()
+        {
+
+        }
     }
 }

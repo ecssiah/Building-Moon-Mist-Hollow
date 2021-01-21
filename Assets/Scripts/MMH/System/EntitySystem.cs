@@ -28,7 +28,6 @@ namespace MMH.System
 
             entitiesObject = GameObject.Find("Entities");
             colonistPrefab = Resources.Load<GameObject>("Prefabs/Colonist");
-
         }
 
 
