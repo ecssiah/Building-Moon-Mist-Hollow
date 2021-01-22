@@ -15,7 +15,8 @@ namespace HPAStar
         private readonly int MaxPriorityQueueNodes = 1000;
 
 
-        public AStar()        {
+        public AStar()
+        {
             openSet = new FastPriorityQueue<Node>(MaxPriorityQueueNodes);
             previous = new Dictionary<Node, Node>(MaxPriorityQueueNodes);
         }
@@ -110,10 +111,8 @@ namespace HPAStar
 
         private int CalculateDistanceCost(Node start, Node end)
         {
-            int2 differenceVector = start.Position - end.Position;
-
-            int dx = math.abs(differenceVector.x);
-            int dy = math.abs(differenceVector.y);
+            int dx = math.abs(start.Position.x - end.Position.x);
+            int dy = math.abs(start.Position.y - end.Position.y);
 
             int remainder = math.abs(dx - dy);
 

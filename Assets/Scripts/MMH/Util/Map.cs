@@ -73,9 +73,6 @@ namespace MMH.Util
                 1,  1
             );
 
-            //float2 product = new float2(
-            //    2 * isoVector.x )
-
             return (1 / 4f) * math.mul(isoTransform, isoVector);
         }
 
