@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Priority_Queue;
+using System;
 
 namespace HPAStar
 {
@@ -9,8 +10,8 @@ namespace HPAStar
 
         public Vector2Int Position;
 
-        public float GScore;
-        public float FScore;
+        public int GScore;
+        public int FScore;
 
 
         public Node(int x, int y)
@@ -19,8 +20,8 @@ namespace HPAStar
 
             Position = new Vector2Int(x, y);
 
-            GScore = Mathf.Infinity;
-            FScore = Mathf.Infinity;
+            GScore = int.MaxValue;
+            FScore = int.MaxValue;
         }
 
 

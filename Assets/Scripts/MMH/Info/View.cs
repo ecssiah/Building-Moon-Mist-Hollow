@@ -2,8 +2,10 @@
 
 namespace MMH.Info
 {
-    public struct View
+    public struct Render
     {
+        public static readonly int FPSTarget = 48;
+
         public static readonly int DefaultOrthographicSize = 4;
 
         public static readonly float CameraPanSpeed = 24f;

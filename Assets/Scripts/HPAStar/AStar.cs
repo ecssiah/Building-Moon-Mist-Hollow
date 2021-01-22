@@ -15,8 +15,7 @@ namespace HPAStar
         private readonly int MaxPriorityQueueNodes = 1000;
 
 
-        public AStar()
-        {
+        public AStar()        {
             openSet = new FastPriorityQueue<Node>(MaxPriorityQueueNodes);
             previous = new Dictionary<Node, Node>(MaxPriorityQueueNodes);
         }
@@ -44,7 +43,7 @@ namespace HPAStar
                 foreach (KeyValuePair<int, Node> keyValuePair in Graph.Neighbors(current))
                 {
                     Node neighbor = keyValuePair.Value;
-                    float gCost = CalcuateGCost(current, neighbor);
+                    int gCost = CalcuateGCost(current, neighbor);
 
                     if (gCost < neighbor.GScore)
                     {
@@ -95,30 +94,33 @@ namespace HPAStar
         }
 
 
-        private float CalcuateGCost(Node start, Node end)
+        private int CalcuateGCost(Node start, Node end)
         {
-            return start.GScore + Vector2Int.Distance(start.Position, end.Position);
+            bool horizontalMove = (start.Position.x == end.Position.x) || (start.Position.y == end.Position.y);
+
+
+            return start.GScore + (horizontalMove ? 10 : 14);
         }
 
 
-        private float CalculateFCost(Node start, Node end)
+        private int CalculateFCost(Node start, Node end)
         {
-            return start.GScore + CalculateHCost(start, end);
+            return start.GScore + (int)(10 * CalculateHCost(start, end));
         }
 
 
-        private float OctileDistance(Node start, Node end)
+        private int OctileDistance(Node start, Node end)
         {
-            Vector2Int differenceVector = end.Position - start.Position;
+            Vector2 differenceVector = end.Position - start.Position;
 
-            int minDifference = Mathf.Min(Mathf.Abs(differenceVector.x), Mathf.Abs(differenceVector.y));
-            int maxDifference = Mathf.Max(Mathf.Abs(differenceVector.x), Mathf.Abs(differenceVector.y));
+            float minDifference = Mathf.Min(Mathf.Abs(differenceVector.x), Mathf.Abs(differenceVector.y));
+            float maxDifference = Mathf.Max(Mathf.Abs(differenceVector.x), Mathf.Abs(differenceVector.y));
 
             float octileDistance =
                 MMH.Info.Path.HorizontalWeight * maxDifference +
                 (MMH.Info.Path.DiagonalWeight - MMH.Info.Path.HorizontalWeight) * minDifference;
 
-            return octileDistance;
+            return (int)(10 * octileDistance);
         }
 
 
@@ -176,8 +178,8 @@ namespace HPAStar
             {
                 Node node = keyValue.Value;
 
-                node.FScore = Mathf.Infinity;
-                node.GScore = Mathf.Infinity;
+                node.FScore = int.MaxValue;
+                node.GScore = int.MaxValue;
             }
         }
     }

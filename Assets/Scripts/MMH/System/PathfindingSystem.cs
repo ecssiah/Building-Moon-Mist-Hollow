@@ -42,15 +42,15 @@ namespace MMH.System
         }
 
 
-        public Data.Path FindPath(Vector2Int position1, Vector2Int position2)
+        public Data.Path FindPath(Vector2Int start, Vector2Int end)
         {
-            if (!Util.Map.OnMap(position1) || !Util.Map.OnMap(position2))
+            if (!Util.Map.OnMap(start) || !Util.Map.OnMap(end))
             {
                 return new Data.Path();
             }
 
-            Node startNode = aStar.GetNode(position1);
-            Node endNode = aStar.GetNode(position2);
+            Node startNode = aStar.GetNode(start);
+            Node endNode = aStar.GetNode(end);
 
             if (startNode is null || endNode is null)
             {

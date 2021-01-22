@@ -13,6 +13,8 @@ namespace MMH.System
 
         void Awake()
         {
+            Application.targetFrameRate = Info.Render.FPSTarget;
+
             InitTiles();
             InitTilemaps();
         }

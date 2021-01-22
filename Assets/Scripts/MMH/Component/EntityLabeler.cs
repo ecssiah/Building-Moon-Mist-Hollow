@@ -55,7 +55,7 @@ namespace MMH
         private Vector3 GetLabelPosition(Vector3 entityPosition)
         {
             Vector3 screenPosition = Util.Map.WorldToScreen(entityPosition);
-            screenPosition.y += Info.UI.LabelYOffset * Info.View.CameraZoomRatio;
+            screenPosition.y += Info.UI.LabelYOffset * Info.Render.CameraZoomRatio;
 
             return screenPosition;
         }
