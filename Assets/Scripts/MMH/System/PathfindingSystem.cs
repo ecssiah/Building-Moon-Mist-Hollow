@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using HPAStar;
+using Unity.Mathematics;
 
 namespace MMH.System
 {
@@ -42,7 +43,7 @@ namespace MMH.System
         }
 
 
-        public Data.Path FindPath(Vector2Int start, Vector2Int end)
+        public Data.Path FindPath(int2 start, int2 end)
         {
             if (!Util.Map.OnMap(start) || !Util.Map.OnMap(end))
             {
@@ -77,15 +78,15 @@ namespace MMH.System
                 {
                     if (x == 0 && y == 0) continue;
 
-                    Vector2Int offset = new Vector2Int(x, y);
+                    int2 offset = new int2(x, y);
 
                     if (ValidEdgeLocation(targetNode.Position, offset))
                     {
-                        Vector2Int neighborPosition = targetNode.Position + offset;
+                        int2 neighborPosition = targetNode.Position + offset;
 
                         Node neighborNode = aStar.GetNode(neighborPosition) ?? aStar.BuildNode(neighborPosition);
 
-                        float neighborDistance = Vector2Int.Distance(targetNode.Position, neighborPosition);
+                        float neighborDistance = math.distance(targetNode.Position, neighborPosition);
 
                         aStar.BuildEdge(targetNode, neighborNode, neighborDistance);
                     }
@@ -94,18 +95,18 @@ namespace MMH.System
         }
 
 
-        private bool ValidEdgeLocation(Vector2Int position, Vector2Int offset)
+        private bool ValidEdgeLocation(int2 position, int2 offset)
         {
-            Vector2Int neighborPosition = position + offset;
+            int2 neighborPosition = position + offset;
 
             if (!Util.Map.OnMap(neighborPosition)) return false;
 
             if (mapSystem.GetCell(neighborPosition).Solid) return false;
 
-            Vector2Int northPosition = position + new Vector2Int(0, 1);
-            Vector2Int eastPosition = position + new Vector2Int(1, 0);
-            Vector2Int southPosition = position + new Vector2Int(0, -1);
-            Vector2Int westPosition = position + new Vector2Int(-1, 0);
+            int2 northPosition = position + new int2(0, 1);
+            int2 eastPosition = position + new int2(1, 0);
+            int2 southPosition = position + new int2(0, -1);
+            int2 westPosition = position + new int2(-1, 0);
 
             bool northSolid = !Util.Map.OnMap(northPosition) || mapSystem.GetCell(northPosition).Solid;
             bool eastSolid = !Util.Map.OnMap(eastPosition) || mapSystem.GetCell(eastPosition).Solid;

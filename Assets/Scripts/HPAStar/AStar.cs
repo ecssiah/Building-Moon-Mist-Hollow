@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using Priority_Queue;
-
+using Unity.Mathematics;
 
 namespace HPAStar
 {
@@ -88,16 +88,9 @@ namespace HPAStar
 
         // Cost Methods
 
-        private float CalculateHCost(Node start, Node end)
-        {
-            return OctileDistance(start, end);
-        }
-
-
         private int CalcuateGCost(Node start, Node end)
         {
             bool horizontalMove = (start.Position.x == end.Position.x) || (start.Position.y == end.Position.y);
-
 
             return start.GScore + (horizontalMove ? 10 : 14);
         }
@@ -109,25 +102,28 @@ namespace HPAStar
         }
 
 
-        private int OctileDistance(Node start, Node end)
+        private int CalculateHCost(Node start, Node end)
         {
-            Vector2 differenceVector = end.Position - start.Position;
-
-            float minDifference = Mathf.Min(Mathf.Abs(differenceVector.x), Mathf.Abs(differenceVector.y));
-            float maxDifference = Mathf.Max(Mathf.Abs(differenceVector.x), Mathf.Abs(differenceVector.y));
-
-            float octileDistance =
-                MMH.Info.Path.HorizontalWeight * maxDifference +
-                (MMH.Info.Path.DiagonalWeight - MMH.Info.Path.HorizontalWeight) * minDifference;
-
-            return (int)(10 * octileDistance);
+            return CalculateDistanceCost(start, end);
         }
 
+
+        private int CalculateDistanceCost(Node start, Node end)
+        {
+            int2 differenceVector = start.Position - end.Position;
+
+            int dx = math.abs(differenceVector.x);
+            int dy = math.abs(differenceVector.y);
+
+            int remainder = math.abs(dx - dy);
+
+            return MMH.Info.Path.DiagonalWeight * math.min(dx, dy) + MMH.Info.Path.HorizontalWeight * remainder;
+        }
 
 
         // Building Methods
 
-        public Node BuildNode(Vector2Int position)
+        public Node BuildNode(int2 position)
         {
             return BuildNode(position.x, position.y);
         }
@@ -155,11 +151,11 @@ namespace HPAStar
 
         public Node GetNode(int x, int y)
         {
-            return GetNode(new Vector2Int(x, y));
+            return GetNode(new int2(x, y));
         }
 
 
-        public Node GetNode(Vector2Int position)
+        public Node GetNode(int2 position)
         {
             int nodeIndex = MMH.Util.Map.CoordsToIndex(position);
 

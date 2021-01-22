@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.Mathematics;
+using UnityEngine;
 
 
 namespace MMH.System
@@ -94,7 +95,7 @@ namespace MMH.System
         }
 
 
-        public void SelectCell(Vector2Int cellPosition)
+        public void SelectCell(int2 cellPosition)
         {
             if (uiData.Mode == Type.UIMode.Main) return;
 

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.Mathematics;
+using UnityEngine;
 
 namespace MMH
 {
@@ -28,11 +29,22 @@ namespace MMH
             {
                 colonist.Path.Progress += Time.deltaTime;
 
-                Vector2 isoPosition = Vector2.Lerp(
-                    colonist.Entity.Position, colonist.Path.Nodes[0].Position, colonist.Path.Progress
+                float2 isoPosition = new float2 (
+                    math.lerp (
+                        colonist.Entity.Position.x,
+                        colonist.Path.Nodes[0].Position.x,
+                        colonist.Path.Progress
+                    ),
+                    math.lerp (
+                        colonist.Entity.Position.y,
+                        colonist.Path.Nodes[0].Position.y,
+                        colonist.Path.Progress
+                    )
                 );
 
-                transform.position = Util.Map.IsoToWorld(isoPosition);
+                float2 worldPosition = Util.Map.IsoToWorld(isoPosition);
+
+                transform.position = new Vector3(worldPosition.x, worldPosition.y, 0);
             }
             else
             {

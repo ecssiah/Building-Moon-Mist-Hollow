@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using Unity.Mathematics;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace MMH.Util
 {
     public struct Map
     {
-        public static int CoordsToIndex(Vector2Int position)
+        public static int CoordsToIndex(int2 position)
         {
             return CoordsToIndex(position.x, position.y);
         }
@@ -17,36 +18,36 @@ namespace MMH.Util
         }
 
 
-        public static Vector2Int IndexToCoords(int i)
+        public static int2 IndexToCoords(int i)
         {
-            return new Vector2Int(
+            return new int2(
                 (i % Info.Map.Width) - Info.Map.Size,
                 (i / Info.Map.Width) - Info.Map.Size
             );
         }
 
 
-        public static Vector2 WorldToIso(Vector2 worldPosition)
+        public static float2 WorldToIso(float2 worldPosition)
         {
-            return new Vector2(
+            return new float2(
                 worldPosition.x + 2 * worldPosition.y,
                 -worldPosition.x + 2 * worldPosition.y
             );
         }
 
 
-        public static Vector2Int WorldToIsoGrid(Vector2 screenPosition)
+        public static int2 WorldToIsoGrid(float2 screenPosition)
         {
-            Vector2 isoVector = WorldToIso(screenPosition);
+            float2 isoVector = WorldToIso(screenPosition);
 
-            return new Vector2Int(
-                (int)Mathf.Floor(isoVector.x),
-                (int)Mathf.Floor(isoVector.y)
+            return new int2(
+                (int)math.floor(isoVector.x),
+                (int)math.floor(isoVector.y)
             );
         }
 
 
-        public static Vector2 WorldToScreen(Vector2 worldPosition)
+        public static float2 WorldToScreen(float2 worldPosition)
         {
             return RectTransformUtility.WorldToScreenPoint(
                 Camera.main, new Vector3(worldPosition.x, worldPosition.y, 0)
@@ -54,23 +55,28 @@ namespace MMH.Util
         }
 
 
-        public static Vector2Int ScreenToIsoGrid(Vector2 screenPosition)
+        public static int2 ScreenToIsoGrid(float2 screenPosition)
         {
-            Vector2 worldPosition = Camera.main.ScreenToWorldPoint(screenPosition);
+            Vector2 worldPosition = Camera.main.ScreenToWorldPoint(
+                new Vector3(screenPosition.x, screenPosition.y, 0)
+            );
             worldPosition.y += 0.25f;
 
             return WorldToIsoGrid(worldPosition);
         }
 
 
-        public static Vector2 IsoToWorld(Vector2 isoVector)
+        public static float2 IsoToWorld(float2 isoVector)
         {
-            var matrixProduct = new Vector2(
-                2 * isoVector.x - 2 * isoVector.y,
-                1 * isoVector.x + 1 * isoVector.y
+            float2x2 isoTransform = new float2x2(
+                2, -2,
+                1,  1
             );
 
-            return (1 / 4f) * matrixProduct;
+            //float2 product = new float2(
+            //    2 * isoVector.x )
+
+            return (1 / 4f) * math.mul(isoTransform, isoVector);
         }
 
 
@@ -87,11 +93,11 @@ namespace MMH.Util
 
         public static bool OnMap(int x, int y)
         {
-            return OnMap(new Vector2Int(x, y));
+            return OnMap(new int2(x, y));
         }
 
 
-        public static bool OnMap(Vector2Int position)
+        public static bool OnMap(int2 position)
         {
             RectInt mapBoundary = new RectInt
             {
@@ -101,7 +107,7 @@ namespace MMH.Util
                 height = Info.Map.Width,
             };
 
-            return mapBoundary.Contains(position);
+            return mapBoundary.Contains(new Vector2Int(position.x, position.y));
         }
 
 
@@ -113,15 +119,15 @@ namespace MMH.Util
 
         public static bool EntranceExistsAt(int x, int y, Data.Room room)
         {
-            return EntranceExistsAt(new Vector2Int(x, y), room);
+            return EntranceExistsAt(new int2(x, y), room);
         }
 
 
-        public static bool EntranceExistsAt(Vector2Int position, Data.Room room)
+        public static bool EntranceExistsAt(int2 position, Data.Room room)
         {
             foreach (Data.Entrance entrance in room.Entrances)
             {
-                if (entrance.Bounds.Contains(position))
+                if (entrance.Bounds.Contains(new Vector2Int(position.x, position.y)))
                 {
                     return true;
                 }
@@ -131,64 +137,64 @@ namespace MMH.Util
         }
 
 
-        public static Vector2Int GetRandomMapPosition()
+        public static int2 GetRandomMapPosition()
         {
-            return new Vector2Int(
+            return new int2(
                 Random.Range(-Info.Map.Size, Info.Map.Size),
                 Random.Range(-Info.Map.Size, Info.Map.Size)
             );
         }
 
 
-        public static Vector2 RandomIsoDirection()
+        public static float2 RandomIsoDirection()
         {
-            Vector2 newIsoDirection = new Vector2(Random.Range(-1, 2), Random.Range(-1, 2));
+            float2 newIsoDirection = new float2(Random.Range(-1, 2), Random.Range(-1, 2));
 
             return IsoToWorld(newIsoDirection);
         }
 
 
-        public static Vector2Int GetRandomBorderPosition(RectInt bounds, bool includeCorners = false)
+        public static int2 GetRandomBorderPosition(RectInt bounds, bool includeCorners = false)
         {
             int cornerModifier = includeCorners ? 0 : 1;
 
             switch (Random.Range(0, 4))
             {
                 case 0:
-                    Vector2Int topWallPosition = new Vector2Int(
+                    int2 topWallPosition = new int2(
                         Random.Range(bounds.xMin + cornerModifier, bounds.xMax - cornerModifier),
                         bounds.yMax
                     );
 
                     return topWallPosition;
                 case 1:
-                    Vector2Int bottomWallPosition = new Vector2Int(
+                    int2 bottomWallPosition = new int2(
                         Random.Range(bounds.xMin + cornerModifier, bounds.xMax - cornerModifier),
                         bounds.yMin
                     );
 
                     return bottomWallPosition;
                 case 2:
-                    Vector2Int leftWallPosition = new Vector2Int(
+                    int2 leftWallPosition = new int2(
                         bounds.xMin,
                         Random.Range(bounds.yMin + cornerModifier, bounds.yMax - cornerModifier)
                     );
 
                     return leftWallPosition;
                 case 3:
-                    Vector2Int rightWallPosition = new Vector2Int(
+                    int2 rightWallPosition = new int2(
                         bounds.xMax,
                         Random.Range(bounds.yMin + cornerModifier, bounds.yMax - cornerModifier)
                     );
 
                     return rightWallPosition;
                 default:
-                    return new Vector2Int(bounds.xMin + 1, bounds.yMin);
+                    return new int2(bounds.xMin + 1, bounds.yMin);
             }
         }
 
 
-        public static Type.Direction CardinalDirection(Vector2 direction)
+        public static Type.Direction CardinalDirection(float2 direction)
         {
             if (direction.x == 0 && direction.y > 0)
             {

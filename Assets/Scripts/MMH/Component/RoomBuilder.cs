@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
+
+using Random = UnityEngine.Random;
 
 namespace MMH
 {
@@ -133,9 +136,12 @@ namespace MMH
 
             for (int i = 0; i < number; i++)
             {
-                Vector2Int wallPosition = Util.Map.GetRandomBorderPosition(bounds);
+                int2 wallPosition = Util.Map.GetRandomBorderPosition(bounds);
 
-                RectInt entranceBounds = new RectInt(wallPosition, new Vector2Int(1, 1));
+                RectInt entranceBounds = new RectInt(
+                    new Vector2Int(wallPosition.x, wallPosition.y),
+                    new Vector2Int(1, 1)
+                );
 
                 if (entranceBounds.x == bounds.xMin || entranceBounds.x == bounds.xMax)
                 {
@@ -168,10 +174,10 @@ namespace MMH
         {
             for (int i = 0; i < 10; i++)
             {
-                Vector2Int randomMapPosition = Util.Map.GetRandomMapPosition();
+                int2 randomMapPosition = Util.Map.GetRandomMapPosition();
 
                 RectInt roomBounds = new RectInt(
-                    randomMapPosition,
+                    new Vector2Int(randomMapPosition.x, randomMapPosition.y),
                     new Vector2Int(Info.Map.SeedRoomSize, Info.Map.SeedRoomSize)
                 );
 

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Priority_Queue;
 using System;
+using Unity.Mathematics;
 
 namespace HPAStar
 {
@@ -8,7 +9,7 @@ namespace HPAStar
     {
         public int Index;
 
-        public Vector2Int Position;
+        public int2 Position;
 
         public int GScore;
         public int FScore;
@@ -18,7 +19,7 @@ namespace HPAStar
         {
             Index = MMH.Util.Map.CoordsToIndex(x, y);
 
-            Position = new Vector2Int(x, y);
+            Position = new int2(x, y);
 
             GScore = int.MaxValue;
             FScore = int.MaxValue;

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace MMH
@@ -27,7 +28,7 @@ namespace MMH
         {
             for (int i = 0; i < entities.Count; i++)
             {
-                labels[i].transform.position = GetLabelPosition(entities[i].transform.position);
+                labels[i].transform.position = GetLabelPosition(entities[i]);
             }
         }
 
@@ -36,7 +37,7 @@ namespace MMH
         {
             GameObject newLabel = Instantiate(
                 labelPrefab,
-                GetLabelPosition(entity.transform.position),
+                GetLabelPosition(entity),
                 Quaternion.identity
             );
 
@@ -52,12 +53,20 @@ namespace MMH
         }
 
 
-        private Vector3 GetLabelPosition(Vector3 entityPosition)
+        private Vector3 GetLabelPosition(GameObject entity)
         {
-            Vector3 screenPosition = Util.Map.WorldToScreen(entityPosition);
+            float2 worldPosition = new float2(entity.transform.position.x, entity.transform.position.y);
+            float2 screenPosition = Util.Map.WorldToScreen(worldPosition);
+
             screenPosition.y += Info.UI.LabelYOffset * Info.Render.CameraZoomRatio;
 
-            return screenPosition;
+            Vector3 labelPosition = new Vector3(
+                screenPosition.x,
+                screenPosition.y + Info.UI.LabelYOffset * Info.Render.CameraZoomRatio,
+                0
+            );
+
+            return labelPosition;
         }
 
 

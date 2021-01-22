@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace MMH.System
@@ -11,7 +12,7 @@ namespace MMH.System
 
         private Data.Map mapData;
 
-        private Vector2Int selectedCell;
+        private int2 selectedCell;
 
 
         void Awake()
@@ -42,14 +43,14 @@ namespace MMH.System
 
         private void SetupCells()
         {
-            selectedCell = new Vector2Int();
+            selectedCell = new int2();
 
             for (int x = -Info.Map.Size; x <= Info.Map.Size; x++)
             {
                 for (int y = -Info.Map.Size; y <= Info.Map.Size; y++)
                 {
                     Data.Cell cellData = GetCell(x, y);
-                    cellData.Position = new Vector2Int(x, y);
+                    cellData.Position = new int2(x, y);
 
                     SetCell(x, y, cellData);
                 }
@@ -62,11 +63,11 @@ namespace MMH.System
 
         public void SetCellSolid(int x, int y, bool solid = true)
         {
-            SetCellSolid(new Vector2Int(x, y), solid);
+            SetCellSolid(new int2(x, y), solid);
         }
 
 
-        public void SetCellSolid(Vector2Int position, bool solid = true)
+        public void SetCellSolid(int2 position, bool solid = true)
         {
             if (Util.Map.OnMap(position))
             {
@@ -95,11 +96,11 @@ namespace MMH.System
 
         public void SetupGround(int x, int y, Type.Ground groundType)
         {
-            SetupGround(new Vector2Int(x, y), groundType);
+            SetupGround(new int2(x, y), groundType);
         }
 
 
-        public void SetupGround(Vector2Int position, Type.Ground groundType)
+        public void SetupGround(int2 position, Type.Ground groundType)
         {
             if (Util.Map.OnMap(position))
             {
@@ -128,11 +129,11 @@ namespace MMH.System
 
         public void SetupStructure(int x, int y, Type.Structure structureType, bool solid = true)
         {
-            SetupStructure(new Vector2Int(x, y), structureType, solid);
+            SetupStructure(new int2(x, y), structureType, solid);
         }
 
 
-        public void SetupStructure(Vector2Int position, Type.Structure structureType, bool solid = true)
+        public void SetupStructure(int2 position, Type.Structure structureType, bool solid = true)
         {
             if (Util.Map.OnMap(position))
             {
@@ -165,11 +166,11 @@ namespace MMH.System
 
         public void SetupOverlay(int x, int y, Type.Overlay overlayType)
         {
-            SetupOverlay(new Vector2Int(x, y), overlayType);
+            SetupOverlay(new int2(x, y), overlayType);
         }
 
 
-        public void SetupOverlay(Vector2Int position, Type.Overlay overlayType)
+        public void SetupOverlay(int2 position, Type.Overlay overlayType)
         {
             if (Util.Map.OnMap(position))
             {
@@ -260,7 +261,7 @@ namespace MMH.System
             {
                 for (int y = room.Bounds.yMin; y <= room.Bounds.yMax; y++)
                 {
-                    Vector2Int cellPosition = new Vector2Int(x, y);
+                    int2 cellPosition = new int2(x, y);
 
                     SetupGround(cellPosition, room.GroundType);
 
@@ -360,7 +361,7 @@ namespace MMH.System
         }
 
 
-        public Data.Cell GetCell(Vector2Int position)
+        public Data.Cell GetCell(int2 position)
         {
             return GetCell(position.x, position.y);
         }
@@ -401,7 +402,7 @@ namespace MMH.System
         }
 
 
-        public void SetCell(Vector2Int position, Data.Cell cellData)
+        public void SetCell(int2 position, Data.Cell cellData)
         {
             SetCell(position.x, position.y, cellData);
         }
@@ -424,7 +425,7 @@ namespace MMH.System
 
         // Selection Methods
 
-        public void SelectCell(Vector2Int position)
+        public void SelectCell(int2 position)
         {
             selectedCell = position;
 

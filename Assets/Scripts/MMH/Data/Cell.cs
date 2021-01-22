@@ -1,4 +1,5 @@
 ﻿using System;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace MMH.Data
@@ -6,7 +7,7 @@ namespace MMH.Data
     [Serializable]
     public struct Cell
     {
-        public Vector2Int Position;
+        public int2 Position;
 
         public bool Solid;
 

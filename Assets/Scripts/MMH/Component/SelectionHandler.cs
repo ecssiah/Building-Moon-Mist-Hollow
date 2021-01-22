@@ -1,4 +1,5 @@
 ﻿using System;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -38,7 +39,7 @@ namespace MMH
             }
             else
             {
-                Vector2Int isoGridPosition = Util.Map.ScreenToIsoGrid(Input.mousePosition);
+                int2 isoGridPosition = Util.Map.ScreenToIsoGrid(new float2(Input.mousePosition.x, Input.mousePosition.y));
 
                 if (Util.Map.OnMap(isoGridPosition))
                 {

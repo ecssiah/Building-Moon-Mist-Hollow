@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.Mathematics;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace MMH.Handler
@@ -6,7 +7,7 @@ namespace MMH.Handler
     public interface IUIEventHandler : IEventSystemHandler
     {
         void SelectEntity(GameObject entityObject);
-        void SelectCell(Vector2Int cellPosition);
+        void SelectCell(int2 cellPosition);
 
         void ClearSelection();
     }

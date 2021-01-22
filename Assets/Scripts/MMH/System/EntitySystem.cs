@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace MMH.System
@@ -42,7 +43,7 @@ namespace MMH.System
         }
 
 
-        private void GenerateColonist(Vector2Int position)
+        private void GenerateColonist(int2 position)
         {
             Type.Group groupType = Util.Misc.RandomEnumValue<Type.Group>();
 
@@ -53,7 +54,7 @@ namespace MMH.System
             {
                 GameObject = colonistGameObject,
                 Speed = 0f,
-                Position = new Vector2Int(position.x, position.y),
+                Position = position,
                 Direction = Type.Direction.S,
             };
 
@@ -72,7 +73,7 @@ namespace MMH.System
         }
 
 
-        private GameObject GenerateColonistObject(Vector2Int position)
+        private GameObject GenerateColonistObject(int2 position)
         {
             Vector2 worldPosition = Util.Map.IsoToWorld(position);
 
@@ -86,7 +87,7 @@ namespace MMH.System
         }
 
 
-        public Data.Path RequestPath(Vector2Int start, Vector2Int end)
+        public Data.Path RequestPath(int2 start, int2 end)
         {
             return pathfindingSystem.FindPath(start, end);
         }

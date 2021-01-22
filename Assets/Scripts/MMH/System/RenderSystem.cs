@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -47,7 +48,7 @@ namespace MMH.System
         }
 
 
-        public void SetTile(Vector2Int position, Type.Ground groundType)
+        public void SetTile(int2 position, Type.Ground groundType)
         {
             tilemaps["Ground"].SetTile(
                 new Vector3Int(position.x, position.y, 0),
@@ -55,7 +56,7 @@ namespace MMH.System
             );
         }
 
-        public void SetTile(Vector2Int position, Type.Structure structureType)
+        public void SetTile(int2 position, Type.Structure structureType)
         {
             tilemaps["Structure"].SetTile(
                 new Vector3Int(position.x, position.y, 3),
@@ -63,7 +64,7 @@ namespace MMH.System
             );
         }
 
-        public void SetTile(Vector2Int position, Type.Overlay overlayType)
+        public void SetTile(int2 position, Type.Overlay overlayType)
         {
             tilemaps["Overlay"].SetTile(
                 new Vector3Int(position.x, position.y, 0),
@@ -72,7 +73,7 @@ namespace MMH.System
         }
 
 
-        public void ClearTile(Vector2Int position, string layer)
+        public void ClearTile(int2 position, string layer)
         {
             tilemaps[layer].SetTile(new Vector3Int(position.x, position.y, 0), null);
         }

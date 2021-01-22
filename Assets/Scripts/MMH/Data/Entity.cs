@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.Mathematics;
+using UnityEngine;
 
 namespace MMH.Data
 {
@@ -6,7 +7,7 @@ namespace MMH.Data
     {
         public GameObject GameObject;
 
-        public Vector2Int Position;
+        public int2 Position;
 
         public float Speed;
         public Type.Direction Direction;
