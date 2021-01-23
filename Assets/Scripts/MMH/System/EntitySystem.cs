@@ -58,6 +58,12 @@ namespace MMH.System
                 Direction = Type.Direction.S,
             };
 
+            colonist.Path = new Data.Path
+            {
+                Progress = 0f,
+                NodePositions = new List<int2>(),
+            };
+
             colonist.Id = new Data.Id
             {
                 FullName = NameGenerator.GetName(groupType),
@@ -87,9 +93,9 @@ namespace MMH.System
         }
 
 
-        public Data.Path RequestPath(int2 start, int2 end)
+        public void RequestPath(int2 start, int2 end)
         {
-            return pathfindingSystem.FindPath(start, end);
+            pathfindingSystem.FindPath(start, end);
         }
 
 
@@ -103,10 +109,7 @@ namespace MMH.System
             {
                 foreach (Colonist colonist in population.Colonists)
                 {
-                    colonist.Path = RequestPath(
-                        colonist.Entity.Position,
-                        mapSystem.GetColonyBase(colonist.Id.GroupType).Position
-                    );
+                    print(colonist.name);
                 }
             }
         }

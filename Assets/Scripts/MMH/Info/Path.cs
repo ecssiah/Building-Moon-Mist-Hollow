@@ -2,7 +2,7 @@
 {
     public struct Path
     {
-        public static readonly int HorizontalWeight = 10;
-        public static readonly int DiagonalWeight = 14;
+        public static readonly int StraightMoveCost = 10;
+        public static readonly int DiagonalMoveCost = 14;
     }
 }
