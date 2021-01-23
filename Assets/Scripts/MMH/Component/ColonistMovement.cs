@@ -32,32 +32,31 @@ namespace MMH
                 float2 isoPosition = new float2 (
                     math.lerp (
                         colonist.Entity.Position.x,
-                        colonist.Path.Nodes[0].Position.x,
+                        colonist.Path.NodePositions[0].x,
                         colonist.Path.Progress
                     ),
                     math.lerp (
                         colonist.Entity.Position.y,
-                        colonist.Path.Nodes[0].Position.y,
+                        colonist.Path.NodePositions[0].y,
                         colonist.Path.Progress
                     )
                 );
 
                 float2 worldPosition = Util.Map.IsoToWorld(isoPosition);
-
                 transform.position = new Vector3(worldPosition.x, worldPosition.y, 0);
             }
             else
             {
-                colonist.Entity.Position = colonist.Path.Nodes[0].Position;
+                colonist.Entity.Position = colonist.Path.NodePositions[0];
 
                 colonist.Path.Progress = 0f;
-                colonist.Path.Nodes.RemoveAt(0);
+                colonist.Path.NodePositions.RemoveAt(0);
 
-                if (colonist.Path.Nodes.Count > 0)
+                if (colonist.Path.Valid)
                 {
                     colonist.Entity.Speed = Info.Entity.DefaultWalkSpeed;
                     colonist.Entity.Direction = Util.Map.CardinalDirection(
-                        colonist.Path.Nodes[0].Position - colonist.Entity.Position
+                        colonist.Path.NodePositions[0] - colonist.Entity.Position
                     );
                 }
                 else
