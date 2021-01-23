@@ -95,7 +95,6 @@ namespace MMH.System
 
         public void RequestPath(int2 start, int2 end)
         {
-            pathfindingSystem.FindPath(start, end);
         }
 
 

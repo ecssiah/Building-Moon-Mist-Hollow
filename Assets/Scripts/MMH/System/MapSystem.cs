@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Unity.Collections;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -370,6 +371,21 @@ namespace MMH.System
         public Data.Cell[] GetCells()
         {
             return mapData.Cells;
+        }
+
+
+        public List<int> GetSolidData()
+        {
+            List<int> solidData = new List<int>(mapData.Cells.Length);
+
+            for (int i = 0; i < mapData.Cells.Length; i++)
+            {
+                Data.Cell cellData = mapData.Cells[i];
+
+                solidData.Add(cellData.Solid ? 1 : 0);
+            }
+
+            return solidData;
         }
 
 
