@@ -13,7 +13,6 @@ namespace MMH.System
 
         private Data.Map mapData;
 
-        private int2 selectedCell;
 
 
         void Awake()
@@ -25,6 +24,8 @@ namespace MMH.System
                 Size = Info.Map.Size,
                 Placeholders = new List<RectInt>(),
                 Cells = new Data.Cell[Info.Map.Width * Info.Map.Width],
+                EdgesValid = false,
+                Edges = new List<int>(),
                 Rooms = new List<Data.Room>(Info.Map.NumberOfSeedRooms),
                 ColonyBases = new Dictionary<Type.Group, Data.ColonyBase>(),
             };
@@ -44,7 +45,7 @@ namespace MMH.System
 
         private void SetupCells()
         {
-            selectedCell = new int2();
+            mapData.SelectedCell = new int2();
 
             for (int x = -Info.Map.Size; x <= Info.Map.Size; x++)
             {
@@ -389,6 +390,103 @@ namespace MMH.System
         }
 
 
+        public List<int> GetEdgeData()
+        {
+            if (!mapData.EdgesValid)
+            {
+                mapData.ClearEdges();
+
+                for (int x = -Info.Map.Size + 2; x <= Info.Map.Size - 2; x++)
+                {
+                    for (int y = -Info.Map.Size + 2; y <= Info.Map.Size - 2; y++)
+                    {
+                        Data.Cell currentCell = GetCell(x, y);
+
+                        if (currentCell.Solid)
+                        {
+                            continue;
+                        }
+
+                        foreach (KeyValuePair<Type.Direction, int2> keyValuePair in Info.Map.Directions)
+                        {
+                            Type.Direction neighborDirection = keyValuePair.Key;
+                            int2 neighborOffset = keyValuePair.Value;
+
+                            int2 neighborPosition = currentCell.Position + neighborOffset;
+
+                            if (Util.Map.OnMap(neighborPosition))
+                            {
+                                Data.Cell neighborCell = GetCell(neighborPosition);
+
+                                if (neighborCell.Solid)
+                                {
+                                    continue;
+                                }
+
+                                if (ValidEdge(neighborCell, neighborDirection))
+                                {
+                                    mapData.Edges[Util.Map.CoordsToIndex(neighborCell.Position)] = 1;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                mapData.EdgesValid = true;
+            }
+
+            return mapData.Edges;
+        }
+
+
+        private bool ValidEdge(Data.Cell neighborCell, Type.Direction neighborDirection)
+        {
+            int2 northPosition = neighborCell.Position + Info.Map.Directions[Type.Direction.NN];
+            int2 eastPosition = neighborCell.Position + Info.Map.Directions[Type.Direction.EE];
+            int2 southPosition = neighborCell.Position + Info.Map.Directions[Type.Direction.SS];
+            int2 westPosition = neighborCell.Position + Info.Map.Directions[Type.Direction.WW];
+
+            bool northSolid = !Util.Map.OnMap(northPosition) || mapData.Cells[Util.Map.CoordsToIndex(northPosition)].Solid;
+            bool eastSolid = !Util.Map.OnMap(eastPosition) || mapData.Cells[Util.Map.CoordsToIndex(eastPosition)].Solid;
+            bool southSolid = !Util.Map.OnMap(southPosition) || mapData.Cells[Util.Map.CoordsToIndex(southPosition)].Solid;
+            bool westSolid = !Util.Map.OnMap(westPosition) || mapData.Cells[Util.Map.CoordsToIndex(westPosition)].Solid;
+
+            if (neighborDirection == Type.Direction.NE)
+            {
+                if (northSolid || eastSolid)
+                {
+                    return false;
+                }
+            }
+
+            if (neighborDirection == Type.Direction.SE)
+            {
+                if (southSolid || eastSolid)
+                {
+                    return false;
+                }
+            }
+
+            if (neighborDirection == Type.Direction.NW)
+            {
+                if (northSolid || westSolid)
+                {
+                    return false;
+                }
+            }
+
+            if (neighborDirection == Type.Direction.SW)
+            {
+                if (southSolid || westSolid)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+
         public Data.Cell GetFreeCell()
         {
             Data.Cell cellData = GetCell(Util.Map.GetRandomMapPosition());
@@ -443,7 +541,7 @@ namespace MMH.System
 
         public void SelectCell(int2 position)
         {
-            selectedCell = position;
+            mapData.SelectedCell = position;
 
             renderSystem.SetTile(position, Type.Overlay.Selection);
         }
@@ -451,7 +549,7 @@ namespace MMH.System
 
         public void ClearSelection()
         {
-            renderSystem.ClearTile(selectedCell, "Overlay");
+            renderSystem.ClearTile(mapData.SelectedCell, "Overlay");
         }
 
 

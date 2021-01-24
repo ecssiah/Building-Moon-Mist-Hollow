@@ -55,7 +55,7 @@ namespace MMH.System
                 GameObject = colonistGameObject,
                 Speed = 0f,
                 Position = position,
-                Direction = Type.Direction.S,
+                Direction = Type.Direction.SS,
             };
 
             colonist.Path = new Data.Path

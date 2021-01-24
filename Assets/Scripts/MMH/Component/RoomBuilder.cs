@@ -54,7 +54,7 @@ namespace MMH
             Data.Room expandedRoom = room;
 
             List<Type.Direction> directions = new List<Type.Direction> {
-                Type.Direction.S, Type.Direction.N, Type.Direction.W, Type.Direction.E
+                Type.Direction.SS, Type.Direction.NN, Type.Direction.WW, Type.Direction.EE
             };
 
             while (!expanded && directions.Count > 0)
@@ -67,16 +67,16 @@ namespace MMH
 
                 switch (direction)
                 {
-                    case Type.Direction.S:
+                    case Type.Direction.SS:
                         expandedRoom.Bounds.xMin -= 1;
                         break;
-                    case Type.Direction.W:
+                    case Type.Direction.WW:
                         expandedRoom.Bounds.xMax += 1;
                         break;
-                    case Type.Direction.N:
+                    case Type.Direction.NN:
                         expandedRoom.Bounds.yMin -= 1;
                         break;
-                    case Type.Direction.E:
+                    case Type.Direction.EE:
                         expandedRoom.Bounds.yMax += 1;
                         break;
                 }

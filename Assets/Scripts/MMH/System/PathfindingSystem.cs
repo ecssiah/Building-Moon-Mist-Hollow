@@ -21,12 +21,8 @@ namespace MMH.System
         {
             List<int> solidDataList = mapSystem.GetSolidData();
 
-            NativeArray<int> solidData = new NativeArray<int>(solidDataList.Count, Allocator.Persistent);
-
-            for (int i = 0; i < solidData.Length; i++)
-            {
-                solidData[i] = solidDataList[i];
-            }
+            NativeArray<int> solidData = solidDataList.ToNativeArray(Allocator.TempJob);
+            NativeArray<int> adjacencyData = new NativeArray<int>(solidDataList.Count, Allocator.TempJob);
 
             FindPathJob findPathJob = new FindPathJob
             {
@@ -38,6 +34,7 @@ namespace MMH.System
             findPathJob.Run();
 
             solidData.Dispose();
+            adjacencyData.Dispose();
         }
 
 
@@ -129,7 +126,7 @@ namespace MMH.System
 
                         Data.Node neighborNode = nativeNodeArray[Util.Map.CoordsToIndex(neighborPosition)];
 
-                        if (neighborNode.Solid || closedList.Contains(neighborNode.Index))
+                        if (closedList.Contains(neighborNode.Index))
                         {
                             continue;
                         }
@@ -179,6 +176,9 @@ namespace MMH.System
             }
 
 
+            
+
+
             private NativeList<int2> CalculatePath(NativeArray<Data.Node> nativeNodeArray, Data.Node endNode)
             {
                 if (endNode.PreviousIndex == -1)
@@ -221,12 +221,18 @@ namespace MMH.System
 
             public int CalcuateGCost(Data.Node startNode, Data.Node endNode)
             {
+                int additionalGCost = IsMovingStraight(startNode, endNode) ? Info.Path.StraightMoveCost : Info.Path.DiagonalMoveCost;
+
+                return startNode.GCost + additionalGCost;
+            }
+
+
+            private bool IsMovingStraight(Data.Node startNode, Data.Node endNode)
+            {
                 bool xConstant = startNode.Position.x == endNode.Position.x;
                 bool yConstant = startNode.Position.y == endNode.Position.y;
 
-                bool movingStraight = xConstant || yConstant;
-
-                return startNode.GCost + (movingStraight ? Info.Path.StraightMoveCost : Info.Path.DiagonalMoveCost);
+                return xConstant || yConstant;
             }
 
 

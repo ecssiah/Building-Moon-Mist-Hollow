@@ -2,13 +2,13 @@
 {
     public enum Direction
     {
-        E,
+        EE,
         NE,
-        N,
+        NN,
         NW,
-        W,
+        WW,
         SW,
-        S,
+        SS,
         SE,
     }
 }
