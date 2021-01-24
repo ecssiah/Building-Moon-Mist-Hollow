@@ -7,24 +7,26 @@ namespace MMH.Data
 {
     public struct Map
     {
-        public Cell[] Cells;
+        public List<Cell> Cells;
         public List<int> Edges;
-
-        public int2 SelectedCell;
 
         public bool EdgesValid;
 
+        public int2 SelectedCell;
+
         public int Size;
-        public int Width { get => 2 * Size + 1; }
+        public int Width;
 
         public List<Room> Rooms;
         public List<RectInt> Placeholders;
+
         public Dictionary<Type.Group, ColonyBase> ColonyBases;
 
 
-        public void ClearEdges()
+        public void ResetEdges()
         {
-            Edges = Enumerable.Repeat(0, Edges.Count).ToList();
+            EdgesValid = false;
+            Edges = Enumerable.Repeat(0, Cells.Count * Cells.Count).ToList();
         }
     }
 }

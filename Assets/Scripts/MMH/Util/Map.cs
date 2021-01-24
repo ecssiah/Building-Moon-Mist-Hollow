@@ -8,13 +8,19 @@ namespace MMH.Util
     {
         public static int CoordsToIndex(int2 position)
         {
-            return CoordsToIndex(position.x, position.y);
+            return PositionToIndex(position.x, position.y);
         }
 
 
-        public static int CoordsToIndex(int x, int y)
+        public static int PositionToIndex(int x, int y)
         {
             return x + Info.Map.Size + Info.Map.Width * (y + Info.Map.Size);
+        }
+
+
+        public static int EdgeToIndex(Data.Node node1, Data.Node node2)
+        {
+            return node1.Index + Info.Map.Area * node2.Index;
         }
 
 
@@ -69,11 +75,11 @@ namespace MMH.Util
         public static float2 IsoToWorld(float2 isoVector)
         {
             float2x2 isoTransform = new float2x2(
-                2, -2,
-                1,  1
+                0.50f, -0.50f,
+                0.25f,  0.25f
             );
 
-            return (1 / 4f) * math.mul(isoTransform, isoVector);
+            return math.mul(isoTransform, isoVector);
         }
 
 

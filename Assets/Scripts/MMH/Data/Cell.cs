@@ -1,12 +1,12 @@
 ﻿using System;
 using Unity.Mathematics;
-using UnityEngine;
 
 namespace MMH.Data
 {
     [Serializable]
     public struct Cell
     {
+        public int Index;
         public int2 Position;
 
         public bool Solid;

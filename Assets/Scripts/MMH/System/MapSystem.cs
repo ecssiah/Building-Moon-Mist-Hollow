@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Unity.Collections;
 using Unity.Mathematics;
 using UnityEngine;
@@ -22,8 +23,9 @@ namespace MMH.System
             mapData = new Data.Map
             {
                 Size = Info.Map.Size,
+                Width = Info.Map.Width,
                 Placeholders = new List<RectInt>(),
-                Cells = new Data.Cell[Info.Map.Width * Info.Map.Width],
+                Cells = Enumerable.Repeat(new Data.Cell(), Info.Map.Area).ToList(),
                 EdgesValid = false,
                 Edges = new List<int>(),
                 Rooms = new List<Data.Room>(Info.Map.NumberOfSeedRooms),
@@ -47,15 +49,13 @@ namespace MMH.System
         {
             mapData.SelectedCell = new int2();
 
-            for (int x = -Info.Map.Size; x <= Info.Map.Size; x++)
+            for (int i = 0; i < Info.Map.Area; i++)
             {
-                for (int y = -Info.Map.Size; y <= Info.Map.Size; y++)
-                {
-                    Data.Cell cellData = GetCell(x, y);
-                    cellData.Position = new int2(x, y);
+                Data.Cell cellData = mapData.Cells[i];
+                cellData.Index = i;
+                cellData.Position = Util.Map.IndexToCoords(i);
 
-                    SetCell(x, y, cellData);
-                }
+                mapData.Cells[i] = cellData;
             }
         }
 
@@ -359,7 +359,7 @@ namespace MMH.System
 
         public Data.Cell GetCell(int x, int y)
         {
-            return mapData.Cells[Util.Map.CoordsToIndex(x, y)];
+            return mapData.Cells[Util.Map.PositionToIndex(x, y)];
         }
 
 
@@ -369,7 +369,7 @@ namespace MMH.System
         }
 
 
-        public Data.Cell[] GetCells()
+        public List<Data.Cell> GetCells()
         {
             return mapData.Cells;
         }
@@ -377,9 +377,9 @@ namespace MMH.System
 
         public List<int> GetSolidData()
         {
-            List<int> solidData = new List<int>(mapData.Cells.Length);
+            List<int> solidData = new List<int>(mapData.Cells.Count);
 
-            for (int i = 0; i < mapData.Cells.Length; i++)
+            for (int i = 0; i < mapData.Cells.Count; i++)
             {
                 Data.Cell cellData = mapData.Cells[i];
 
@@ -394,7 +394,7 @@ namespace MMH.System
         {
             if (!mapData.EdgesValid)
             {
-                mapData.ClearEdges();
+                mapData.ResetEdges();
 
                 for (int x = -Info.Map.Size + 2; x <= Info.Map.Size - 2; x++)
                 {
@@ -425,7 +425,11 @@ namespace MMH.System
 
                                 if (ValidEdge(neighborCell, neighborDirection))
                                 {
-                                    mapData.Edges[Util.Map.CoordsToIndex(neighborCell.Position)] = 1;
+                                    int currentCellIndex = Util.Map.CoordsToIndex(currentCell.Position);
+                                    int neighborCellIndex = Util.Map.CoordsToIndex(neighborCell.Position);
+
+                                    mapData.Edges[currentCellIndex + Info.Map.Area * neighborCellIndex] = 1;
+                                    mapData.Edges[neighborCellIndex + Info.Map.Area * currentCellIndex] = 1;
                                 }
                             }
                         }
@@ -512,7 +516,7 @@ namespace MMH.System
 
         public void SetCell(int x, int y, Data.Cell cellData)
         {
-            mapData.Cells[Util.Map.CoordsToIndex(x, y)] = cellData;
+            mapData.Cells[Util.Map.PositionToIndex(x, y)] = cellData;
         }
 
 

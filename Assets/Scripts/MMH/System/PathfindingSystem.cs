@@ -20,21 +20,23 @@ namespace MMH.System
         private void Start()
         {
             List<int> solidDataList = mapSystem.GetSolidData();
+            List<int> edgeDataList = mapSystem.GetEdgeData();
 
             NativeArray<int> solidData = solidDataList.ToNativeArray(Allocator.TempJob);
-            NativeArray<int> adjacencyData = new NativeArray<int>(solidDataList.Count, Allocator.TempJob);
+            NativeArray<int> edgeData = edgeDataList.ToNativeArray(Allocator.TempJob);
 
             FindPathJob findPathJob = new FindPathJob
             {
                 startPosition = new int2(0, 0),
                 endPosition = new int2(8, 8),
                 solidData = solidData,
+                edgeData = edgeData,
             };
 
             findPathJob.Run();
 
             solidData.Dispose();
-            adjacencyData.Dispose();
+            edgeData.Dispose();
         }
 
 
@@ -44,6 +46,7 @@ namespace MMH.System
             public int2 endPosition;
 
             public NativeArray<int> solidData;
+            public NativeArray<int> edgeData;
 
             public void Execute()
             {
@@ -53,12 +56,14 @@ namespace MMH.System
                 {
                     for (int y = -Info.Map.Size; y <= Info.Map.Size; y++)
                     {
+                        int cellIndex = Util.Map.PositionToIndex(x, y);
+
                         Data.Node node = new Data.Node
                         {
                             Position = new int2(x, y),
-                            Solid = solidData[Util.Map.CoordsToIndex(x, y)] == 1,
+                            Solid = solidData[cellIndex] == 1,
 
-                            Index = Util.Map.CoordsToIndex(x, y),
+                            Index = cellIndex,
                             PreviousIndex = -1,
 
                             GCost = int.MaxValue,
@@ -83,16 +88,6 @@ namespace MMH.System
 
                 openList.Add(startNode.Index);
 
-                NativeArray<int2> neighborOffsets = new NativeArray<int2>(8, Allocator.Temp);
-                neighborOffsets[0] = new int2(+1, +0);
-                neighborOffsets[1] = new int2(+1, +1);
-                neighborOffsets[2] = new int2(+0, +1);
-                neighborOffsets[3] = new int2(-1, +1);
-                neighborOffsets[4] = new int2(-1, +0);
-                neighborOffsets[5] = new int2(-1, -1);
-                neighborOffsets[6] = new int2(+0, -1);
-                neighborOffsets[7] = new int2(+1, -1);
-
                 while (openList.Length > 0)
                 {
                     int currentIndex = GetIndexOfMinCostNode(openList, nativeNodeArray);
@@ -114,9 +109,11 @@ namespace MMH.System
 
                     closedList.Add(currentIndex);
 
-                    for (int i = 0; i < neighborOffsets.Length; i++)
+                    foreach (KeyValuePair<Type.Direction, int2> keyValuePair in Info.Map.Directions)
                     {
-                        int2 neighborOffset = neighborOffsets[i];
+                        _ = keyValuePair.Key;
+                        int2 neighborOffset = keyValuePair.Value;
+
                         int2 neighborPosition = currentNode.Position + neighborOffset;
 
                         if (!Util.Map.OnMap(neighborPosition))
@@ -126,18 +123,23 @@ namespace MMH.System
 
                         Data.Node neighborNode = nativeNodeArray[Util.Map.CoordsToIndex(neighborPosition)];
 
+                        if (edgeData[Util.Map.EdgeToIndex(currentNode, neighborNode)] == 0)
+                        {
+                            continue;
+                        }
+
                         if (closedList.Contains(neighborNode.Index))
                         {
                             continue;
                         }
 
-                        int tentativeGCost = currentNode.GCost + CalculateHCost(currentNode, neighborNode);
+                        int testNeighborGCost = currentNode.GCost + CalculateHCost(currentNode, neighborNode);
 
-                        if (tentativeGCost < neighborNode.GCost)
+                        if (testNeighborGCost < neighborNode.GCost)
                         {
                             neighborNode.PreviousIndex = currentNode.Index;
 
-                            neighborNode.GCost = tentativeGCost;
+                            neighborNode.GCost = testNeighborGCost;
                             neighborNode.HCost = CalculateHCost(neighborPosition, endPosition);
                             neighborNode.FCost = neighborNode.GCost + neighborNode.HCost;
 
@@ -148,11 +150,12 @@ namespace MMH.System
                                 openList.Add(neighborNode.Index);
                             }
                         }
-
                     }
                 }
 
+
                 Data.Node endNode = nativeNodeArray[endNodeIndex];
+
 
                 if (endNode.PreviousIndex == -1)
                 {
@@ -172,7 +175,6 @@ namespace MMH.System
                 nativeNodeArray.Dispose();
                 openList.Dispose();
                 closedList.Dispose();
-                neighborOffsets.Dispose();
             }
 
 

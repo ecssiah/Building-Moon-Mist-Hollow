@@ -8,6 +8,7 @@ namespace MMH.Info
     {
         public static readonly int Size = 32;
         public static readonly int Width = 2 * Size + 1;
+        public static readonly int Area = Width * Width;
 
         public static readonly bool ShowCollision = false;
 
