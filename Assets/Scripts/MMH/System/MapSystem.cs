@@ -12,31 +12,41 @@ namespace MMH.System
     {
         private RenderSystem renderSystem;
 
-        private Data.Map mapData;
+        private int size;
+        private int width;
 
+        private bool edgesValid;
 
+        private int2 selectedCell;
+
+        private List<Data.Cell> cells;
+        private List<int> edges;
+        private List<Data.Room> rooms;
+        private List<RectInt> placeholders;
+
+        private Dictionary<Type.Group, Data.ColonyBase> colonyBases = new Dictionary<Type.Group, Data.ColonyBase>();
 
         void Awake()
         {
             renderSystem = GameObject.Find("RenderSystem").GetComponent<RenderSystem>();
 
-            mapData = new Data.Map
-            {
-                Size = Info.Map.Size,
-                Width = Info.Map.Width,
-                Placeholders = new List<RectInt>(),
-                Cells = Enumerable.Repeat(new Data.Cell(), Info.Map.Area).ToList(),
-                EdgesValid = false,
-                Edges = new List<int>(),
-                Rooms = new List<Data.Room>(Info.Map.NumberOfSeedRooms),
-                ColonyBases = new Dictionary<Type.Group, Data.ColonyBase>(),
-            };
+            size = Info.Map.Size;
+            width = Info.Map.Width;
+
+            edgesValid = false;
+
+            selectedCell = new int2();
+
+            cells = Enumerable.Repeat(new Data.Cell(), Info.Map.Area).ToList();
+            edges = new List<int>(Info.Map.Area * Info.Map.Area);
+            rooms = new List<Data.Room>(Info.Map.NumberOfSeedRooms);
+            placeholders = new List<RectInt>();
 
             SetupCells();
             SetupBase();
             SetupPaths();
 
-            RoomBuilder.LayoutRooms(mapData);
+            RoomBuilder.LayoutRooms(rooms, placeholders);
 
             SetupRooms();
             SetupColonyBases();
@@ -47,15 +57,15 @@ namespace MMH.System
 
         private void SetupCells()
         {
-            mapData.SelectedCell = new int2();
+            selectedCell = new int2();
 
             for (int i = 0; i < Info.Map.Area; i++)
             {
-                Data.Cell cellData = mapData.Cells[i];
+                Data.Cell cellData = cells[i];
                 cellData.Index = i;
                 cellData.Position = Util.Map.IndexToCoords(i);
 
-                mapData.Cells[i] = cellData;
+                cells[i] = cellData;
             }
         }
 
@@ -250,7 +260,7 @@ namespace MMH.System
 
         private void SetupRooms()
         {
-            foreach (Data.Room room in mapData.Rooms)
+            foreach (Data.Room room in rooms)
             {
                 SetupRoom(room);
             }
@@ -301,11 +311,11 @@ namespace MMH.System
                 Position = GetFreeCell().Position,
             };
 
-            mapData.ColonyBases[Type.Group.Guy] = guyColonyBase;
-            mapData.ColonyBases[Type.Group.Kailt] = kailtColonyBase;
-            mapData.ColonyBases[Type.Group.Taylor] = taylorColonyBase;
+            colonyBases[Type.Group.Guy] = guyColonyBase;
+            colonyBases[Type.Group.Kailt] = kailtColonyBase;
+            colonyBases[Type.Group.Taylor] = taylorColonyBase;
 
-            foreach (KeyValuePair<Type.Group, Data.ColonyBase> keyValue in mapData.ColonyBases)
+            foreach (KeyValuePair<Type.Group, Data.ColonyBase> keyValue in colonyBases)
             {
                 Data.ColonyBase colonyBaseData = keyValue.Value;
 
@@ -334,7 +344,7 @@ namespace MMH.System
 
         public void ConstructMap()
         {
-            foreach (Data.Cell cell in mapData.Cells)
+            foreach (Data.Cell cell in cells)
             {
                 if (cell.GroundType != Type.Ground.None)
                 {
@@ -359,7 +369,7 @@ namespace MMH.System
 
         public Data.Cell GetCell(int x, int y)
         {
-            return mapData.Cells[Util.Map.PositionToIndex(x, y)];
+            return cells[Util.Map.PositionToIndex(x, y)];
         }
 
 
@@ -371,17 +381,17 @@ namespace MMH.System
 
         public List<Data.Cell> GetCells()
         {
-            return mapData.Cells;
+            return cells;
         }
 
 
         public List<int> GetSolidData()
         {
-            List<int> solidData = new List<int>(mapData.Cells.Count);
+            List<int> solidData = new List<int>(cells.Count);
 
-            for (int i = 0; i < mapData.Cells.Count; i++)
+            for (int i = 0; i < cells.Count; i++)
             {
-                Data.Cell cellData = mapData.Cells[i];
+                Data.Cell cellData = cells[i];
 
                 solidData.Add(cellData.Solid ? 1 : 0);
             }
@@ -392,9 +402,9 @@ namespace MMH.System
 
         public List<int> GetEdgeData()
         {
-            if (!mapData.EdgesValid)
+            if (!edgesValid)
             {
-                mapData.ResetEdges();
+                ResetEdges();
 
                 for (int x = -Info.Map.Size + 2; x <= Info.Map.Size - 2; x++)
                 {
@@ -428,18 +438,18 @@ namespace MMH.System
                                     int currentCellIndex = Util.Map.CoordsToIndex(currentCell.Position);
                                     int neighborCellIndex = Util.Map.CoordsToIndex(neighborCell.Position);
 
-                                    mapData.Edges[currentCellIndex + Info.Map.Area * neighborCellIndex] = 1;
-                                    mapData.Edges[neighborCellIndex + Info.Map.Area * currentCellIndex] = 1;
+                                    edges[currentCellIndex + Info.Map.Area * neighborCellIndex] = 1;
+                                    edges[neighborCellIndex + Info.Map.Area * currentCellIndex] = 1;
                                 }
                             }
                         }
                     }
                 }
 
-                mapData.EdgesValid = true;
+                edgesValid = true;
             }
 
-            return mapData.Edges;
+            return edges;
         }
 
 
@@ -450,10 +460,10 @@ namespace MMH.System
             int2 southPosition = neighborCell.Position + Info.Map.Directions[Type.Direction.SS];
             int2 westPosition = neighborCell.Position + Info.Map.Directions[Type.Direction.WW];
 
-            bool northSolid = !Util.Map.OnMap(northPosition) || mapData.Cells[Util.Map.CoordsToIndex(northPosition)].Solid;
-            bool eastSolid = !Util.Map.OnMap(eastPosition) || mapData.Cells[Util.Map.CoordsToIndex(eastPosition)].Solid;
-            bool southSolid = !Util.Map.OnMap(southPosition) || mapData.Cells[Util.Map.CoordsToIndex(southPosition)].Solid;
-            bool westSolid = !Util.Map.OnMap(westPosition) || mapData.Cells[Util.Map.CoordsToIndex(westPosition)].Solid;
+            bool northSolid = !Util.Map.OnMap(northPosition) || cells[Util.Map.CoordsToIndex(northPosition)].Solid;
+            bool eastSolid = !Util.Map.OnMap(eastPosition) || cells[Util.Map.CoordsToIndex(eastPosition)].Solid;
+            bool southSolid = !Util.Map.OnMap(southPosition) || cells[Util.Map.CoordsToIndex(southPosition)].Solid;
+            bool westSolid = !Util.Map.OnMap(westPosition) || cells[Util.Map.CoordsToIndex(westPosition)].Solid;
 
             if (neighborDirection == Type.Direction.NE)
             {
@@ -506,7 +516,7 @@ namespace MMH.System
 
         public Data.ColonyBase GetColonyBase(Type.Group groupType)
         {
-            return mapData.ColonyBases[groupType];
+            return colonyBases[groupType];
         }
 
 
@@ -516,7 +526,7 @@ namespace MMH.System
 
         public void SetCell(int x, int y, Data.Cell cellData)
         {
-            mapData.Cells[Util.Map.PositionToIndex(x, y)] = cellData;
+            cells[Util.Map.PositionToIndex(x, y)] = cellData;
         }
 
 
@@ -536,7 +546,14 @@ namespace MMH.System
                 height = bounds.height + 1,
             };
 
-            mapData.Placeholders.Add(nonOverlappingBounds);
+            placeholders.Add(nonOverlappingBounds);
+        }
+
+
+        public void ResetEdges()
+        {
+            edgesValid = false;
+            edges = Enumerable.Repeat(0, cells.Count * cells.Count).ToList();
         }
 
 
@@ -545,7 +562,7 @@ namespace MMH.System
 
         public void SelectCell(int2 position)
         {
-            mapData.SelectedCell = position;
+            selectedCell = position;
 
             renderSystem.SetTile(position, Type.Overlay.Selection);
         }
@@ -553,7 +570,7 @@ namespace MMH.System
 
         public void ClearSelection()
         {
-            renderSystem.ClearTile(mapData.SelectedCell, "Overlay");
+            renderSystem.ClearTile(selectedCell, "Overlay");
         }
 
 
@@ -562,23 +579,23 @@ namespace MMH.System
 
         public void SaveMapData(string name)
         {
-            using (StreamWriter file = File.CreateText($"Assets/Resources/Data/{name}.json"))
-            {
-                string jsonCellsText = JsonUtility.ToJson(mapData, true);
+            //using (StreamWriter file = File.CreateText($"Assets/Resources/Data/{name}.json"))
+            //{
+            //    string jsonCellsText = JsonUtility.ToJson(mapData, true);
 
-                file.Write(jsonCellsText);
-            }
+            //    file.Write(jsonCellsText);
+            //}
         }
 
 
         public void LoadMapData(string name)
         {
-            using (StreamReader reader = new StreamReader($"Assets/Resources/Data/{name}.json"))
-            {
-                string jsonText = reader.ReadToEnd();
+            //using (StreamReader reader = new StreamReader($"Assets/Resources/Data/{name}.json"))
+            //{
+            //    string jsonText = reader.ReadToEnd();
 
-                mapData = JsonUtility.FromJson<Data.Map>(jsonText);
-            }
+            //    mapData = JsonUtility.FromJson<Data.Map>(jsonText);
+            //}
         }
     }
 }

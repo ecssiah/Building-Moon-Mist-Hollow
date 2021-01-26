@@ -8,19 +8,19 @@ namespace MMH
 {
     public static class RoomBuilder
     {
-        public static void LayoutRooms(Data.Map mapData)
+        public static void LayoutRooms(List<Data.Room> rooms, List<RectInt> placeholders)
         {
-            SeedRooms(mapData);
-            ExpandRooms(mapData);
-            GenerateEntrances(mapData);
+            SeedRooms(rooms, placeholders);
+            ExpandRooms(rooms, placeholders);
+            GenerateEntrances(rooms);
         }
 
 
-        private static void SeedRooms(Data.Map mapData)
+        private static void SeedRooms(List<Data.Room> rooms, List<RectInt> placeholders)
         {
             for (int i = 0; i < Info.Map.NumberOfSeedRooms; i++)
             {
-                RectInt bounds = GetNewRoomLocation(mapData);
+                RectInt bounds = GetNewRoomLocation(rooms, placeholders);
 
                 if (bounds.width == 0 && bounds.height == 0) continue;
 
@@ -31,24 +31,24 @@ namespace MMH
                     StructureType = Type.Structure.Stone_Wall,
                 };
 
-                mapData.Rooms.Add(room);
+                rooms.Add(room);
             }
         }
 
 
-        private static void ExpandRooms(Data.Map mapData)
+        private static void ExpandRooms(List<Data.Room> rooms, List<RectInt> placeholders)
         {
             for (int expansionAttempt = 0; expansionAttempt < Info.Map.MaximumExpansionAttempts; expansionAttempt++)
             {
-                for (int roomNumber = 0; roomNumber < mapData.Rooms.Count; roomNumber++)
+                for (int roomNumber = 0; roomNumber < rooms.Count; roomNumber++)
                 {
-                    mapData.Rooms[roomNumber] = ExpandRoom(mapData, mapData.Rooms[roomNumber]);
+                    rooms[roomNumber] = ExpandRoom(rooms[roomNumber], rooms, placeholders);
                 }
             }
         }
 
 
-        private static Data.Room ExpandRoom(Data.Map mapData, Data.Room room)
+        private static Data.Room ExpandRoom(Data.Room room, List<Data.Room> rooms, List<RectInt> placeholders)
         {
             bool expanded = false;
             Data.Room expandedRoom = room;
@@ -89,7 +89,7 @@ namespace MMH
                 }
                 else
                 {
-                    foreach (Data.Room testRoom in mapData.Rooms)
+                    foreach (Data.Room testRoom in rooms)
                     {
                         if (testRoom.Equals(room)) continue;
 
@@ -99,7 +99,7 @@ namespace MMH
                         }
                     }
 
-                    foreach (RectInt bounds in mapData.Placeholders)
+                    foreach (RectInt bounds in placeholders)
                     {
                         if (bounds.Overlaps(expandedRoom.Bounds))
                         {
@@ -118,14 +118,14 @@ namespace MMH
         }
 
 
-        private static void GenerateEntrances(Data.Map mapData)
+        private static void GenerateEntrances(List<Data.Room> rooms)
         {
-            for (int i = 0; i < mapData.Rooms.Count; i++)
+            for (int i = 0; i < rooms.Count; i++)
             {
-                Data.Room room = mapData.Rooms[i];
-                room.Entrances = GenerateRoomEntrances(mapData.Rooms[i].Bounds);
+                Data.Room room = rooms[i];
+                room.Entrances = GenerateRoomEntrances(rooms[i].Bounds);
 
-                mapData.Rooms[i] = room;
+                rooms[i] = room;
             }
         }
 
@@ -170,7 +170,7 @@ namespace MMH
         }
 
 
-        private static RectInt GetNewRoomLocation(Data.Map mapData)
+        private static RectInt GetNewRoomLocation(List<Data.Room> rooms, List<RectInt> placeholders)
         {
             for (int i = 0; i < 10; i++)
             {
@@ -189,7 +189,7 @@ namespace MMH
                 }
                 else
                 {
-                    foreach (Data.Room room in mapData.Rooms)
+                    foreach (Data.Room room in rooms)
                     {
                         if (roomBounds.Overlaps(room.Bounds))
                         {
@@ -197,7 +197,7 @@ namespace MMH
                         }
                     }
 
-                    foreach (RectInt placeholder in mapData.Placeholders)
+                    foreach (RectInt placeholder in placeholders)
                     {
                         if (roomBounds.Overlaps(placeholder))
                         {

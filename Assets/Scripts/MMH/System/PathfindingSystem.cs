@@ -22,35 +22,24 @@ namespace MMH.System
             List<int> solidDataList = mapSystem.GetSolidData();
             List<int> edgeDataList = mapSystem.GetEdgeData();
 
-            NativeArray<int> solidData = solidDataList.ToNativeArray(Allocator.TempJob);
-            NativeArray<int> edgeData = edgeDataList.ToNativeArray(Allocator.TempJob);
-
             FindPathJob findPathJob = new FindPathJob
             {
-                startPosition = new int2(0, 0),
-                endPosition = new int2(8, 8),
-                solidData = solidData,
-                edgeData = edgeData,
+                StartPosition = new int2(0, 0),
+                EndPosition = new int2(8, 8),
             };
 
             findPathJob.Run();
-
-            solidData.Dispose();
-            edgeData.Dispose();
         }
 
 
         private struct FindPathJob : IJob
         {
-            public int2 startPosition;
-            public int2 endPosition;
-
-            public NativeArray<int> solidData;
-            public NativeArray<int> edgeData;
+            public int2 StartPosition;
+            public int2 EndPosition;
 
             public void Execute()
             {
-                NativeArray<Data.Node> nativeNodeArray = new NativeArray<Data.Node>(solidData.Length, Allocator.Temp);
+                NativeArray<Data.Node> nativeNodeArray = new NativeArray<Data.Node>(Info.Map.Area, Allocator.Temp);
 
                 for (int x = -Info.Map.Size; x <= Info.Map.Size; x++)
                 {
@@ -61,7 +50,7 @@ namespace MMH.System
                         Data.Node node = new Data.Node
                         {
                             Position = new int2(x, y),
-                            Solid = solidData[cellIndex] == 1,
+                            Solid = false,
 
                             Index = cellIndex,
                             PreviousIndex = -1,
@@ -75,13 +64,13 @@ namespace MMH.System
                     }
                 }
 
-                Data.Node startNode = nativeNodeArray[Util.Map.CoordsToIndex(startPosition)];
+                Data.Node startNode = nativeNodeArray[Util.Map.CoordsToIndex(StartPosition)];
                 startNode.GCost = 0;
                 startNode.FCost = startNode.GCost + startNode.HCost;
 
                 nativeNodeArray[startNode.Index] = startNode;
 
-                int endNodeIndex = Util.Map.CoordsToIndex(endPosition);
+                int endNodeIndex = Util.Map.CoordsToIndex(EndPosition);
 
                 NativeList<int> openList = new NativeList<int>(Allocator.Temp);
                 NativeList<int> closedList = new NativeList<int>(Allocator.Temp);
@@ -123,24 +112,24 @@ namespace MMH.System
 
                         Data.Node neighborNode = nativeNodeArray[Util.Map.CoordsToIndex(neighborPosition)];
 
-                        if (edgeData[Util.Map.EdgeToIndex(currentNode, neighborNode)] == 0)
-                        {
-                            continue;
-                        }
-
                         if (closedList.Contains(neighborNode.Index))
                         {
                             continue;
                         }
 
-                        int testNeighborGCost = currentNode.GCost + CalculateHCost(currentNode, neighborNode);
+                        if (neighborNode.Solid)
+                        {
+                            continue;
+                        }
+
+                        int testNeighborGCost = currentNode.GCost + CalculateDistanceCost(currentNode.Position, neighborPosition);
 
                         if (testNeighborGCost < neighborNode.GCost)
                         {
                             neighborNode.PreviousIndex = currentNode.Index;
 
                             neighborNode.GCost = testNeighborGCost;
-                            neighborNode.HCost = CalculateHCost(neighborPosition, endPosition);
+                            neighborNode.HCost = CalculateHCost(neighborPosition, EndPosition);
                             neighborNode.FCost = neighborNode.GCost + neighborNode.HCost;
 
                             nativeNodeArray[neighborNode.Index] = neighborNode;
@@ -176,9 +165,6 @@ namespace MMH.System
                 openList.Dispose();
                 closedList.Dispose();
             }
-
-
-            
 
 
             private NativeList<int2> CalculatePath(NativeArray<Data.Node> nativeNodeArray, Data.Node endNode)
@@ -221,20 +207,20 @@ namespace MMH.System
             }
 
 
-            public int CalcuateGCost(Data.Node startNode, Data.Node endNode)
-            {
-                int additionalGCost = IsMovingStraight(startNode, endNode) ? Info.Path.StraightMoveCost : Info.Path.DiagonalMoveCost;
-
-                return startNode.GCost + additionalGCost;
-            }
-
-
             private bool IsMovingStraight(Data.Node startNode, Data.Node endNode)
             {
                 bool xConstant = startNode.Position.x == endNode.Position.x;
                 bool yConstant = startNode.Position.y == endNode.Position.y;
 
                 return xConstant || yConstant;
+            }
+
+
+            public int CalcuateGCost(Data.Node startNode, Data.Node endNode)
+            {
+                int additionalGCost = IsMovingStraight(startNode, endNode) ? Info.Path.StraightMoveCost : Info.Path.DiagonalMoveCost;
+
+                return startNode.GCost + additionalGCost;
             }
 
 
