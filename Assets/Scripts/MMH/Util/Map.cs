@@ -6,7 +6,7 @@ namespace MMH.Util
 {
     public struct Map
     {
-        public static int CoordsToIndex(int2 position)
+        public static int PositionToIndex(int2 position)
         {
             return PositionToIndex(position.x, position.y);
         }
@@ -24,7 +24,7 @@ namespace MMH.Util
         }
 
 
-        public static int2 IndexToCoords(int i)
+        public static int2 IndexToPosition(int i)
         {
             return new int2(
                 (i % Info.Map.Width) - Info.Map.Size,

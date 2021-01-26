@@ -10,10 +10,25 @@ namespace MMH.System
 {
     public class MapSystem : MonoBehaviour
     {
+        public static readonly Dictionary<Type.Direction, int2> Directions = new Dictionary<Type.Direction, int2>
+        {
+            [Type.Direction.EE] = new int2(+1, +0),
+            [Type.Direction.NE] = new int2(+1, +1),
+            [Type.Direction.NN] = new int2(+0, +1),
+            [Type.Direction.NW] = new int2(-1, +1),
+            [Type.Direction.WW] = new int2(-1, +0),
+            [Type.Direction.SW] = new int2(-1, -1),
+            [Type.Direction.SS] = new int2(+0, -1),
+            [Type.Direction.SE] = new int2(+1, -1),
+        };
+
         private RenderSystem renderSystem;
 
         private int size;
+        public int Size => size;
+
         private int width;
+        public int Width => width;
 
         private bool edgesValid;
 
@@ -63,7 +78,7 @@ namespace MMH.System
             {
                 Data.Cell cellData = cells[i];
                 cellData.Index = i;
-                cellData.Position = Util.Map.IndexToCoords(i);
+                cellData.Position = Util.Map.IndexToPosition(i);
 
                 cells[i] = cellData;
             }
@@ -373,6 +388,13 @@ namespace MMH.System
         }
 
 
+        public Data.Cell GetCell(int index)
+        {
+
+            return cells[index];
+        }
+
+
         public Data.Cell GetCell(int2 position)
         {
             return GetCell(position.x, position.y);
@@ -385,15 +407,15 @@ namespace MMH.System
         }
 
 
-        public List<int> GetSolidData()
+        public List<bool> GetSolidData()
         {
-            List<int> solidData = new List<int>(cells.Count);
+            List<bool> solidData = new List<bool>(cells.Count);
 
             for (int i = 0; i < cells.Count; i++)
             {
                 Data.Cell cellData = cells[i];
 
-                solidData.Add(cellData.Solid ? 1 : 0);
+                solidData.Add(cellData.Solid);
             }
 
             return solidData;
@@ -417,7 +439,7 @@ namespace MMH.System
                             continue;
                         }
 
-                        foreach (KeyValuePair<Type.Direction, int2> keyValuePair in Info.Map.Directions)
+                        foreach (KeyValuePair<Type.Direction, int2> keyValuePair in MapSystem.Directions)
                         {
                             Type.Direction neighborDirection = keyValuePair.Key;
                             int2 neighborOffset = keyValuePair.Value;
@@ -435,8 +457,8 @@ namespace MMH.System
 
                                 if (ValidEdge(neighborCell, neighborDirection))
                                 {
-                                    int currentCellIndex = Util.Map.CoordsToIndex(currentCell.Position);
-                                    int neighborCellIndex = Util.Map.CoordsToIndex(neighborCell.Position);
+                                    int currentCellIndex = Util.Map.PositionToIndex(currentCell.Position);
+                                    int neighborCellIndex = Util.Map.PositionToIndex(neighborCell.Position);
 
                                     edges[currentCellIndex + Info.Map.Area * neighborCellIndex] = 1;
                                     edges[neighborCellIndex + Info.Map.Area * currentCellIndex] = 1;
@@ -455,15 +477,15 @@ namespace MMH.System
 
         private bool ValidEdge(Data.Cell neighborCell, Type.Direction neighborDirection)
         {
-            int2 northPosition = neighborCell.Position + Info.Map.Directions[Type.Direction.NN];
-            int2 eastPosition = neighborCell.Position + Info.Map.Directions[Type.Direction.EE];
-            int2 southPosition = neighborCell.Position + Info.Map.Directions[Type.Direction.SS];
-            int2 westPosition = neighborCell.Position + Info.Map.Directions[Type.Direction.WW];
+            int2 northPosition = neighborCell.Position + MapSystem.Directions[Type.Direction.NN];
+            int2 eastPosition = neighborCell.Position + MapSystem.Directions[Type.Direction.EE];
+            int2 southPosition = neighborCell.Position + MapSystem.Directions[Type.Direction.SS];
+            int2 westPosition = neighborCell.Position + MapSystem.Directions[Type.Direction.WW];
 
-            bool northSolid = !Util.Map.OnMap(northPosition) || cells[Util.Map.CoordsToIndex(northPosition)].Solid;
-            bool eastSolid = !Util.Map.OnMap(eastPosition) || cells[Util.Map.CoordsToIndex(eastPosition)].Solid;
-            bool southSolid = !Util.Map.OnMap(southPosition) || cells[Util.Map.CoordsToIndex(southPosition)].Solid;
-            bool westSolid = !Util.Map.OnMap(westPosition) || cells[Util.Map.CoordsToIndex(westPosition)].Solid;
+            bool northSolid = !Util.Map.OnMap(northPosition) || cells[Util.Map.PositionToIndex(northPosition)].Solid;
+            bool eastSolid = !Util.Map.OnMap(eastPosition) || cells[Util.Map.PositionToIndex(eastPosition)].Solid;
+            bool southSolid = !Util.Map.OnMap(southPosition) || cells[Util.Map.PositionToIndex(southPosition)].Solid;
+            bool westSolid = !Util.Map.OnMap(westPosition) || cells[Util.Map.PositionToIndex(westPosition)].Solid;
 
             if (neighborDirection == Type.Direction.NE)
             {
