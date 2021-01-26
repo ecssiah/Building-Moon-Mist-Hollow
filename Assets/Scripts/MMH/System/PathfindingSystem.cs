@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Unity.Burst;
 using Unity.Mathematics;
 using Unity.Collections;
 using Unity.Jobs;
@@ -19,19 +20,26 @@ namespace MMH.System
 
         private void Start()
         {
-            List<int> solidDataList = mapSystem.GetSolidData();
-            List<int> edgeDataList = mapSystem.GetEdgeData();
+            int findPathJobCount = 5;
+            NativeArray<JobHandle> jobHandleArray = new NativeArray<JobHandle>(findPathJobCount, Allocator.TempJob);
 
-            FindPathJob findPathJob = new FindPathJob
+            for (int i = 0; i < findPathJobCount; i++)
             {
-                StartPosition = new int2(0, 0),
-                EndPosition = new int2(8, 8),
-            };
+                FindPathJob findPathJob = new FindPathJob
+                {
+                    StartPosition = new int2(0, 0),
+                    EndPosition = new int2(19, 19),
+                };
 
-            findPathJob.Run();
+                jobHandleArray[i] = findPathJob.Schedule();
+            }
+
+            JobHandle.CompleteAll(jobHandleArray);
+            jobHandleArray.Dispose();
         }
 
 
+        [BurstCompile]
         private struct FindPathJob : IJob
         {
             public int2 StartPosition;
@@ -39,13 +47,17 @@ namespace MMH.System
 
             public void Execute()
             {
-                NativeArray<Data.Node> nativeNodeArray = new NativeArray<Data.Node>(Info.Map.Area, Allocator.Temp);
+                // Build Graph
+                int gridSize = 100;
+                int gridWidth = 2 * gridSize + 1;
 
-                for (int x = -Info.Map.Size; x <= Info.Map.Size; x++)
+                NativeArray<Data.Node> nativeNodeArray = new NativeArray<Data.Node>(gridWidth * gridWidth, Allocator.Temp);
+
+                for (int x = -gridSize; x <= gridSize; x++)
                 {
-                    for (int y = -Info.Map.Size; y <= Info.Map.Size; y++)
+                    for (int y = -gridSize; y <= gridSize; y++)
                     {
-                        int cellIndex = Util.Map.PositionToIndex(x, y);
+                        int cellIndex = PositionToIndex(new int2(x, y), gridSize);
 
                         Data.Node node = new Data.Node
                         {
@@ -64,13 +76,42 @@ namespace MMH.System
                     }
                 }
 
-                Data.Node startNode = nativeNodeArray[Util.Map.CoordsToIndex(StartPosition)];
+                {
+                    int position1Index = PositionToIndex(new int2(1, 0), gridSize);
+                    int position2Index = PositionToIndex(new int2(1, 1), gridSize);
+                    int position3Index = PositionToIndex(new int2(1, 2), gridSize);
+
+                    Data.Node node = nativeNodeArray[position1Index];
+                    node.Solid = true;
+                    nativeNodeArray[position1Index] = node;
+
+                    node = nativeNodeArray[position2Index];
+                    node.Solid = true;
+                    nativeNodeArray[position2Index] = node;
+
+                    node = nativeNodeArray[position3Index];
+                    node.Solid = true;
+                    nativeNodeArray[position3Index] = node;
+                }
+
+                // Pathfinding
+
+                NativeArray<int2> neighborOffsetArray = new NativeArray<int2>(8, Allocator.Temp);
+                neighborOffsetArray[0] = new int2(+1, +0);
+                neighborOffsetArray[1] = new int2(+1, +1);
+                neighborOffsetArray[2] = new int2(+0, +1);
+                neighborOffsetArray[3] = new int2(-1, +1);
+                neighborOffsetArray[4] = new int2(-1, +0);
+                neighborOffsetArray[5] = new int2(-1, -1);
+                neighborOffsetArray[6] = new int2(+0, -1);
+                neighborOffsetArray[7] = new int2(+1, -1);
+
+                Data.Node startNode = nativeNodeArray[PositionToIndex(StartPosition, gridSize)];
                 startNode.GCost = 0;
                 startNode.FCost = startNode.GCost + startNode.HCost;
-
                 nativeNodeArray[startNode.Index] = startNode;
 
-                int endNodeIndex = Util.Map.CoordsToIndex(EndPosition);
+                int endNodeIndex = PositionToIndex(EndPosition, gridSize);
 
                 NativeList<int> openList = new NativeList<int>(Allocator.Temp);
                 NativeList<int> closedList = new NativeList<int>(Allocator.Temp);
@@ -98,19 +139,16 @@ namespace MMH.System
 
                     closedList.Add(currentIndex);
 
-                    foreach (KeyValuePair<Type.Direction, int2> keyValuePair in Info.Map.Directions)
+                    for (int i = 0; i < neighborOffsetArray.Length; i++)
                     {
-                        _ = keyValuePair.Key;
-                        int2 neighborOffset = keyValuePair.Value;
+                        int2 neighborPosition = currentNode.Position + neighborOffsetArray[i];
 
-                        int2 neighborPosition = currentNode.Position + neighborOffset;
-
-                        if (!Util.Map.OnMap(neighborPosition))
+                        if (!OnGrid(neighborPosition, gridSize))
                         {
                             continue;
                         }
 
-                        Data.Node neighborNode = nativeNodeArray[Util.Map.CoordsToIndex(neighborPosition)];
+                        Data.Node neighborNode = nativeNodeArray[PositionToIndex(neighborPosition, gridSize)];
 
                         if (closedList.Contains(neighborNode.Index))
                         {
@@ -142,28 +180,36 @@ namespace MMH.System
                     }
                 }
 
-
                 Data.Node endNode = nativeNodeArray[endNodeIndex];
-
 
                 if (endNode.PreviousIndex == -1)
                 {
-                    print("No path found");
-                }
-                else
-                {
                     NativeList<int2> path = CalculatePath(nativeNodeArray, endNode);
 
-                    foreach (int2 nodePosition in path)
-                    {
-                        print(nodePosition);
-                    }
+                    path.Dispose();
                 }
 
-
-                nativeNodeArray.Dispose();
                 openList.Dispose();
                 closedList.Dispose();
+
+                nativeNodeArray.Dispose();
+            }
+
+
+            private bool OnGrid(int2 position, int gridSize)
+            {
+                bool xOnGrid = position.x >= -gridSize && position.x <= gridSize;
+                bool yOnGrid = position.x >= -gridSize && position.y <= gridSize;
+
+                return xOnGrid && yOnGrid;
+            }
+
+
+            private int PositionToIndex(int2 position, int gridSize)
+            {
+                int gridWidth = 2 * gridSize + 1;
+
+                return (position.x + gridSize) + gridWidth * (position.y + gridSize);
             }
 
 

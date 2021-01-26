@@ -20,8 +20,8 @@ namespace MMH.System
         private int2 selectedCell;
 
         private List<Data.Cell> cells;
-        private List<int> edges;
         private List<Data.Room> rooms;
+        private List<int> edges;
         private List<RectInt> placeholders;
 
         private Dictionary<Type.Group, Data.ColonyBase> colonyBases = new Dictionary<Type.Group, Data.ColonyBase>();
