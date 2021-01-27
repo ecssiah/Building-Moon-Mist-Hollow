@@ -29,9 +29,9 @@ namespace MMH.System
                 {
                     GridSize = Info.Map.Size,
                     GridWidth = Info.Map.Width,
-                    NativeNodeArray = GetNativeNodeArray(),
                     StartPosition = new int2(0, 0),
                     EndPosition = new int2(19, 19),
+                    Nodes = GetNodes(),
                 };
 
                 jobHandleArray[i] = findPathJob.Schedule();
@@ -42,7 +42,7 @@ namespace MMH.System
         }
 
 
-        private NativeArray<Data.Node> GetNativeNodeArray()
+        private NativeArray<Data.Node> GetNodes()
         {
             NativeArray<Data.Node> nativeNodeArray = new NativeArray<Data.Node>(Info.Map.Area, Allocator.TempJob);
 
@@ -84,23 +84,22 @@ namespace MMH.System
             public int2 EndPosition;
 
             [DeallocateOnJobCompletion]
-            public NativeArray<Data.Node> NativeNodeArray;
+            public NativeArray<Data.Node> Nodes;
 
 
             public void Execute()
             {
                 // Build Graph
-                for (int i = 0; i < NativeNodeArray.Length; i++)
+                for (int i = 0; i < Nodes.Length; i++)
                 {
-                    Data.Node node = NativeNodeArray[i];
+                    Data.Node node = Nodes[i];
                     node.HCost = CalculateHCost(node.Position, EndPosition);
                     node.PreviousIndex = -1;
 
-                    NativeNodeArray[i] = node;
+                    Nodes[i] = node;
                 }
 
                 // Pathfinding
-
                 NativeArray<int2> neighborOffsetArray = new NativeArray<int2>(8, Allocator.Temp);
                 neighborOffsetArray[0] = new int2(+1, +0);
                 neighborOffsetArray[1] = new int2(+1, +1);
@@ -111,10 +110,10 @@ namespace MMH.System
                 neighborOffsetArray[6] = new int2(+0, -1);
                 neighborOffsetArray[7] = new int2(+1, -1);
 
-                Data.Node startNode = NativeNodeArray[PositionToIndex(StartPosition, GridSize)];
+                Data.Node startNode = Nodes[PositionToIndex(StartPosition, GridSize)];
                 startNode.GCost = 0;
                 startNode.FCost = startNode.GCost + startNode.HCost;
-                NativeNodeArray[startNode.Index] = startNode;
+                Nodes[startNode.Index] = startNode;
 
                 int endNodeIndex = PositionToIndex(EndPosition, GridSize);
 
@@ -126,7 +125,7 @@ namespace MMH.System
                 while (openList.Length > 0)
                 {
                     int currentIndex = GetIndexOfMinCostNode(openList);
-                    Data.Node currentNode = NativeNodeArray[currentIndex];
+                    Data.Node currentNode = Nodes[currentIndex];
 
                     if (currentIndex == endNodeIndex)
                     {
@@ -153,7 +152,7 @@ namespace MMH.System
                             continue;
                         }
 
-                        Data.Node neighborNode = NativeNodeArray[PositionToIndex(neighborPosition, GridSize)];
+                        Data.Node neighborNode = Nodes[PositionToIndex(neighborPosition, GridSize)];
 
                         if (closedList.Contains(neighborNode.Index))
                         {
@@ -175,7 +174,7 @@ namespace MMH.System
                             neighborNode.HCost = CalculateHCost(neighborPosition, EndPosition);
                             neighborNode.FCost = neighborNode.GCost + neighborNode.HCost;
 
-                            NativeNodeArray[neighborNode.Index] = neighborNode;
+                            Nodes[neighborNode.Index] = neighborNode;
 
                             if (!openList.Contains(neighborNode.Index))
                             {
@@ -185,7 +184,7 @@ namespace MMH.System
                     }
                 }
 
-                Data.Node endNode = NativeNodeArray[endNodeIndex];
+                Data.Node endNode = Nodes[endNodeIndex];
 
                 if (endNode.PreviousIndex == -1)
                 {
@@ -227,9 +226,9 @@ namespace MMH.System
                     NativeList<int2> path = new NativeList<int2>(Allocator.Temp);
                     path.Add(endNode.Position);
 
-                    for (Data.Node currentNode = endNode; currentNode.PreviousIndex != -1; currentNode = NativeNodeArray[currentNode.PreviousIndex])
+                    for (Data.Node currentNode = endNode; currentNode.PreviousIndex != -1; currentNode = Nodes[currentNode.PreviousIndex])
                     {
-                        Data.Node previousNode = NativeNodeArray[currentNode.PreviousIndex];
+                        Data.Node previousNode = Nodes[currentNode.PreviousIndex];
                         path.Add(previousNode.Position);
                     }
 
@@ -240,11 +239,11 @@ namespace MMH.System
 
             private int GetIndexOfMinCostNode(NativeList<int> openList)
             {
-                Data.Node lowestCostNode = NativeNodeArray[openList[0]];
+                Data.Node lowestCostNode = Nodes[openList[0]];
 
                 for (int i = 1; i < openList.Length; i++)
                 {
-                    Data.Node testNode = NativeNodeArray[openList[i]];
+                    Data.Node testNode = Nodes[openList[i]];
 
                     if (testNode.FCost < lowestCostNode.FCost)
                     {
