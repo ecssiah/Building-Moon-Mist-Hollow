@@ -48,28 +48,57 @@ namespace MMH.System
         }
 
 
-        public void SetTile(int2 position, Type.Ground groundType)
+        public void SetCell(Data.Cell cellData)
         {
-            tilemaps["Ground"].SetTile(
-                new Vector3Int(position.x, position.y, 0),
-                tiles[Info.Tile.groundTileNames[groundType]]
-            );
+            SetGround(cellData.Position, cellData.GroundType);
+            SetStructure(cellData.Position, cellData.StructureType);
+            SetOverlay(cellData.Position, cellData.OverlayType);
         }
 
-        public void SetTile(int2 position, Type.Structure structureType)
+
+        public void SetGround(int2 position, Type.Ground groundType)
         {
-            tilemaps["Structure"].SetTile(
-                new Vector3Int(position.x, position.y, 3),
-                tiles[Info.Tile.structureTileNames[structureType]]
-            );
+            if (groundType == Type.Ground.None)
+            {
+                tilemaps["Ground"].SetTile(new Vector3Int(position.x, position.y, 0), null);
+            }
+            else
+            {
+                tilemaps["Ground"].SetTile(
+                    new Vector3Int(position.x, position.y, 0),
+                    tiles[Info.Tile.GroundTileNames[groundType]]
+                );
+            }
         }
 
-        public void SetTile(int2 position, Type.Overlay overlayType)
+        public void SetStructure(int2 position, Type.Structure structureType)
         {
-            tilemaps["Overlay"].SetTile(
-                new Vector3Int(position.x, position.y, 0),
-                tiles[Info.Tile.overlayTileNames[overlayType]]
-            );
+            if (structureType == Type.Structure.None)
+            {
+                tilemaps["Structure"].SetTile(new Vector3Int(position.x, position.y, 0), null);
+            }
+            else
+            {
+                tilemaps["Structure"].SetTile(
+                    new Vector3Int(position.x, position.y, 3),
+                    tiles[Info.Tile.StructureTileNames[structureType]]
+                );
+            }
+        }
+
+        public void SetOverlay(int2 position, Type.Overlay overlayType)
+        {
+            if (overlayType == Type.Overlay.None)
+            {
+                tilemaps["Overlay"].SetTile(new Vector3Int(position.x, position.y, 0), null);
+            }
+            else
+            {
+                tilemaps["Overlay"].SetTile(
+                    new Vector3Int(position.x, position.y, 0),
+                    tiles[Info.Tile.OverlayTileNames[overlayType]]
+                );
+            }
         }
 
 

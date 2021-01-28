@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using HPAStar;
 using Unity.Mathematics;
+using System.Collections.Generic;
 
 namespace MMH.System
 {
@@ -27,13 +28,17 @@ namespace MMH.System
 
         public void BuildGraph()
         {
-            aStar.Graph = new Graph(mapSystem.GetCells().Length);
+            List<int> edgeData = mapSystem.GetEdgeData();
+
+            aStar.Graph = new Graph(Info.Map.Area);
 
             for (int x = -Info.Map.Size; x <= Info.Map.Size; x++)
             {
                 for (int y = -Info.Map.Size; y <= Info.Map.Size; y++)
                 {
-                    if (mapSystem.GetCell(x, y).Solid) continue;
+                    int edgeIndex = x + Info.Map.Area * y;
+
+                    if (edgeData[edgeIndex] != 0) continue;
 
                     Node node = aStar.GetNode(x, y) ?? aStar.BuildNode(x, y);
 

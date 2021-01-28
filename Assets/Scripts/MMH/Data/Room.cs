@@ -16,5 +16,16 @@ namespace MMH.Data
         public Type.Overlay OverlayType;
 
         public List<Entrance> Entrances;
+
+
+        public Room(Room room)
+        {
+            Bounds = room.Bounds;
+            Fill = room.Fill;
+            GroundType = room.GroundType;
+            StructureType = room.StructureType;
+            OverlayType = room.OverlayType;
+            Entrances = room.Entrances;
+        }
     }
 }
