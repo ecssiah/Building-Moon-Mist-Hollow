@@ -2,29 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tab : MonoBehaviour
+namespace MMH.Component
 {
-    protected bool _active;
-    public bool Active
+    public class Tab : MonoBehaviour
     {
-        get => _active;
-        set
+        protected bool _active;
+        public bool Active
         {
-            _active = value;
-            gameObject.SetActive(_active);
+            get => _active;
+            set
+            {
+                _active = value;
+                gameObject.SetActive(_active);
+            }
         }
-    }
 
-    private string _name;
-    public string Name
-    {
-        get => _name;
-        set => _name = value;
-    }
+        private string _name;
+        public string Name
+        {
+            get => _name;
+            set => _name = value;
+        }
 
 
-    public virtual void Awake()
-    {
-        Active = false;
+        public virtual void Awake()
+        {
+            Active = false;
+        }
     }
 }

@@ -5,7 +5,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace MMH
+namespace MMH.Component
 {
     public class AdminTab : Tab
     {

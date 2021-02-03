@@ -1,17 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class PopulationTab : Tab
+namespace MMH.Component
 {
-    private TextMeshProUGUI testTextContent;
-
-    public override void Awake()
+    public class PopulationTab : Tab
     {
-        Active = false;
+        private TextMeshProUGUI testTextContent;
 
-        testTextContent = gameObject.AddComponent<TextMeshProUGUI>();
-        testTextContent.text = "Population";
+        public override void Awake()
+        {
+            Active = false;
+
+            testTextContent = gameObject.AddComponent<TextMeshProUGUI>();
+            testTextContent.text = "Population";
+        }
     }
 }

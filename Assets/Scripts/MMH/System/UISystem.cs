@@ -11,10 +11,10 @@ namespace MMH.System
         private RenderSystem renderSystem;
         private MapSystem mapSystem;
 
-        private MainMenu mainMenu;
-        private InfoWindow infoWindow;
+        private Component.MainMenu mainMenu;
+        private Component.InfoWindow infoWindow;
 
-        private EntityLabeler entityLabeler;
+        private Component.EntityLabeler entityLabeler;
 
 
         void Awake()
@@ -27,13 +27,13 @@ namespace MMH.System
             renderSystem = GameObject.Find("Render System").GetComponent<RenderSystem>();
             mapSystem = GameObject.Find("Map System").GetComponent<MapSystem>();
 
-            mainMenu = GameObject.Find("Main Menu").AddComponent<MainMenu>();
-            infoWindow = GameObject.Find("Info Window").AddComponent<InfoWindow>();
+            mainMenu = GameObject.Find("Main Menu").AddComponent<Component.MainMenu>();
+            infoWindow = GameObject.Find("Info Window").AddComponent<Component.InfoWindow>();
 
-            entityLabeler = gameObject.AddComponent<EntityLabeler>();
+            entityLabeler = gameObject.AddComponent<Component.EntityLabeler>();
 
-            _ = gameObject.AddComponent<CameraController>();
-            _ = gameObject.AddComponent<SelectionHandler>();
+            _ = gameObject.AddComponent<Component.CameraController>();
+            _ = gameObject.AddComponent<Component.SelectionHandler>();
         }
 
 
@@ -84,7 +84,7 @@ namespace MMH.System
 
             entityLabeler.SelectEntity(entity);
 
-            Colonist colonist = entity.GetComponent<Colonist>();
+            Component.Colonist colonist = entity.GetComponent<Component.Colonist>();
             infoWindow.DisplayColonist(colonist);
         }
 

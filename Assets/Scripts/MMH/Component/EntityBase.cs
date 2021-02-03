@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MMH
+namespace MMH.Component
 {
     public class EntityBase : MonoBehaviour
     {

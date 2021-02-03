@@ -8,6 +8,6 @@ namespace MMH.Data
     {
         public int NextId;
 
-        public List<Colonist> Colonists;
+        public List<Component.Colonist> Colonists;
     }
 }

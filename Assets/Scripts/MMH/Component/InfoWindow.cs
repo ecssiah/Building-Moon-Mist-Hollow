@@ -2,7 +2,7 @@
 using TMPro;
 using System;
 
-namespace MMH
+namespace MMH.Component
 {
     public class InfoWindow : MonoBehaviour
     {
@@ -56,7 +56,7 @@ namespace MMH
         }
 
 
-        public void DisplayColonist(Colonist colonist)
+        public void DisplayColonist(Component.Colonist colonist)
         {
             mode = Type.Info.Colonist;
 

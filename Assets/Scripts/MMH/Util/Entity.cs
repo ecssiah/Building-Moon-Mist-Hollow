@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-namespace MMH
+namespace MMH.Util
 {
-    public static class NameGenerator
+    public struct Entity
     {
         public static string GetName(Type.Group groupType)
         {

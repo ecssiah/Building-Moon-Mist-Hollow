@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-namespace MMH
+namespace MMH.Component
 {
     public class RulerTab : Tab
     {

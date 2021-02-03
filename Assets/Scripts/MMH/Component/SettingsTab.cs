@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class SettingsTab : Tab
+namespace MMH.Component
 {
-    private TextMeshProUGUI testTextContent;
-
-    public override void Awake()
+    public class SettingsTab : Tab
     {
-        Active = false;
+        private TextMeshProUGUI testTextContent;
 
-        testTextContent = gameObject.AddComponent<TextMeshProUGUI>();
-        testTextContent.text = "Settings";
+        public override void Awake()
+        {
+            Active = false;
+
+            testTextContent = gameObject.AddComponent<TextMeshProUGUI>();
+            testTextContent.text = "Settings";
+        }
     }
 }

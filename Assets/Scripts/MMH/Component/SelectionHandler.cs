@@ -3,7 +3,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace MMH
+namespace MMH.Component
 {
     public class SelectionHandler : MonoBehaviour
     {

@@ -1,7 +1,7 @@
 ﻿using Unity.Mathematics;
 using UnityEngine;
 
-namespace MMH
+namespace MMH.Component
 {
     public class ColonistMovement : MonoBehaviour
     {

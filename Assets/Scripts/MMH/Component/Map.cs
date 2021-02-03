@@ -4,7 +4,7 @@ using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace MMH
+namespace MMH.Component
 {
     public class Map : MonoBehaviour
     {
@@ -42,10 +42,12 @@ namespace MMH
             SetupBase();
             SetupPaths();
 
-            RoomBuilder.LayoutRooms(rooms, placeholders);
+            Factory.RoomBuilder.LayoutRooms(rooms, placeholders);
 
             SetupRooms();
             SetupColonyBases();
+
+            SetupStructure(new int2(1, 0), Type.Structure.Stone_Wall);
 
             CalculateEdges();
 

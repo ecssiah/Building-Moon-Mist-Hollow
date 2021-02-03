@@ -24,7 +24,7 @@ namespace MMH.System
             population = new Data.Population
             {
                 NextId = 0,
-                Colonists = new List<Colonist>(),
+                Colonists = new List<Component.Colonist>(),
             };
 
             entitiesObject = GameObject.Find("Entities");
@@ -48,7 +48,7 @@ namespace MMH.System
             Type.Group groupType = Util.Misc.RandomEnumValue<Type.Group>();
 
             GameObject colonistGameObject = GenerateColonistObject(position);
-            Colonist colonist = colonistGameObject.AddComponent<Colonist>();
+            Component.Colonist colonist = colonistGameObject.AddComponent<Component.Colonist>();
 
             colonist.Entity = new Data.Entity
             {
@@ -60,7 +60,7 @@ namespace MMH.System
 
             colonist.Id = new Data.Id
             {
-                FullName = NameGenerator.GetName(groupType),
+                FullName = Util.Entity.GetName(groupType),
                 Number = population.NextId++,
                 PopulationType = Type.Population.Citizen,
                 GroupType = groupType,
@@ -103,7 +103,7 @@ namespace MMH.System
             }
             else if (behaviorName == "Gather Home")
             {
-                foreach (Colonist colonist in population.Colonists)
+                foreach (Component.Colonist colonist in population.Colonists)
                 {
                     colonist.Path = RequestPath(
                         colonist.Entity.Position,

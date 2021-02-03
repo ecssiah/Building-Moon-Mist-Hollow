@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace MMH
+namespace MMH.Component
 {
     public class CameraController : MonoBehaviour
     {

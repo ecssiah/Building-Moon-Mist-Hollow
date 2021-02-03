@@ -10,15 +10,15 @@ namespace MMH.System
     {
         private RenderSystem renderSystem;
 
-        private Map map;
-        public Map Map { get => map; }
+        private Component.Map map;
+        public Component.Map Map { get => map; }
 
 
         void Awake()
         {
             renderSystem = GameObject.Find("Render System").GetComponent<RenderSystem>();
 
-            map = GameObject.Find("Map").AddComponent<Map>();
+            map = GameObject.Find("Map").AddComponent<Component.Map>();
         }
 
 

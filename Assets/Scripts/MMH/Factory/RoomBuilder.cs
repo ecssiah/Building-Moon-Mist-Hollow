@@ -4,7 +4,7 @@ using UnityEngine;
 
 using Random = UnityEngine.Random;
 
-namespace MMH
+namespace MMH.Factory
 {
     public static class RoomBuilder
     {

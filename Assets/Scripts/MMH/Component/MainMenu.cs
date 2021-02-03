@@ -2,7 +2,7 @@
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace MMH
+namespace MMH.Component
 {
     public class MainMenu : MonoBehaviour
     {
@@ -34,10 +34,10 @@ namespace MMH
 
         void Start()
         {
-            populationTab = GameObject.Find("Population Tab").AddComponent<PopulationTab>();
-            rulerTab = GameObject.Find("Ruler Tab").AddComponent<RulerTab>();
-            settingsTab = GameObject.Find("Settings Tab").AddComponent<SettingsTab>();
-            adminTab = GameObject.Find("Admin Tab").AddComponent<AdminTab>();
+            populationTab = GameObject.Find("Population Tab").AddComponent<Component.PopulationTab>();
+            rulerTab = GameObject.Find("Ruler Tab").AddComponent<Component.RulerTab>();
+            settingsTab = GameObject.Find("Settings Tab").AddComponent<Component.SettingsTab>();
+            adminTab = GameObject.Find("Admin Tab").AddComponent<Component.AdminTab>();
 
             populationButton = GameObject.Find("Population Button").GetComponent<Button>();
             populationButton.onClick.AddListener(
