@@ -2,12 +2,15 @@
 
 namespace MMH
 {
-    public class Colonist : EntityBase
+    public class Colonist : MonoBehaviour
     {
+        public Data.Entity Entity;
+
         public Data.Id Id;
+        public Data.Path Path;
         public Data.Inventory Inventory;
 
-        public override void Awake()
+        private void Awake()
         {
             gameObject.AddComponent<ColonistAnimator>();
             gameObject.AddComponent<ColonistMovement>();

@@ -1,40 +1,27 @@
 ﻿using System.Collections.Generic;
+using Unity.Mathematics;
 
 namespace MMH.Data
 {
-    public struct Path
+    public class Path
     {
-        public float Progress;
+        private int index;
+        public int Index { get => index; set => index = value; }
 
-        public List<HPAStar.Node> Nodes;
+        private float progress;
+        public float Progress { get => progress; set => progress = value; }
 
-        public bool Valid
+        private List<int2> positions;
+        public List<int2> Positions { get => positions; set => positions = value; }
+
+
+        public Path()
         {
-            get
-            {
-                if (Nodes is null)
-                {
-                    return false;
-                }
+            index = 0;
+            progress = 0f;
 
-                return Nodes.Count >= 1;
-            }
+            positions = new List<int2>();
         }
 
-
-        public override string ToString()
-        {
-            string output = $"Path: {Valid}";
-
-            if (Valid)
-            {
-                for (int i = 0; i < Nodes.Count; i++)
-                {
-                    output += $" - {Nodes[i].Position}";
-                }
-            }
-
-            return output;
-        }
     }
 }

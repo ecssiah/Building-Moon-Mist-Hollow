@@ -6,9 +6,14 @@ namespace MMH.Data
     public struct Map
     {
         public int Size;
-        public int Width { get => 2 * Size + 1; }
+        public int Width => 2 * Size + 1;
+        public int Area => Width * Width;
 
         public Cell[] Cells;
+
+        public bool EdgesValid;
+
+        public int[] Edges;
     }
 }
 

@@ -8,6 +8,7 @@ namespace MMH.System
     {
         private Data.UI uiData;
 
+        private RenderSystem renderSystem;
         private MapSystem mapSystem;
 
         private MainMenu mainMenu;
@@ -23,10 +24,11 @@ namespace MMH.System
                 Mode = Type.UIMode.None,
             };
 
+            renderSystem = GameObject.Find("RenderSystem").GetComponent<RenderSystem>();
             mapSystem = GameObject.Find("MapSystem").GetComponent<MapSystem>();
 
             mainMenu = GameObject.Find("Main Menu").AddComponent<MainMenu>();
-            infoWindow = gameObject.AddComponent<InfoWindow>();
+            infoWindow = GameObject.Find("Info Window").AddComponent<InfoWindow>();
 
             entityLabeler = gameObject.AddComponent<EntityLabeler>();
 
@@ -65,7 +67,7 @@ namespace MMH.System
                 case Type.UIMode.None:
                     if (mainMenu.Section == Type.MainMenuSection.Admin)
                     {
-                        mainMenu.SelectSection(Type.MainMenuSection.None);
+                        mainMenu.SelectSection(Type.MainMenuSection.Ruler);
                     }
 
                     mainMenu.Active = false;
@@ -86,7 +88,6 @@ namespace MMH.System
             if (uiData.Mode == Type.UIMode.Main) return;
 
             ClearSelection();
-            mapSystem.ClearSelection();
 
             entityLabeler.SelectEntity(entity);
 
@@ -100,19 +101,18 @@ namespace MMH.System
             if (uiData.Mode == Type.UIMode.Main) return;
 
             ClearSelection();
-            mapSystem.ClearSelection();
 
-            mapSystem.SelectCell(cellPosition);
+            renderSystem.SetOverlay(cellPosition, Type.Overlay.None);
 
-            Data.Cell cellData = mapSystem.GetCell(cellPosition);
+            Data.Cell cellData = mapSystem.Map.GetCell(cellPosition);
+
             infoWindow.ActivateCellMode(cellData);
         }
 
 
         public void ClearSelection()
         {
-            mapSystem.ClearSelection();
-
+            renderSystem.SetOverlay(mapSystem.Map.SelectedCell, Type.Overlay.None);
             entityLabeler.Clear();
             infoWindow.Deactivate();
         }

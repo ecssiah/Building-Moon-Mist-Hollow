@@ -28,17 +28,17 @@ namespace MMH
 
         void Awake()
         {
-            Section = Type.MainMenuSection.None;
-
-            populationTab = GameObject.Find("Population Tab").AddComponent<PopulationTab>();
-            rulerTab = GameObject.Find("Ruler Tab").AddComponent<RulerTab>();
-            settingsTab = GameObject.Find("Settings Tab").AddComponent<SettingsTab>();
-            adminTab = GameObject.Find("Admin Tab").AddComponent<AdminTab>();
+            Active = false;
         }
 
 
         void Start()
         {
+            populationTab = GameObject.Find("Population Tab").AddComponent<PopulationTab>();
+            rulerTab = GameObject.Find("Ruler Tab").AddComponent<RulerTab>();
+            settingsTab = GameObject.Find("Settings Tab").AddComponent<SettingsTab>();
+            adminTab = GameObject.Find("Admin Tab").AddComponent<AdminTab>();
+
             populationButton = GameObject.Find("Population Button").GetComponent<Button>();
             populationButton.onClick.AddListener(
                 delegate { SelectSection(Type.MainMenuSection.Population); }
@@ -54,7 +54,7 @@ namespace MMH
                 delegate { SelectSection(Type.MainMenuSection.Settings); }
             );
 
-            Active = false;
+            SelectSection(Type.MainMenuSection.Ruler);
         }
 
 
@@ -70,20 +70,20 @@ namespace MMH
             switch (Section)
             {
                 case Type.MainMenuSection.Population:
-                    populationButton.Select();
                     populationTab.Active = true;
+                    populationButton.Select();
                     break;
                 case Type.MainMenuSection.Ruler:
-                    rulerButton.Select();
                     rulerTab.Active = true;
+                    rulerButton.Select();
                     break;
                 case Type.MainMenuSection.Settings:
-                    settingsButton.Select();
                     settingsTab.Active = true;
+                    settingsButton.Select();
                     break;
                 case Type.MainMenuSection.Admin:
-                    EventSystem.current.SetSelectedGameObject(null);
                     adminTab.Active = true;
+                    EventSystem.current.SetSelectedGameObject(null);
                     break;
                 case Type.MainMenuSection.None:
                 default:

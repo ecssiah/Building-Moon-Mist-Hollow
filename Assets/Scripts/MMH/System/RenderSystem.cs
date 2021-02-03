@@ -36,7 +36,7 @@ namespace MMH.System
         {
             tilemaps = new Dictionary<string, Tilemap>();
 
-            Tilemap[] tilemapsArray = GameObject.Find("Tilemaps").GetComponentsInChildren<Tilemap>();
+            Tilemap[] tilemapsArray = GameObject.Find("Map").GetComponentsInChildren<Tilemap>();
 
             foreach (Tilemap tilemap in tilemapsArray)
             {

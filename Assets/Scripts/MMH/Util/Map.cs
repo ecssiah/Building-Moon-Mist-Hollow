@@ -6,24 +6,30 @@ namespace MMH.Util
 {
     public struct Map
     {
-        public static int CoordsToIndex(int2 position)
+        public static int PositionToIndex(int2 position)
         {
-            return CoordsToIndex(position.x, position.y);
+            return PositionToIndex(position.x, position.y);
         }
 
 
-        public static int CoordsToIndex(int x, int y)
+        public static int PositionToIndex(int x, int y)
         {
             return x + Info.Map.Size + Info.Map.Width * (y + Info.Map.Size);
         }
 
 
-        public static int2 IndexToCoords(int i)
+        public static int2 IndexToPosition(int index)
         {
             return new int2(
-                (i % Info.Map.Width) - Info.Map.Size,
-                (i / Info.Map.Width) - Info.Map.Size
+                (index % Info.Map.Width) - Info.Map.Size,
+                (index / Info.Map.Width) - Info.Map.Size
             );
+        }
+
+
+        public static int EdgeToIndex(int cellIndex1, int cellIndex2)
+        {
+            return cellIndex1 + Info.Map.Area * cellIndex2;
         }
 
 

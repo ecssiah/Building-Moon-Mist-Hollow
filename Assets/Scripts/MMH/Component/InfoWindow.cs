@@ -34,7 +34,7 @@ namespace MMH
 
         private void SetupEntityTab()
         {
-            entityTab = GameObject.Find("Entity Tab");
+            entityTab = transform.Find("Entity Tab").gameObject;
             entityTab.SetActive(false);
 
             entityIdText = Util.UI.SetLabel("Id", entityTab.transform.Find("Id"));
@@ -46,7 +46,7 @@ namespace MMH
 
         private void SetupCellTab()
         {
-            cellTab = GameObject.Find("Cell Tab");
+            cellTab = transform.Find("Cell Tab").gameObject;
             cellTab.SetActive(false);
 
             cellSolidText = Util.UI.SetLabel("Solid", cellTab.transform.Find("Solid"));

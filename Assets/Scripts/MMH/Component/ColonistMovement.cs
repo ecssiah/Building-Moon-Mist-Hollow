@@ -16,7 +16,7 @@ namespace MMH
 
         void Update()
         {
-            if (colonist.Path.Valid)
+            if (colonist.Path.Positions.Count > 0)
             {
                 FollowPath();
             }
@@ -32,12 +32,12 @@ namespace MMH
                 float2 isoPosition = new float2 (
                     math.lerp (
                         colonist.Entity.Position.x,
-                        colonist.Path.Nodes[0].Position.x,
+                        colonist.Path.Positions[0].x,
                         colonist.Path.Progress
                     ),
                     math.lerp (
                         colonist.Entity.Position.y,
-                        colonist.Path.Nodes[0].Position.y,
+                        colonist.Path.Positions[0].y,
                         colonist.Path.Progress
                     )
                 );
@@ -48,16 +48,16 @@ namespace MMH
             }
             else
             {
-                colonist.Entity.Position = colonist.Path.Nodes[0].Position;
+                colonist.Entity.Position = colonist.Path.Positions[0];
 
                 colonist.Path.Progress = 0f;
-                colonist.Path.Nodes.RemoveAt(0);
+                colonist.Path.Positions.RemoveAt(0);
 
-                if (colonist.Path.Nodes.Count > 0)
+                if (colonist.Path.Positions.Count > 0)
                 {
                     colonist.Entity.Speed = Info.Entity.DefaultWalkSpeed;
                     colonist.Entity.Direction = Util.Map.CardinalDirection(
-                        colonist.Path.Nodes[0].Position - colonist.Entity.Position
+                        colonist.Path.Positions[0] - colonist.Entity.Position
                     );
                 }
                 else

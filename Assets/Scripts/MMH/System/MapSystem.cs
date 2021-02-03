@@ -11,6 +11,7 @@ namespace MMH.System
         private RenderSystem renderSystem;
 
         private Map map;
+        public Map Map { get => map; }
 
 
         void Awake()
@@ -21,27 +22,15 @@ namespace MMH.System
         }
 
 
-        public void ConstructCell(Data.Cell cellData)
+        public void RenderCell(Data.Cell cellData)
         {
             renderSystem.SetCell(cellData);
         }
 
 
-        public void SelectCell(int2 position)
+        public void SelectCell(int2 cellPosition)
         {
-            renderSystem.SetOverlay(position, Type.Overlay.Selection);
-        }
-
-
-        public void ClearSelection()
-        {
-            renderSystem.SetOverlay(map.SelectedCell, Type.Overlay.None);
-        }
-
-
-        public List<int> GetEdgeData()
-        {
-            return new List<int>();
+            map.SelectCell(cellPosition);
         }
 
 

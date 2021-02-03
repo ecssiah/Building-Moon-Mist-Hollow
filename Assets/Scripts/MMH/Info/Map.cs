@@ -17,6 +17,9 @@ namespace MMH.Info
 
         public static readonly bool ShowCollision = false;
 
+        public static readonly int StraightMovementCost = 10;
+        public static readonly int DiagonalMovementCost = 14;
+
         public static readonly int SeedRoomSize = 3;
         public static readonly int NumberOfSeedRooms = 32;
         public static readonly int MaximumExpansionAttempts = 20;

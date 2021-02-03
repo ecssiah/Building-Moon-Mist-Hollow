@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -9,10 +10,11 @@ namespace MMH
     {
         private System.MapSystem mapSystem;
 
-        private Data.Map data;
+        private Data.Map mapData;
 
-        private List<RectInt> placeholders;
         private List<Data.Room> rooms;
+        private List<RectInt> placeholders;
+
         private Dictionary<Type.Group, Data.ColonyBase> colonyBases;
 
         private int2 selectedCell;
@@ -22,17 +24,19 @@ namespace MMH
         {
             mapSystem = GameObject.Find("MapSystem").GetComponent<System.MapSystem>();
 
-            data = new Data.Map
+            mapData = new Data.Map
             {
                 Size = Info.Map.Size,
                 Cells = new Data.Cell[Info.Map.Area],
+                Edges = new int[Info.Map.Area * Info.Map.Area],
             };
 
-            placeholders = new List<RectInt>();
-            rooms = new List<Data.Room>(Info.Map.NumberOfSeedRooms);
-            colonyBases = new Dictionary<Type.Group, Data.ColonyBase>();
-
             selectedCell = new int2();
+
+            rooms = new List<Data.Room>(Info.Map.NumberOfSeedRooms);
+            placeholders = new List<RectInt>();
+           
+            colonyBases = new Dictionary<Type.Group, Data.ColonyBase>();
 
             SetupCells();
             SetupBase();
@@ -43,19 +47,27 @@ namespace MMH
             SetupRooms();
             SetupColonyBases();
 
+            CalculateEdges();
+
             ConstructMap();
         }
 
 
         public Data.Cell[] GetCells()
         {
-            return data.Cells;
+            return mapData.Cells;
+        }
+
+
+        public int[] GetEdgeData()
+        {
+            return mapData.Edges;
         }
 
 
         public Data.Cell GetCell(int x, int y)
         {
-            return data.Cells[Util.Map.CoordsToIndex(x, y)];
+            return mapData.Cells[Util.Map.PositionToIndex(x, y)];
         }
 
 
@@ -86,7 +98,7 @@ namespace MMH
 
         public void SetCell(int x, int y, Data.Cell cellData)
         {
-            data.Cells[Util.Map.CoordsToIndex(x, y)] = cellData;
+            mapData.Cells[Util.Map.PositionToIndex(x, y)] = cellData;
         }
 
 
@@ -113,8 +125,6 @@ namespace MMH
         public void SelectCell(int2 position)
         {
             selectedCell = position;
-
-            mapSystem.SelectCell(position);
         }
 
 
@@ -126,8 +136,17 @@ namespace MMH
             {
                 for (int y = -Info.Map.Size; y <= Info.Map.Size; y++)
                 {
-                    Data.Cell cellData = GetCell(x, y);
-                    cellData.Position = new int2(x, y);
+                    Data.Cell cellData = new Data.Cell
+                    {
+                        Index = Util.Map.PositionToIndex(x, y),
+                        Position = new int2(x, y),
+
+                        Solid = false,
+
+                        GroundType = Type.Ground.None,
+                        StructureType = Type.Structure.None,
+                        OverlayType = Type.Overlay.None,
+                    };
 
                     SetCell(x, y, cellData);
                 }
@@ -149,21 +168,6 @@ namespace MMH
                 cellData.Solid = solid;
 
                 SetCell(position, cellData);
-            }
-        }
-
-
-        private void SetCellSolid(RectInt bounds, bool solid = true, bool fill = true)
-        {
-            for (int x = bounds.xMin; x < bounds.xMax; x++)
-            {
-                for (int y = bounds.yMin; y < bounds.yMax; y++)
-                {
-                    if (fill || Util.Map.OnRectBoundary(x, y, bounds))
-                    {
-                        SetCellSolid(x, y, solid);
-                    }
-                }
             }
         }
 
@@ -217,23 +221,6 @@ namespace MMH
                 cellData.StructureType = structureType;
 
                 SetCell(position, cellData);
-            }
-        }
-
-
-        private void SetupStructure(RectInt bounds, Type.Structure structureType, bool fill = false, bool solid = true)
-        {
-            for (int x = bounds.xMin; x < bounds.xMax; x++)
-            {
-                for (int y = bounds.yMin; y < bounds.yMax; y++)
-                {
-                    if (fill || Util.Map.OnRectBoundary(x, y, bounds))
-                    {
-                        SetupStructure(x, y, structureType);
-
-                        if (solid) SetCellSolid(x, y);
-                    }
-                }
             }
         }
 
@@ -377,10 +364,8 @@ namespace MMH
             colonyBases[Type.Group.Kailt] = kailtColonyBase;
             colonyBases[Type.Group.Taylor] = taylorColonyBase;
 
-            foreach (KeyValuePair<Type.Group, Data.ColonyBase> keyValue in colonyBases)
+            foreach (Data.ColonyBase colonyBaseData in colonyBases.Values)
             {
-                Data.ColonyBase colonyBaseData = keyValue.Value;
-
                 Type.Structure structureType = Type.Structure.None;
 
                 switch (colonyBaseData.GroupType)
@@ -401,11 +386,92 @@ namespace MMH
         }
 
 
-        private void ConstructMap()
+        public void CalculateEdges()
         {
-            foreach (Data.Cell cell in data.Cells)
+            ResetEdges();
+
+            for (int x = -Info.Map.Size + 2; x <= Info.Map.Size - 2; x++)
             {
-                mapSystem.ConstructCell(cell);
+                for (int y = -Info.Map.Size + 2; y <= Info.Map.Size - 2; y++)
+                {
+                    Data.Cell cellData = GetCell(x, y);
+
+                    if (cellData.Solid) continue;
+
+                    Data.Cell cellDataEE = GetCell(x + 1, y + 0);
+                    Data.Cell cellDataNE = GetCell(x + 1, y + 1);
+                    Data.Cell cellDataNN = GetCell(x + 0, y + 1);
+                    Data.Cell cellDataNW = GetCell(x - 1, y + 1);
+                    Data.Cell cellDataWW = GetCell(x - 1, y + 0);
+                    Data.Cell cellDataSW = GetCell(x - 1, y - 1);
+                    Data.Cell cellDataSS = GetCell(x + 0, y - 1);
+                    Data.Cell cellDataSE = GetCell(x + 1, y - 1);
+
+                    if (!cellDataEE.Solid)
+                    {
+                        AddEdge(cellData, cellDataEE, Info.Map.StraightMovementCost);
+                    }
+
+                    if (!cellDataNE.Solid && !cellDataNN.Solid)
+                    {
+                        AddEdge(cellData, cellDataNE, Info.Map.DiagonalMovementCost);
+                    }
+
+                    if (!cellDataNN.Solid)
+                    {
+                        AddEdge(cellData, cellDataNN, Info.Map.StraightMovementCost);
+                    }
+
+                    if (!cellDataNN.Solid && !cellDataNW.Solid && !cellDataWW.Solid)
+                    {
+                        AddEdge(cellData, cellDataNW, Info.Map.DiagonalMovementCost);
+                    }
+
+                    if (!cellDataWW.Solid)
+                    {
+                        AddEdge(cellData, cellDataWW, Info.Map.StraightMovementCost);
+                    }
+
+                    if (!cellDataWW.Solid && !cellDataSW.Solid && !cellDataSS.Solid)
+                    {
+                        AddEdge(cellData, cellDataSW, Info.Map.DiagonalMovementCost);
+                    }
+
+                    if (!cellDataSS.Solid)
+                    {
+                        AddEdge(cellData, cellDataSS, Info.Map.StraightMovementCost);
+                    }
+
+                    if (!cellDataSS.Solid && !cellDataSE.Solid && !cellDataEE.Solid)
+                    {
+                        AddEdge(cellData, cellDataSE, Info.Map.DiagonalMovementCost);
+                    }
+                }
+            }
+        }
+
+
+        private void AddEdge(Data.Cell cellData1, Data.Cell cellData2, int weight)
+        {
+            int forwardEdgeIndex = Util.Map.EdgeToIndex(cellData1.Index, cellData2.Index);
+            int backwardEdgeIndex = Util.Map.EdgeToIndex(cellData2.Index, cellData1.Index); 
+
+            mapData.Edges[forwardEdgeIndex] = weight;
+            mapData.Edges[backwardEdgeIndex] = weight;
+        }
+
+
+        private void ResetEdges()
+        {
+            mapData.Edges = new int[Info.Map.Area * Info.Map.Area];
+        }
+
+
+        public void ConstructMap()
+        {
+            foreach (Data.Cell cell in mapData.Cells)
+            {
+                mapSystem.RenderCell(cell);
             }
         }
     }

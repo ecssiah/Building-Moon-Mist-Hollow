@@ -36,7 +36,7 @@ namespace MMH.System
         {
             for (int i = 0; i < Info.Entity.NumberOfSeedColonists; i++)
             {
-                Data.Cell cellData = mapSystem.GetFreeCell();
+                Data.Cell cellData = mapSystem.Map.GetFreeCell();
 
                 GenerateColonist(cellData.Position);
             }
@@ -65,6 +65,8 @@ namespace MMH.System
                 PopulationType = Type.Population.Citizen,
                 GroupType = groupType,
             };
+
+            colonist.Path = new Data.Path();
 
             colonistGameObject.name = colonist.Id.FullName;
             colonistGameObject.transform.parent = entitiesObject.transform;
@@ -105,7 +107,7 @@ namespace MMH.System
                 {
                     colonist.Path = RequestPath(
                         colonist.Entity.Position,
-                        mapSystem.GetColonyBase(colonist.Id.GroupType).Position
+                        mapSystem.Map.GetColonyBase(colonist.Id.GroupType).Position
                     );
                 }
             }
