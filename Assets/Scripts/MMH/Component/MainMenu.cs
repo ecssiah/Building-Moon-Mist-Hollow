@@ -28,33 +28,35 @@ namespace MMH.Component
 
         void Awake()
         {
-            Active = false;
+
         }
 
 
         void Start()
         {
-            populationTab = GameObject.Find("Population Tab").AddComponent<Component.PopulationTab>();
-            rulerTab = GameObject.Find("Ruler Tab").AddComponent<Component.RulerTab>();
-            settingsTab = GameObject.Find("Settings Tab").AddComponent<Component.SettingsTab>();
-            adminTab = GameObject.Find("Admin Tab").AddComponent<Component.AdminTab>();
+            populationTab = transform.Find("Body Panel/Population Tab").gameObject.AddComponent<PopulationTab>();
+            rulerTab = transform.Find("Body Panel/Ruler Tab").gameObject.AddComponent<RulerTab>();
+            settingsTab = transform.Find("Body Panel/Settings Tab").gameObject.AddComponent<SettingsTab>();
+            adminTab = transform.Find("Body Panel/Admin Tab").gameObject.AddComponent<AdminTab>();
 
-            populationButton = GameObject.Find("Population Button").GetComponent<Button>();
+            populationButton = transform.Find("Header Panel/Population Button").GetComponent<Button>();
             populationButton.onClick.AddListener(
                 delegate { SelectSection(Type.MainMenuSection.Population); }
             );
 
-            rulerButton = GameObject.Find("Ruler Button").GetComponent<Button>();
+            rulerButton = transform.Find("Header Panel/Ruler Button").GetComponent<Button>();
             rulerButton.onClick.AddListener(
                 delegate { SelectSection(Type.MainMenuSection.Ruler); }
             );
 
-            settingsButton = GameObject.Find("Settings Button").GetComponent<Button>();
+            settingsButton = transform.Find("Header Panel/Settings Button").GetComponent<Button>();
             settingsButton.onClick.AddListener(
                 delegate { SelectSection(Type.MainMenuSection.Settings); }
             );
 
             SelectSection(Type.MainMenuSection.Ruler);
+
+            Active = false;
         }
 
 

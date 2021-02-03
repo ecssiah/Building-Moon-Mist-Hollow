@@ -56,7 +56,7 @@ namespace MMH.Component
         }
 
 
-        public void DisplayColonist(Component.Colonist colonist)
+        public void DisplayColonist(Colonist colonist)
         {
             mode = Type.Info.Colonist;
 

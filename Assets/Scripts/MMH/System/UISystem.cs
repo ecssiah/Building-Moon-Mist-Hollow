@@ -13,7 +13,6 @@ namespace MMH.System
 
         private Component.MainMenu mainMenu;
         private Component.InfoWindow infoWindow;
-
         private Component.EntityLabeler entityLabeler;
 
 
@@ -27,10 +26,10 @@ namespace MMH.System
             renderSystem = GameObject.Find("Render System").GetComponent<RenderSystem>();
             mapSystem = GameObject.Find("Map System").GetComponent<MapSystem>();
 
-            mainMenu = GameObject.Find("Main Menu").AddComponent<Component.MainMenu>();
-            infoWindow = GameObject.Find("Info Window").AddComponent<Component.InfoWindow>();
-
             entityLabeler = gameObject.AddComponent<Component.EntityLabeler>();
+
+            mainMenu = transform.Find("Canvas/Main Panel Canvas/Main Menu").gameObject.AddComponent<Component.MainMenu>();
+            infoWindow = transform.Find("Canvas/Info Panel Canvas/Info Window").gameObject.AddComponent<Component.InfoWindow>();
 
             _ = gameObject.AddComponent<Component.CameraController>();
             _ = gameObject.AddComponent<Component.SelectionHandler>();
@@ -54,9 +53,14 @@ namespace MMH.System
 
         private void ToggleMain()
         {
-            Type.UIMode uiMode = uiData.Mode == Type.UIMode.None ? Type.UIMode.Main : Type.UIMode.None;
-
-            SetMode(uiMode);
+            if (uiData.Mode == Type.UIMode.None)
+            {
+                SetMode(Type.UIMode.Main);
+            }
+            else
+            {
+                SetMode(Type.UIMode.None);
+            }
         }
 
 
@@ -95,10 +99,10 @@ namespace MMH.System
 
             ClearSelection();
 
-            renderSystem.SetOverlay(cellPosition, Type.Overlay.None);
+            mapSystem.Map.SelectCell(cellPosition);
+            renderSystem.SetOverlay(cellPosition, Type.Overlay.Selection);
 
             Data.Cell cellData = mapSystem.Map.GetCell(cellPosition);
-
             infoWindow.ActivateCellMode(cellData);
         }
 
@@ -106,6 +110,7 @@ namespace MMH.System
         public void ClearSelection()
         {
             renderSystem.SetOverlay(mapSystem.Map.SelectedCell, Type.Overlay.None);
+
             entityLabeler.Clear();
             infoWindow.Deactivate();
         }
