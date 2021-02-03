@@ -16,7 +16,7 @@ namespace MMH.System
 
         void Awake()
         {
-            renderSystem = GameObject.Find("RenderSystem").GetComponent<RenderSystem>();
+            renderSystem = GameObject.Find("Render System").GetComponent<RenderSystem>();
 
             map = GameObject.Find("Map").AddComponent<Map>();
         }

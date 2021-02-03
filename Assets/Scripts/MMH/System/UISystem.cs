@@ -24,8 +24,8 @@ namespace MMH.System
                 Mode = Type.UIMode.None,
             };
 
-            renderSystem = GameObject.Find("RenderSystem").GetComponent<RenderSystem>();
-            mapSystem = GameObject.Find("MapSystem").GetComponent<MapSystem>();
+            renderSystem = GameObject.Find("Render System").GetComponent<RenderSystem>();
+            mapSystem = GameObject.Find("Map System").GetComponent<MapSystem>();
 
             mainMenu = GameObject.Find("Main Menu").AddComponent<MainMenu>();
             infoWindow = GameObject.Find("Info Window").AddComponent<InfoWindow>();
@@ -41,20 +41,22 @@ namespace MMH.System
         {
             if (Input.GetKeyDown(KeyCode.Tab))
             {
-                if (uiData.Mode == Type.UIMode.None)
-                {
-                    SetMode(Type.UIMode.Main);
-                }
-                else
-                {
-                    SetMode(Type.UIMode.None);
-                }
+                ToggleMain();
             }
 
             if (Input.GetKeyDown(KeyCode.BackQuote))
             {
-                SetMode(Type.UIMode.Admin);
+                SetMode(Type.UIMode.Main);
+                mainMenu.SelectSection(Type.MainMenuSection.Admin);
             }
+        }
+
+
+        private void ToggleMain()
+        {
+            Type.UIMode uiMode = uiData.Mode == Type.UIMode.None ? Type.UIMode.Main : Type.UIMode.None;
+
+            SetMode(uiMode);
         }
 
 
@@ -65,19 +67,10 @@ namespace MMH.System
             switch (uiMode)
             {
                 case Type.UIMode.None:
-                    if (mainMenu.Section == Type.MainMenuSection.Admin)
-                    {
-                        mainMenu.SelectSection(Type.MainMenuSection.Ruler);
-                    }
-
                     mainMenu.Active = false;
                     break;
                 case Type.UIMode.Main:
                     mainMenu.Active = true;
-                    break;
-                case Type.UIMode.Admin:
-                    mainMenu.Active = true;
-                    mainMenu.SelectSection(Type.MainMenuSection.Admin);
                     break;
             }
         }

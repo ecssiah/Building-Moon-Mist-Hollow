@@ -4,6 +4,5 @@
     {
         None,
         Main,
-        Admin,
     }
 }

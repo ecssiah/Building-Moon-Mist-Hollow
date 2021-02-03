@@ -1,33 +1,39 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class AdminTab : Tab
+namespace MMH
 {
-    private GameObject testButtonObject;
-
-    private Button testButton;
-
-    private TextMeshProUGUI testTextContent;
-
-    public override void Awake()
+    public class AdminTab : Tab
     {
-        Active = false;
+        private System.PathfindingSystem pathfindingSystem;
 
-        testTextContent = gameObject.AddComponent<TextMeshProUGUI>();
-        testTextContent.text = "Admin";
+        private GameObject testButtonObject;
 
-        testButtonObject = transform.Find("Test Button").gameObject;
-        testButton = testButtonObject.GetComponent<Button>();
+        private Button testButton;
 
-        testButton.onClick.AddListener(delegate { OnTestButtonClick(); });
-    }
+        public override void Awake()
+        {
+            Active = false;
+
+            pathfindingSystem = GameObject.Find("Pathfinding System").GetComponent<System.PathfindingSystem>();
+
+            testButtonObject = transform.Find("Test Button").gameObject;
+            testButton = testButtonObject.GetComponent<Button>();
+
+            testButton.onClick.AddListener(delegate { OnTestButtonClick(); });
+        }
 
 
-    private void OnTestButtonClick()
-    {
-        print("Test Button Clicked!");
+        private void OnTestButtonClick()
+        {
+            Data.Path pathData = pathfindingSystem.FindPath(new int2(0, 0), new int2(2, 0));
+
+            print("Is this the path yo?");
+            print(pathData);
+        }
     }
 }

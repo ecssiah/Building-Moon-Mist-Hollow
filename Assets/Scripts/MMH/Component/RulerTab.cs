@@ -18,7 +18,7 @@ namespace MMH
 
         public override void Awake()
         {
-            entitySystem = GameObject.Find("EntitySystem").GetComponent<System.EntitySystem>();
+            entitySystem = GameObject.Find("Entity System").GetComponent<System.EntitySystem>();
 
             Active = false;
 

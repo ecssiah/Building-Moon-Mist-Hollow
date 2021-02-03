@@ -18,8 +18,8 @@ namespace MMH.System
 
         private void Awake()
         {
-            mapSystem = GameObject.Find("MapSystem").GetComponent<MapSystem>();
-            pathfindingSystem = GameObject.Find("PathfindingSystem").GetComponent<PathfindingSystem>();
+            mapSystem = GameObject.Find("Map System").GetComponent<MapSystem>();
+            pathfindingSystem = GameObject.Find("Pathfinding System").GetComponent<PathfindingSystem>();
 
             population = new Data.Population
             {

@@ -19,7 +19,7 @@ namespace MMH.System
 
         void Awake()
         {
-            mapSystem = GameObject.Find("MapSystem").GetComponent<MapSystem>();
+            mapSystem = GameObject.Find("Map System").GetComponent<MapSystem>();
 
             nodes = new List<Data.Node>(Info.Map.Area);
 

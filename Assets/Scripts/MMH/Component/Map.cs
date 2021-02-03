@@ -22,7 +22,7 @@ namespace MMH
 
         void Awake()
         {
-            mapSystem = GameObject.Find("MapSystem").GetComponent<System.MapSystem>();
+            mapSystem = GameObject.Find("Map System").GetComponent<System.MapSystem>();
 
             mapData = new Data.Map
             {

@@ -23,5 +23,17 @@ namespace MMH.Data
             positions = new List<int2>();
         }
 
+
+        public override string ToString()
+        {
+            string result = $"Path:";
+
+            foreach (int2 position in positions)
+            {
+                result += $" ({position.x},{position.y})";
+            }
+
+            return result;
+        }
     }
 }
