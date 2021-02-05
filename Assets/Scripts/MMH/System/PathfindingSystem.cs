@@ -90,21 +90,11 @@ namespace MMH.System
 
             openList.Add(startNode.Index);
 
-            int testCount = 0;
-
-            //while (openList.Count > 0)
-            while (testCount < 20)
+            while (openList.Count > 0)
             {
-                testCount++;
-
                 Data.Node currentNode = GetNodeWithLowestFCost();
 
-                string result = $"Current: {currentNode.Position}";
-
-                if (currentNode == endNode)
-                {
-                    break;
-                }
+                if (currentNode == endNode) break;
 
                 for (int i = 0; i < openList.Count; i++)
                 {
@@ -131,17 +121,14 @@ namespace MMH.System
 
                     if (edgeData[edgeIndex] == 0) continue;
 
-                    result += $" Neighbor: {neighborNode.Position}";
-
                     int gCost = currentNode.GCost + edgeData[edgeIndex];
 
                     if (gCost < neighborNode.GCost)
                     {
-                        neighborNode.PreviousIndex = currentNode.Index;
-
                         neighborNode.GCost = gCost;
-                        neighborNode.HCost = CalculateHCost(neighborNode, endNode);
                         neighborNode.FCost = neighborNode.GCost + neighborNode.HCost;
+
+                        neighborNode.PreviousIndex = currentNode.Index;
 
                         if (!openList.Contains(neighborNode.Index))
                         {
@@ -149,8 +136,6 @@ namespace MMH.System
                         }
                     }
                 }
-
-                print(result);
             }
 
             return CalculatePath(endNode);
@@ -179,6 +164,8 @@ namespace MMH.System
 
                 pathData.Positions.Add(currentNode.Position);
             }
+
+            pathData.Positions.Reverse();
 
             return pathData;
         }
