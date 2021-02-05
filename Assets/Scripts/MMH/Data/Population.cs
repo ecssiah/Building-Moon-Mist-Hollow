@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace MMH.Data
 {
     [Serializable]
-    public struct Population
+    public class Population
     {
         public int NextId;
 

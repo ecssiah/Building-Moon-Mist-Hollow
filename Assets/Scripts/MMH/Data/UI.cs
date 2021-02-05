@@ -1,7 +1,7 @@
 ﻿
 namespace MMH.Data
 {
-    public struct UI
+    public class UI
     {
         public Type.UIMode Mode;
     }

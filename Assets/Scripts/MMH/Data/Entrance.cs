@@ -4,7 +4,7 @@ using UnityEngine;
 namespace MMH.Data
 {
     [Serializable]
-    public struct Entrance
+    public class Entrance
     {
         public RectInt Bounds;
     }

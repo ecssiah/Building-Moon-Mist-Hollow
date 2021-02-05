@@ -1,20 +1,18 @@
-﻿using System;
-using Unity.Mathematics;
+﻿using Unity.Mathematics;
 
 namespace MMH.Data
 {
     public class Node
     {
         public int Index;
-        public int2 Position;
-
         public int PreviousIndex;
 
-        public bool Solid;
-
-        public int FCost;
         public int GCost;
         public int HCost;
+        public int FCost;
+
+        public int2 Position;
+        public bool Solid;
 
 
         public override bool Equals(object obj)

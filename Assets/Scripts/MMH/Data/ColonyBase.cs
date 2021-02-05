@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace MMH.Data
 {
-    public struct ColonyBase
+    public class ColonyBase
     {
         public Type.Group GroupType;
 

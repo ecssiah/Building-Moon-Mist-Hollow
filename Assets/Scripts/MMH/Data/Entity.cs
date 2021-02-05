@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace MMH.Data
 {
-    public struct Entity
+    public class Entity
     {
         public GameObject GameObject;
 

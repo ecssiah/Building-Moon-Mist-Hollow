@@ -3,7 +3,7 @@
 namespace MMH.Data
 {
     [Serializable]
-    public struct Item
+    public class Item
     {
         public string Name;
         public float Value;

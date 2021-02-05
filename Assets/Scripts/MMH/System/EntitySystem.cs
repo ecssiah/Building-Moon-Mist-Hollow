@@ -97,6 +97,8 @@ namespace MMH.System
 
         public void OnColonistBehaviorChange(string behaviorName)
         {
+            print("Again?");
+
             if (behaviorName == "Wander Out")
             {
                 print("Wander!");
@@ -109,6 +111,9 @@ namespace MMH.System
                         colonist.Entity.Position,
                         mapSystem.Map.GetColonyBase(colonist.Id.GroupType).Position
                     );
+
+                    print(colonist.Id.FullName);
+                    print(colonist.Path);
                 }
             }
         }

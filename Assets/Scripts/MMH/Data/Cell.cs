@@ -5,7 +5,7 @@ using UnityEngine;
 namespace MMH.Data
 {
     [Serializable]
-    public struct Cell
+    public class Cell
     {
         public int Index;
         public int2 Position;

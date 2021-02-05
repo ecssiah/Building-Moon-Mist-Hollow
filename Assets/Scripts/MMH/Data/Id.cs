@@ -1,6 +1,6 @@
 ﻿namespace MMH.Data
 {
-    public struct Id
+    public class Id
     {
         public int Number;
 

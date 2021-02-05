@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace MMH.Data
 {
-    public struct Map
+    public class Map
     {
         public int Size;
         public int Width => 2 * Size + 1;

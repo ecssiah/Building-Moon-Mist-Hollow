@@ -90,8 +90,12 @@ namespace MMH.System
 
             openList.Add(startNode.Index);
 
-            while (openList.Count > 0)
+            int timeout = 0;
+
+            while (openList.Count > 0 && timeout < 1000)
             {
+                timeout++;
+
                 Data.Node currentNode = GetNodeWithLowestFCost();
 
                 if (currentNode == endNode) break;
