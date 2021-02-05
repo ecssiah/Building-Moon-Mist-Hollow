@@ -201,19 +201,19 @@ namespace MMH.Util
         {
             if (direction.x == 0 && direction.y > 0)
             {
-                return Type.Direction.N;
+                return Type.Direction.NN;
             }
             else if (direction.x == 0 && direction.y < 0)
             {
-                return Type.Direction.S;
+                return Type.Direction.SS;
             }
             else if (direction.y == 0 && direction.x > 0)
             {
-                return Type.Direction.E;
+                return Type.Direction.EE;
             }
             else if (direction.y == 0 && direction.x < 0)
             {
-                return Type.Direction.W;
+                return Type.Direction.WW;
             }
             else if (direction.x > 0 && direction.y > 0)
             {
@@ -232,7 +232,7 @@ namespace MMH.Util
                 return Type.Direction.SW;
             }
 
-            return Type.Direction.S;
+            return Type.Direction.SS;
         }
     }
 }

@@ -8,7 +8,7 @@ namespace MMH.Data
         public int Index;
         public int2 Position;
 
-        public int PreviousNodeIndex;
+        public int PreviousIndex;
 
         public bool Solid;
 

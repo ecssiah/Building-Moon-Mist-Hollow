@@ -29,7 +29,6 @@ namespace MMH.Component
         {
             Data.Path pathData = pathfindingSystem.FindPath(new int2(0, 0), new int2(2, 0));
 
-            print("Is this the path yo?");
             print(pathData);
         }
     }

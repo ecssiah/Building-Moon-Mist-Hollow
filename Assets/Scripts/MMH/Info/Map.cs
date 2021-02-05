@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using Unity.Mathematics;
+using UnityEngine;
 
 namespace MMH.Info
 {
@@ -23,5 +25,17 @@ namespace MMH.Info
         public static readonly int SeedRoomSize = 3;
         public static readonly int NumberOfSeedRooms = 32;
         public static readonly int MaximumExpansionAttempts = 20;
+
+        public static readonly Dictionary<Type.Direction, int2> DirectionVectors = new Dictionary<Type.Direction, int2>
+        {
+            [Type.Direction.EE] = new int2(+1, +0),
+            [Type.Direction.NE] = new int2(+1, +1),
+            [Type.Direction.NN] = new int2(+0, +1),
+            [Type.Direction.NW] = new int2(-1, +1),
+            [Type.Direction.WW] = new int2(-1, +0),
+            [Type.Direction.SW] = new int2(-1, -1),
+            [Type.Direction.SS] = new int2(+0, -1),
+            [Type.Direction.SE] = new int2(+1, -1),
+        };
     }
 }

@@ -39,27 +39,24 @@ namespace MMH.System
 
         public void BuildGraph()
         {
-            for (int x = -Info.Map.Size; x <= Info.Map.Size; x++)
+            for (int i = 0; i < cellsData.Length; i++)
             {
-                for (int y = -Info.Map.Size; y <= Info.Map.Size; y++)
+                Data.Cell cellData = cellsData[i];
+
+                Data.Node node = new Data.Node
                 {
-                    Data.Cell cellData = cellsData[Util.Map.PositionToIndex(x, y)];
+                    Index = i,
+                    PreviousIndex = -1,
 
-                    Data.Node node = new Data.Node
-                    {
-                        Index = cellData.Index,
-                        PreviousNodeIndex = -1,
+                    GCost = int.MaxValue,
+                    HCost = int.MaxValue,
+                    FCost = int.MaxValue,
 
-                        GCost = int.MaxValue,
-                        HCost = int.MaxValue,
-                        FCost = int.MaxValue,
+                    Position = cellData.Position,
+                    Solid = cellData.Solid,
+                };
 
-                        Position = cellData.Position,
-                        Solid = cellData.Solid,
-                    };
-
-                    nodes.Add(node);
-                }
+                nodes.Add(node);
             }
         }
 
@@ -93,28 +90,16 @@ namespace MMH.System
 
             openList.Add(startNode.Index);
 
-            int2[] neighborOffsets = new int2[]
-            {
-                new int2(+1, +0),
-                new int2(+1, +1),
-                new int2(+0, +1),
-                new int2(-1, +1),
-                new int2(-1, +0),
-                new int2(-1, -1),
-                new int2(+0, -1),
-                new int2(+1, -1),
-            };
-
             int testCount = 0;
 
             //while (openList.Count > 0)
-            while (testCount < 2)
+            while (testCount < 20)
             {
                 testCount++;
 
                 Data.Node currentNode = GetNodeWithLowestFCost();
 
-                print($"Current: {currentNode.Position}");
+                string result = $"Current: {currentNode.Position}";
 
                 if (currentNode == endNode)
                 {
@@ -132,26 +117,27 @@ namespace MMH.System
 
                 closedList.Add(currentNode.Index);
 
-                for (int i = 0; i < neighborOffsets.Length; i++)
+                foreach (Type.Direction neighborDirection in Info.Map.DirectionVectors.Keys)
                 {
-                    int2 neighborPosition = currentNode.Position + neighborOffsets[i];
+                    int2 neighborPosition = currentNode.Position + Info.Map.DirectionVectors[neighborDirection];
 
                     if (!Util.Map.OnMap(neighborPosition)) continue;
 
-                    int neighborIndex = Util.Map.PositionToIndex(neighborPosition);
-                    Data.Node neighborNode = nodes[neighborIndex];
+                    Data.Node neighborNode = nodes[Util.Map.PositionToIndex(neighborPosition)];
 
-                    if (closedList.Contains(neighborNode.Index)) continue;
+                    if (neighborNode.Solid) continue;
 
-                    if (startNode.Solid || endNode.Solid) continue;
+                    int edgeIndex = Util.Map.EdgeToIndex(currentNode.Index, neighborNode.Index);
 
-                    print($"Neighbor: {neighborNode.Position}");
+                    if (edgeData[edgeIndex] == 0) continue;
 
-                    int gCost = CalcuateGCost(currentNode, neighborNode);
+                    result += $" Neighbor: {neighborNode.Position}";
+
+                    int gCost = currentNode.GCost + edgeData[edgeIndex];
 
                     if (gCost < neighborNode.GCost)
                     {
-                        neighborNode.PreviousNodeIndex = currentNode.Index;
+                        neighborNode.PreviousIndex = currentNode.Index;
 
                         neighborNode.GCost = gCost;
                         neighborNode.HCost = CalculateHCost(neighborNode, endNode);
@@ -163,81 +149,39 @@ namespace MMH.System
                         }
                     }
                 }
+
+                print(result);
             }
 
-            if (endNode.PreviousNodeIndex != -1)
-            {
-                List<int2> path = CalculatePath(endNode);
-
-                foreach (int2 position in path)
-                {
-                    print(position);
-                }
-
-                return new Data.Path
-                {
-                    Index = 0,
-                    Progress = 0f,
-                    Positions = path,
-                };
-            }
-            else
-            {
-                return new Data.Path();
-            }
+            return CalculatePath(endNode);
         }
 
 
-        private List<int2> CalculatePath(Data.Node endNode)
+        private Data.Path CalculatePath(Data.Node endNode)
         {
-            if (endNode.PreviousNodeIndex == -1)
+            Data.Path pathData = new Data.Path
             {
-                return new List<int2>();
-            }
-            else
-            {
-                List<int2> path = new List<int2>();
+                Index = 0,
+                Progress = 0,
+                Positions = new List<int2>(),
+            };
 
+            if (endNode.PreviousIndex != -1)
+            {
                 Data.Node currentNode = endNode;
 
-                while (currentNode.PreviousNodeIndex != -1)
+                while (currentNode.PreviousIndex != -1)
                 {
-                    path.Add(currentNode.Position);
+                    pathData.Positions.Add(currentNode.Position);
 
-                    currentNode = nodes[currentNode.PreviousNodeIndex];
+                    currentNode = nodes[currentNode.PreviousIndex];
                 }
 
-                return path;
-            }
-        }
-
-
-        private List<Data.Node> GetNeighbors(Data.Node node)
-        {
-            List<Data.Node> neighbors = new List<Data.Node>(9);
-
-            for (int x = node.Position.x - 1; x <= node.Position.x + 1; x++)
-            {
-                for (int y = node.Position.y - 1; y <= node.Position.y + 1; y++)
-                {
-                    if (!Util.Map.OnMap(x, y)) continue;
-
-                    int neighborIndex = Util.Map.PositionToIndex(x, y);
-                    Data.Node neighborNode = nodes[neighborIndex];
-
-                    if (neighborNode.Solid) continue;
-
-                    int edgeIndex = Util.Map.EdgeToIndex(node.Index, neighborIndex);
-
-                    if (edgeData[edgeIndex] == 0) continue;
-
-                    neighbors.Add(neighborNode);
-                }
+                pathData.Positions.Add(currentNode.Position);
             }
 
-            return neighbors;
+            return pathData;
         }
-
 
 
         // Cost Methods
@@ -260,24 +204,16 @@ namespace MMH.System
         }
 
 
-        private int CalcuateGCost(Data.Node node1, Data.Node node2)
-        {
-            bool horizontalMove = (node1.Position.x == node2.Position.x) || (node1.Position.y == node2.Position.y);
-
-            return node1.GCost + (horizontalMove ? Info.Map.StraightMovementCost : Info.Map.DiagonalMovementCost);
-        }
-
-
         private int CalculateHCost(Data.Node node1, Data.Node node2)
         {
             return OctileDistance(node1, node2);
         }
 
 
-        private int OctileDistance(Data.Node start, Data.Node end)
+        private int OctileDistance(Data.Node node1, Data.Node node2)
         {
-            int dx = math.abs(start.Position.x - end.Position.x);
-            int dy = math.abs(start.Position.y - end.Position.y);
+            int dx = math.abs(node1.Position.x - node2.Position.x);
+            int dy = math.abs(node1.Position.y - node2.Position.y);
 
             int straightDistance = math.min(dx, dy);
             int diagonalDistance = math.abs(dx - dy);

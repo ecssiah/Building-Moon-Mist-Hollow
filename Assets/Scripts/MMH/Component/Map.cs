@@ -47,7 +47,9 @@ namespace MMH.Component
             SetupRooms();
             SetupColonyBases();
 
-            SetupStructure(new int2(1, 0), Type.Structure.Stone_Wall);
+            SetupStructure(new int2(+1, +1), Type.Structure.Stone_Wall);
+            SetupStructure(new int2(+1, +0), Type.Structure.Stone_Wall);
+            SetupStructure(new int2(+1, -1), Type.Structure.Stone_Wall);
 
             CalculateEdges();
 
@@ -414,7 +416,7 @@ namespace MMH.Component
                         AddEdge(cellData, cellDataEE, Info.Map.StraightMovementCost);
                     }
 
-                    if (!cellDataNE.Solid && !cellDataNN.Solid)
+                    if (!cellDataNE.Solid && !cellDataNN.Solid && !cellDataEE.Solid)
                     {
                         AddEdge(cellData, cellDataNE, Info.Map.DiagonalMovementCost);
                     }
