@@ -33,9 +33,20 @@ namespace MMH.Component
                         int timeout = 0;
                         int2 offset = new int2(0, 0);
 
-                        while (timeout++ < 12 && mapSystem.Map.GetEdge(colonist.Entity.Position, colonist.Entity.Position + offset) == 0)
+                        while (timeout++ < 12)
                         {
-                            offset = Info.Map.DirectionOffsets[Util.Map.GetRandomCardinalDirection()];
+                            int2 testOffset = Info.Map.DirectionOffsets[Util.Map.GetRandomCardinalDirection()];
+
+                            int edgeValue = mapSystem.Map.GetEdge(
+                                colonist.Entity.Position,
+                                colonist.Entity.Position + testOffset
+                            );
+
+                            if (edgeValue != 0)
+                            {
+                                offset = testOffset;
+                                break;
+                            }
                         }
 
                         colonist.Path.StepProgress = 0;
