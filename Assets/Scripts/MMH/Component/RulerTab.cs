@@ -29,8 +29,9 @@ namespace MMH.Component
 
             colonistBehaviors = new List<string>
             {
-                "Wander Out",
-                "Gather Home"
+                "None",
+                "Wander",
+                "Gather"
             };
 
             dropdown = ruleListObject.transform.Find("Dropdown").GetComponent<TMP_Dropdown>();

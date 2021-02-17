@@ -77,6 +77,17 @@ namespace MMH.Component
         }
 
 
+        public int GetEdge(int2 position1, int2 position2)
+        {
+            if (!Util.Map.OnMap(position1) || !Util.Map.OnMap(position2)) return 0;
+
+            int index1 = Util.Map.PositionToIndex(position1);
+            int index2 = Util.Map.PositionToIndex(position2);
+
+            return mapData.Edges[Util.Map.EdgeToIndex(index1, index2)];
+        }
+
+
         public Data.Cell GetFreeCell()
         {
             Data.Cell cellData = GetCell(Util.Map.GetRandomMapPosition());

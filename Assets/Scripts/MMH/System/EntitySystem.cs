@@ -46,6 +46,7 @@ namespace MMH.System
             Type.Group groupType = Util.Misc.RandomEnumValue<Type.Group>();
 
             GameObject colonistGameObject = GenerateColonistObject(position);
+
             Component.Colonist colonist = colonistGameObject.AddComponent<Component.Colonist>();
 
             colonist.Entity = new Data.Entity
@@ -91,11 +92,15 @@ namespace MMH.System
         {
             foreach (Component.Colonist colonist in population.Colonists)
             {
-                if (behaviorName == "Wander Out")
+                if (behaviorName == "None")
+                {
+                    colonist.Behavior = Type.Behavior.None;
+                }
+                else if (behaviorName == "Wander")
                 {
                     colonist.Behavior = Type.Behavior.Wander;
                 }
-                else if (behaviorName == "Gather Home")
+                else if (behaviorName == "Gather")
                 {
                     colonist.Behavior = Type.Behavior.Gather;
                 }

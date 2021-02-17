@@ -2,7 +2,7 @@
 {
     public struct Entity
     {
-        public static readonly int NumberOfSeedColonists = 360;
+        public static readonly int NumberOfSeedColonists = 264;
 
         public static readonly float DefaultWalkSpeed = 4.0f;
 

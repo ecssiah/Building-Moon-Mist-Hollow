@@ -30,13 +30,12 @@ namespace MMH.Component
                     }
                     else
                     {
-                        int2 offset = Info.Map.DirectionOffsets[Util.Map.GetRandomCardinalDirection()];
-                        int2 newPosition = colonist.Entity.Position + offset;
+                        int timeout = 0;
+                        int2 offset = new int2(0, 0);
 
-                        while (!Util.Map.OnMap(newPosition) || mapSystem.Map.GetCell(newPosition).Solid)
+                        while (timeout++ < 12 && mapSystem.Map.GetEdge(colonist.Entity.Position, colonist.Entity.Position + offset) == 0)
                         {
                             offset = Info.Map.DirectionOffsets[Util.Map.GetRandomCardinalDirection()];
-                            newPosition = colonist.Entity.Position + offset;
                         }
 
                         colonist.Path.StepProgress = 0;
@@ -52,6 +51,12 @@ namespace MMH.Component
                     break;
 
                 case Type.Behavior.Gather:
+                    break;
+
+                case Type.Behavior.None:
+                    break;
+
+                default:
                     break;
             }
         }
