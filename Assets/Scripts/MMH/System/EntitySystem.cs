@@ -8,7 +8,6 @@ namespace MMH.System
     public class EntitySystem : MonoBehaviour, Handler.IEntityEventHandler
     {
         private MapSystem mapSystem;
-        private PathfindingSystem pathfindingSystem;
 
         private Data.Population population;
 
@@ -19,7 +18,6 @@ namespace MMH.System
         private void Awake()
         {
             mapSystem = GameObject.Find("Map System").GetComponent<MapSystem>();
-            pathfindingSystem = GameObject.Find("Pathfinding System").GetComponent<PathfindingSystem>();
 
             population = new Data.Population
             {
@@ -53,7 +51,7 @@ namespace MMH.System
             colonist.Entity = new Data.Entity
             {
                 GameObject = colonistGameObject,
-                Speed = 0f,
+                Speed = 0,
                 Position = position,
                 Direction = Type.Direction.SS,
             };
@@ -89,31 +87,17 @@ namespace MMH.System
         }
 
 
-        public Data.Path RequestPath(int2 start, int2 end)
-        {
-            return pathfindingSystem.FindPath(start, end);
-        }
-
-
         public void OnColonistBehaviorChange(string behaviorName)
         {
-            print("Again?");
-
-            if (behaviorName == "Wander Out")
+            foreach (Component.Colonist colonist in population.Colonists)
             {
-                print("Wander!");
-            }
-            else if (behaviorName == "Gather Home")
-            {
-                foreach (Component.Colonist colonist in population.Colonists)
+                if (behaviorName == "Wander Out")
                 {
-                    colonist.Path = RequestPath(
-                        colonist.Entity.Position,
-                        mapSystem.Map.GetColonyBase(colonist.Id.GroupType).Position
-                    );
-
-                    print(colonist.Id.FullName);
-                    print(colonist.Path);
+                    colonist.Behavior = Type.Behavior.Wander;
+                }
+                else if (behaviorName == "Gather Home")
+                {
+                    colonist.Behavior = Type.Behavior.Gather;
                 }
             }
         }

@@ -1,17 +1,18 @@
 ﻿using UnityEngine;
 using Unity.Mathematics;
 using System.Collections.Generic;
+using System.Collections;
 
-namespace MMH.System
+namespace MMH.Component
 {
-    public class PathfindingSystem : MonoBehaviour
+    public class Pathfinding : MonoBehaviour
     {
-        private MapSystem mapSystem;
-
-        private List<Data.Node> nodes;
+        private System.MapSystem mapSystem;
 
         private Data.Cell[] cellsData;
         private int[] edgeData;
+
+        private Data.Node[] nodes;
 
         private List<int> openList;
         private List<int> closedList;
@@ -19,9 +20,9 @@ namespace MMH.System
 
         void Awake()
         {
-            mapSystem = GameObject.Find("Map System").GetComponent<MapSystem>();
+            mapSystem = GameObject.Find("Map System").GetComponent<System.MapSystem>();
 
-            nodes = new List<Data.Node>(Info.Map.Area);
+            nodes = new Data.Node[Info.Map.Area];
 
             openList = new List<int>();
             closedList = new List<int>();
@@ -48,6 +49,8 @@ namespace MMH.System
                     Index = i,
                     PreviousIndex = -1,
 
+                    Visited = false,
+
                     GCost = int.MaxValue,
                     HCost = int.MaxValue,
                     FCost = int.MaxValue,
@@ -56,7 +59,7 @@ namespace MMH.System
                     Solid = cellData.Solid,
                 };
 
-                nodes.Add(node);
+                nodes[i] = node;
             }
         }
 
@@ -76,82 +79,103 @@ namespace MMH.System
                 return new Data.Path();
             }
 
-            for (int i = 0; i < nodes.Count; i++)
-            {
-                Data.Node node = nodes[i];
-                node.HCost = CalculateHCost(node, endNode);
-            }
+            StartCoroutine(Search(startNode, endNode));
+
+            return CalculatePath(startNode, endNode);
+        }
+
+
+        private IEnumerator Search(Data.Node startNode, Data.Node endNode)
+        {
+            int iteration = 0;
 
             openList.Clear();
-            closedList.Clear();
-
-            startNode.GCost = 0;
-            startNode.FCost = startNode.GCost + startNode.HCost;
-
             openList.Add(startNode.Index);
 
-            int timeout = 0;
-
-            while (openList.Count > 0 && timeout < 1000)
+            foreach (Data.Node node in nodes)
             {
-                timeout++;
+                node.Visited = false;
+            }
 
+            startNode.PreviousIndex = -1;
+
+            startNode.GCost = 0;
+            startNode.HCost = CalculateHCost(startNode, endNode);
+            startNode.FCost = startNode.GCost + startNode.HCost;
+
+            while (openList.Count > 0)
+            {
                 Data.Node currentNode = GetNodeWithLowestFCost();
 
-                if (currentNode == endNode) break;
+                print(currentNode.Position);
+                print(currentNode.FCost);
 
-                for (int i = 0; i < openList.Count; i++)
+                openList.RemoveAll(node => node == currentNode.Index);
+                currentNode.Visited = true;
+
+                if (currentNode == endNode)
                 {
-                    if (openList[i] == currentNode.Index)
-                    {
-                        openList.RemoveAt(i);
-                        break;
-                    }
+                    break;
                 }
 
-                closedList.Add(currentNode.Index);
-
-                foreach (Type.Direction neighborDirection in Info.Map.DirectionVectors.Keys)
+                foreach (Type.Direction neighborDirection in Info.Map.DirectionOffsets.Keys)
                 {
-                    int2 neighborPosition = currentNode.Position + Info.Map.DirectionVectors[neighborDirection];
+                    int2 neighborPosition = currentNode.Position + Info.Map.DirectionOffsets[neighborDirection];
 
-                    if (!Util.Map.OnMap(neighborPosition)) continue;
+                    if (!Util.Map.OnMap(neighborPosition))
+                    {
+                        continue;
+                    }
 
-                    Data.Node neighborNode = nodes[Util.Map.PositionToIndex(neighborPosition)];
+                    int neighborIndex = Util.Map.PositionToIndex(neighborPosition);
+                    Data.Node neighborNode = nodes[neighborIndex];
 
-                    if (neighborNode.Solid) continue;
+                    if (neighborNode.Visited)
+                    {
+                        continue;
+                    }
 
                     int edgeIndex = Util.Map.EdgeToIndex(currentNode.Index, neighborNode.Index);
 
-                    if (edgeData[edgeIndex] == 0) continue;
+                    if (edgeData[edgeIndex] == 0)
+                    {
+                        closedList.Add(neighborIndex);
+                        continue;
+                    }
 
                     int gCost = currentNode.GCost + edgeData[edgeIndex];
 
-                    if (gCost < neighborNode.GCost)
-                    {
-                        neighborNode.GCost = gCost;
-                        neighborNode.FCost = neighborNode.GCost + neighborNode.HCost;
+                    bool neighborNotInOpenList = !openList.Contains(neighborNode.Index);
 
+                    if (neighborNotInOpenList || gCost < neighborNode.GCost)
+                    {
                         neighborNode.PreviousIndex = currentNode.Index;
 
-                        if (!openList.Contains(neighborNode.Index))
+                        neighborNode.GCost = gCost;
+                        neighborNode.HCost = CalculateHCost(neighborNode, endNode);
+                        neighborNode.FCost = neighborNode.GCost + neighborNode.HCost;
+
+                        if (neighborNotInOpenList)
                         {
                             openList.Add(neighborNode.Index);
                         }
                     }
                 }
-            }
 
-            return CalculatePath(endNode);
+                if (iteration++ > Info.Path.SearchIterationsPerFrame)
+                {
+                    yield return null;
+                }
+            }
         }
 
 
-        private Data.Path CalculatePath(Data.Node endNode)
+        private Data.Path CalculatePath(Data.Node startNode, Data.Node endNode)
         {
             Data.Path pathData = new Data.Path
             {
                 Index = 0,
-                Progress = 0,
+                StepProgress = 0,
                 Positions = new List<int2>(),
             };
 
@@ -161,21 +185,17 @@ namespace MMH.System
 
                 while (currentNode.PreviousIndex != -1)
                 {
-                    pathData.Positions.Add(currentNode.Position);
+                    pathData.Positions.Insert(0, currentNode.Position);
 
                     currentNode = nodes[currentNode.PreviousIndex];
                 }
-
-                pathData.Positions.Add(currentNode.Position);
             }
 
-            pathData.Positions.Reverse();
+            pathData.Positions.Insert(0, startNode.Position);
 
             return pathData;
         }
 
-
-        // Cost Methods
 
         private Data.Node GetNodeWithLowestFCost()
         {
@@ -187,7 +207,7 @@ namespace MMH.System
 
                 if (testNode.FCost < lowestFCostNode.FCost)
                 {
-                    lowestFCostNode = testNode; 
+                    lowestFCostNode = testNode;
                 }
             }
 

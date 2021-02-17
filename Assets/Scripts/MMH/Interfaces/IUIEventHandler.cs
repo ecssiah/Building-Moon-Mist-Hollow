@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 namespace MMH.Handler
 {
-    public interface IUIEventHandler : IEventSystemHandler
+    public interface IUserInterfaceEventHandler : IEventSystemHandler
     {
         void SelectEntity(GameObject entityObject);
         void SelectCell(int2 cellPosition);

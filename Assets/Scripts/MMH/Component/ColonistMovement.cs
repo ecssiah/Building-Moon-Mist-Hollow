@@ -1,4 +1,5 @@
-﻿using Unity.Mathematics;
+﻿using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace MMH.Component
@@ -7,38 +8,71 @@ namespace MMH.Component
     {
         private Colonist colonist;
 
+        private System.MapSystem mapSystem;
+
 
         void Awake()
         {
             colonist = GetComponent<Colonist>();
+
+            mapSystem = GameObject.Find("Map System").GetComponent<System.MapSystem>();
         }
 
 
         void Update()
         {
-            if (colonist.Path.Positions.Count > 0)
+            switch (colonist.Behavior)
             {
-                FollowPath();
+                case Type.Behavior.Wander:
+                    if (colonist.Path.Active)
+                    {
+                        FollowPath();
+                    }
+                    else
+                    {
+                        int2 offset = Info.Map.DirectionOffsets[Util.Map.GetRandomCardinalDirection()];
+                        int2 newPosition = colonist.Entity.Position + offset;
+
+                        while (!Util.Map.OnMap(newPosition) || mapSystem.Map.GetCell(newPosition).Solid)
+                        {
+                            offset = Info.Map.DirectionOffsets[Util.Map.GetRandomCardinalDirection()];
+                            newPosition = colonist.Entity.Position + offset;
+                        }
+
+                        colonist.Path.StepProgress = 0;
+
+                        colonist.Path.Index = 0;
+                        colonist.Path.Positions = new List<int2>
+                        {
+                            colonist.Entity.Position,
+                            colonist.Entity.Position + offset
+                        };
+                    }
+
+                    break;
+
+                case Type.Behavior.Gather:
+                    break;
             }
         }
 
 
         private void FollowPath()
         {
-            if (colonist.Path.Progress < 1.0f)
+            if (colonist.Path.StepProgress < 1.0f)
             {
-                colonist.Path.Progress += Time.deltaTime;
+                colonist.Path.StepProgress += Time.deltaTime;
 
                 float2 isoPosition = new float2 (
                     math.lerp (
                         colonist.Entity.Position.x,
-                        colonist.Path.Positions[0].x,
-                        colonist.Path.Progress
+                        colonist.Path.Positions[colonist.Path.Index].x,
+                        colonist.Path.StepProgress
                     ),
                     math.lerp (
                         colonist.Entity.Position.y,
-                        colonist.Path.Positions[0].y,
-                        colonist.Path.Progress
+                        colonist.Path.Positions[colonist.Path.Index].y,
+                        colonist.Path.StepProgress
                     )
                 );
 
@@ -48,21 +82,16 @@ namespace MMH.Component
             }
             else
             {
-                colonist.Entity.Position = colonist.Path.Positions[0];
+                colonist.Entity.Position = colonist.Path.Positions[colonist.Path.Index];
 
-                colonist.Path.Progress = 0f;
-                colonist.Path.Positions.RemoveAt(0);
+                colonist.Path.Index++;
+                colonist.Path.StepProgress = 0;
 
-                if (colonist.Path.Positions.Count > 0)
+                if (colonist.Path.Index < colonist.Path.Positions.Count)
                 {
-                    colonist.Entity.Speed = Info.Entity.DefaultWalkSpeed;
-                    colonist.Entity.Direction = Util.Map.CardinalDirection(
-                        colonist.Path.Positions[0] - colonist.Entity.Position
+                    colonist.Entity.Direction = Util.Map.GetCardinalDirection(
+                        colonist.Path.Positions[colonist.Path.Index] - colonist.Entity.Position
                     );
-                }
-                else
-                {
-                    colonist.Entity.Speed = 0;
                 }
             }
         }

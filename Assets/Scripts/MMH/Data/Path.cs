@@ -8,19 +8,21 @@ namespace MMH.Data
         private int index;
         public int Index { get => index; set => index = value; }
 
-        private float progress;
-        public float Progress { get => progress; set => progress = value; }
-
         private List<int2> positions;
         public List<int2> Positions { get => positions; set => positions = value; }
+
+        private float stepProgress;
+        public float StepProgress { get => stepProgress; set => stepProgress = value; }
+
+        public bool Active => index < positions.Count;
 
 
         public Path()
         {
             index = 0;
-            progress = 0f;
-
             positions = new List<int2>();
+
+            stepProgress = 0f;
         }
 
 

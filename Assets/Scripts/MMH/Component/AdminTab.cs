@@ -6,8 +6,6 @@ namespace MMH.Component
 {
     public class AdminTab : Tab
     {
-        private System.PathfindingSystem pathfindingSystem;
-
         private GameObject testButtonObject;
 
         private Button testButton;
@@ -15,8 +13,6 @@ namespace MMH.Component
         public override void Awake()
         {
             Active = false;
-
-            pathfindingSystem = GameObject.Find("Pathfinding System").GetComponent<System.PathfindingSystem>();
 
             testButtonObject = transform.Find("Test Button").gameObject;
             testButton = testButtonObject.GetComponent<Button>();
@@ -27,9 +23,7 @@ namespace MMH.Component
 
         private void OnTestButtonClick()
         {
-            Data.Path pathData = pathfindingSystem.FindPath(new int2(0, 0), new int2(2, 0));
-
-            print(pathData);
+            print("Test Button Clicked");
         }
     }
 }

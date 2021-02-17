@@ -26,7 +26,7 @@ namespace MMH.Info
         public static readonly int NumberOfSeedRooms = 32;
         public static readonly int MaximumExpansionAttempts = 20;
 
-        public static readonly Dictionary<Type.Direction, int2> DirectionVectors = new Dictionary<Type.Direction, int2>
+        public static readonly Dictionary<Type.Direction, int2> DirectionOffsets = new Dictionary<Type.Direction, int2>
         {
             [Type.Direction.EE] = new int2(+1, +0),
             [Type.Direction.NE] = new int2(+1, +1),

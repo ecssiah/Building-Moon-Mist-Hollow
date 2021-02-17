@@ -7,6 +7,8 @@ namespace MMH.Data
         public int Index;
         public int PreviousIndex;
 
+        public bool Visited;
+
         public int GCost;
         public int HCost;
         public int FCost;

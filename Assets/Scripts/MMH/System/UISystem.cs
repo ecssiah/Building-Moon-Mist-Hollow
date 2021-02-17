@@ -4,12 +4,12 @@ using UnityEngine;
 
 namespace MMH.System
 {
-    public class UISystem : MonoBehaviour, Handler.IUIEventHandler
+    public class UISystem : MonoBehaviour, Handler.IUserInterfaceEventHandler
     {
-        private Data.UI uiData;
-
         private RenderSystem renderSystem;
         private MapSystem mapSystem;
+
+        private Data.UI uiData;
 
         private Component.MainMenu mainMenu;
         private Component.InfoWindow infoWindow;
@@ -28,8 +28,8 @@ namespace MMH.System
 
             entityLabeler = gameObject.AddComponent<Component.EntityLabeler>();
 
-            mainMenu = transform.Find("Canvas/Main Panel Canvas/Main Menu").gameObject.AddComponent<Component.MainMenu>();
-            infoWindow = transform.Find("Canvas/Info Panel Canvas/Info Window").gameObject.AddComponent<Component.InfoWindow>();
+            mainMenu = transform.Find("Canvas/Main Panel/Main Menu").gameObject.AddComponent<Component.MainMenu>();
+            infoWindow = transform.Find("Canvas/Info Panel/Info Window").gameObject.AddComponent<Component.InfoWindow>();
 
             _ = gameObject.AddComponent<Component.CameraController>();
             _ = gameObject.AddComponent<Component.SelectionHandler>();
@@ -46,6 +46,7 @@ namespace MMH.System
             if (Input.GetKeyDown(KeyCode.BackQuote))
             {
                 SetMode(Type.UIMode.Main);
+
                 mainMenu.SelectSection(Type.MainMenuSection.Admin);
             }
         }

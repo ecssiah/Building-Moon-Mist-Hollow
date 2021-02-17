@@ -2,6 +2,6 @@
 {
     public struct Path
     {
-        public static readonly int SearchIterationsPerFrame = (int)1e4;
+        public static readonly int SearchIterationsPerFrame = 40;
     }
 }

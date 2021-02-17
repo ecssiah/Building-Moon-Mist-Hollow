@@ -149,7 +149,7 @@ namespace MMH.Util
         }
 
 
-        public static float2 RandomIsoDirection()
+        public static float2 GetRandomIsoDirection()
         {
             float2 newIsoDirection = new float2(Random.Range(-1, 2), Random.Range(-1, 2));
 
@@ -197,7 +197,7 @@ namespace MMH.Util
         }
 
 
-        public static Type.Direction CardinalDirection(float2 direction)
+        public static Type.Direction GetCardinalDirection(float2 direction)
         {
             if (direction.x == 0 && direction.y > 0)
             {
@@ -233,6 +233,12 @@ namespace MMH.Util
             }
 
             return Type.Direction.SS;
+        }
+
+
+        public static Type.Direction GetRandomCardinalDirection()
+        {
+            return GetCardinalDirection(GetRandomIsoDirection());
         }
     }
 }
