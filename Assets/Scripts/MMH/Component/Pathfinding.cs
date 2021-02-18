@@ -226,7 +226,7 @@ namespace MMH.Component
             int straightDistance = math.min(dx, dy);
             int diagonalDistance = math.abs(dx - dy);
 
-            return Info.Map.StraightMovementCost * straightDistance + Info.Map.DiagonalMovementCost * diagonalDistance;
+            return Info.Map.StraightMovementCost * straightDistance + (Info.Map.DiagonalMovementCost - Info.Map.StraightMovementCost) * diagonalDistance;
         }
     }
 }
