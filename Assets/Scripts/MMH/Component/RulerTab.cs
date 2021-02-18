@@ -46,14 +46,14 @@ namespace MMH.Component
             dropdown.AddOptions(colonistBehaviors);
 
             dropdown.onValueChanged.AddListener(
-                delegate { UpdateColonistBehavior(); }
+                delegate { OnColonistBehaviorChange(); }
             );
         }
 
 
-        private void UpdateColonistBehavior()
+        private void OnColonistBehaviorChange()
         {
-            entitySystem.OnColonistBehaviorChange(colonistBehaviors[dropdown.value]);
+            entitySystem.SetColonistBehavior(colonistBehaviors[dropdown.value]);
         }
     }
 }

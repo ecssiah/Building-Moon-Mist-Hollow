@@ -88,7 +88,7 @@ namespace MMH.System
         }
 
 
-        public void OnColonistBehaviorChange(string behaviorName)
+        public void SetColonistBehavior(string behaviorName)
         {
             foreach (Component.Colonist colonist in population.Colonists)
             {

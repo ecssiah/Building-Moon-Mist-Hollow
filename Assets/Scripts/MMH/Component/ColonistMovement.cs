@@ -39,37 +39,9 @@ namespace MMH.Component
                     }
                     else
                     {
-                        int2 offset = new int2(0, 0);
+                        int2 offset = new int2(UnityEngine.Random.Range(-2, 2), UnityEngine.Random.Range(-2, 2));
 
-                        List<int2> offsets = Info.Map.DirectionOffsets.Values.ToList();
-
-                        while (offsets.Count > 0)
-                        {
-                            int testOffsetIndex = UnityEngine.Random.Range(0, offsets.Count - 1);
-                            int2 testOffset = offsets[testOffsetIndex];
-
-                            offsets.RemoveAt(testOffsetIndex);
-
-                            int edgeValue = mapSystem.Map.GetEdge(
-                                colonist.Entity.Position,
-                                colonist.Entity.Position + testOffset
-                            );
-
-                            if (edgeValue != 0)
-                            {
-                                offset = testOffset;
-                                break;
-                            }
-                        }
-
-                        colonist.Path.StepProgress = 0;
-
-                        colonist.Path.Index = 0;
-                        colonist.Path.Positions = new List<int2>
-                        {
-                            colonist.Entity.Position,
-                            colonist.Entity.Position + offset
-                        };
+                        colonist.Path = pathfinding.FindPath(colonist.Entity.Position, colonist.Entity.Position + offset);
                     }
 
                     break;
@@ -89,6 +61,7 @@ namespace MMH.Component
                     break;
 
                 case Type.Behavior.None:
+
                     break;
 
                 default:
