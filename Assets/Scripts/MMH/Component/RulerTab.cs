@@ -24,8 +24,16 @@ namespace MMH.Component
 
             ruleListObject = transform.Find("Colonist Behavior").gameObject;
 
+            SetupBehaviorDropdown();
+        }
+
+
+        private void SetupBehaviorDropdown()
+        {
             label = ruleListObject.transform.Find("Label").GetComponent<TextMeshProUGUI>();
             label.text = "Colonist Behavior";
+
+            dropdown = ruleListObject.transform.Find("Dropdown").GetComponent<TMP_Dropdown>();
 
             colonistBehaviors = new List<string>
             {
@@ -34,23 +42,18 @@ namespace MMH.Component
                 "Gather"
             };
 
-            dropdown = ruleListObject.transform.Find("Dropdown").GetComponent<TMP_Dropdown>();
             dropdown.ClearOptions();
             dropdown.AddOptions(colonistBehaviors);
+
             dropdown.onValueChanged.AddListener(
-                delegate { OnColonistBehaviorChange(); }
+                delegate { UpdateColonistBehavior(); }
             );
         }
 
 
-        private void OnColonistBehaviorChange()
+        private void UpdateColonistBehavior()
         {
             entitySystem.OnColonistBehaviorChange(colonistBehaviors[dropdown.value]);
-        }
-
-
-        void Update()
-        {
         }
     }
 }

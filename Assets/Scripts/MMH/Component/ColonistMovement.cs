@@ -9,14 +9,22 @@ namespace MMH.Component
     {
         private Colonist colonist;
 
+        private Pathfinding pathfinding;
+
         private System.MapSystem mapSystem;
 
 
-        void Awake()
+        private void Awake()
         {
             colonist = GetComponent<Colonist>();
 
             mapSystem = GameObject.Find("Map System").GetComponent<System.MapSystem>();
+        }
+
+
+        private void Start()
+        {
+            pathfinding = colonist.GetComponentInParent<Pathfinding>();
         }
 
 
@@ -67,6 +75,17 @@ namespace MMH.Component
                     break;
 
                 case Type.Behavior.Gather:
+                    if (colonist.Path.Active)
+                    {
+                        FollowPath();
+                    }
+                    else
+                    {
+                        Data.ColonyBase colonyBase = mapSystem.Map.GetColonyBase(colonist.Id.GroupType);
+
+                        colonist.Path = pathfinding.FindPath(colonist.Entity.Position, colonyBase.Position);
+                    }
+
                     break;
 
                 case Type.Behavior.None:

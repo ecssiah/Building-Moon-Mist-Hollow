@@ -38,6 +38,15 @@ namespace MMH.Component
            
             colonyBases = new Dictionary<Type.Group, Data.ColonyBase>();
 
+            SetupMap();
+            ConstructMap();
+
+            CalculateEdges();
+        }
+
+
+        public void SetupMap()
+        {
             SetupCells();
             SetupBase();
             SetupPaths();
@@ -46,10 +55,80 @@ namespace MMH.Component
 
             SetupRooms();
             SetupColonyBases();
+        }
 
-            CalculateEdges();
 
-            ConstructMap();
+        public void ConstructMap()
+        {
+            foreach (Data.Cell cell in mapData.Cells)
+            {
+                mapSystem.RenderCell(cell);
+            }
+        }
+
+
+        public void CalculateEdges()
+        {
+            ResetEdges();
+
+            for (int x = -Info.Map.Size + 1; x <= Info.Map.Size - 1; x++)
+            {
+                for (int y = -Info.Map.Size + 1; y <= Info.Map.Size - 1; y++)
+                {
+                    Data.Cell cellData = GetCell(x, y);
+
+                    if (cellData.Solid) continue;
+
+                    Data.Cell cellDataEE = GetCell(x + 1, y + 0);
+                    Data.Cell cellDataNE = GetCell(x + 1, y + 1);
+                    Data.Cell cellDataNN = GetCell(x + 0, y + 1);
+                    Data.Cell cellDataNW = GetCell(x - 1, y + 1);
+                    Data.Cell cellDataWW = GetCell(x - 1, y + 0);
+                    Data.Cell cellDataSW = GetCell(x - 1, y - 1);
+                    Data.Cell cellDataSS = GetCell(x + 0, y - 1);
+                    Data.Cell cellDataSE = GetCell(x + 1, y - 1);
+
+                    if (!cellDataEE.Solid)
+                    {
+                        AddEdge(cellData, cellDataEE, Info.Map.StraightMovementCost);
+                    }
+
+                    if (!cellDataNE.Solid && !cellDataNN.Solid && !cellDataEE.Solid)
+                    {
+                        AddEdge(cellData, cellDataNE, Info.Map.DiagonalMovementCost);
+                    }
+
+                    if (!cellDataNN.Solid)
+                    {
+                        AddEdge(cellData, cellDataNN, Info.Map.StraightMovementCost);
+                    }
+
+                    if (!cellDataNN.Solid && !cellDataNW.Solid && !cellDataWW.Solid)
+                    {
+                        AddEdge(cellData, cellDataNW, Info.Map.DiagonalMovementCost);
+                    }
+
+                    if (!cellDataWW.Solid)
+                    {
+                        AddEdge(cellData, cellDataWW, Info.Map.StraightMovementCost);
+                    }
+
+                    if (!cellDataWW.Solid && !cellDataSW.Solid && !cellDataSS.Solid)
+                    {
+                        AddEdge(cellData, cellDataSW, Info.Map.DiagonalMovementCost);
+                    }
+
+                    if (!cellDataSS.Solid)
+                    {
+                        AddEdge(cellData, cellDataSS, Info.Map.StraightMovementCost);
+                    }
+
+                    if (!cellDataSS.Solid && !cellDataSE.Solid && !cellDataEE.Solid)
+                    {
+                        AddEdge(cellData, cellDataSE, Info.Map.DiagonalMovementCost);
+                    }
+                }
+            }
         }
 
 
@@ -397,71 +476,7 @@ namespace MMH.Component
         }
 
 
-        public void CalculateEdges()
-        {
-            ResetEdges();
-
-            for (int x = -Info.Map.Size + 2; x <= Info.Map.Size - 2; x++)
-            {
-                for (int y = -Info.Map.Size + 2; y <= Info.Map.Size - 2; y++)
-                {
-                    Data.Cell cellData = GetCell(x, y);
-
-                    if (cellData.Solid) continue;
-
-                    Data.Cell cellDataEE = GetCell(x + 1, y + 0);
-                    Data.Cell cellDataNE = GetCell(x + 1, y + 1);
-                    Data.Cell cellDataNN = GetCell(x + 0, y + 1);
-                    Data.Cell cellDataNW = GetCell(x - 1, y + 1);
-                    Data.Cell cellDataWW = GetCell(x - 1, y + 0);
-                    Data.Cell cellDataSW = GetCell(x - 1, y - 1);
-                    Data.Cell cellDataSS = GetCell(x + 0, y - 1);
-                    Data.Cell cellDataSE = GetCell(x + 1, y - 1);
-
-                    if (!cellDataEE.Solid)
-                    {
-                        AddEdge(cellData, cellDataEE, Info.Map.StraightMovementCost);
-                    }
-
-                    if (!cellDataNE.Solid && !cellDataNN.Solid && !cellDataEE.Solid)
-                    {
-                        AddEdge(cellData, cellDataNE, Info.Map.DiagonalMovementCost);
-                    }
-
-                    if (!cellDataNN.Solid)
-                    {
-                        AddEdge(cellData, cellDataNN, Info.Map.StraightMovementCost);
-                    }
-
-                    if (!cellDataNN.Solid && !cellDataNW.Solid && !cellDataWW.Solid)
-                    {
-                        AddEdge(cellData, cellDataNW, Info.Map.DiagonalMovementCost);
-                    }
-
-                    if (!cellDataWW.Solid)
-                    {
-                        AddEdge(cellData, cellDataWW, Info.Map.StraightMovementCost);
-                    }
-
-                    if (!cellDataWW.Solid && !cellDataSW.Solid && !cellDataSS.Solid)
-                    {
-                        AddEdge(cellData, cellDataSW, Info.Map.DiagonalMovementCost);
-                    }
-
-                    if (!cellDataSS.Solid)
-                    {
-                        AddEdge(cellData, cellDataSS, Info.Map.StraightMovementCost);
-                    }
-
-                    if (!cellDataSS.Solid && !cellDataSE.Solid && !cellDataEE.Solid)
-                    {
-                        AddEdge(cellData, cellDataSE, Info.Map.DiagonalMovementCost);
-                    }
-                }
-            }
-        }
-
-
+        
         private void AddEdge(Data.Cell cellData1, Data.Cell cellData2, int weight)
         {
             int forwardEdgeIndex = Util.Map.EdgeToIndex(cellData1.Index, cellData2.Index);
@@ -478,12 +493,6 @@ namespace MMH.Component
         }
 
 
-        public void ConstructMap()
-        {
-            foreach (Data.Cell cell in mapData.Cells)
-            {
-                mapSystem.RenderCell(cell);
-            }
-        }
+        
     }
 }

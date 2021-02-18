@@ -6,7 +6,7 @@ namespace MMH.Info
 {
     public struct Map
     {
-        public static readonly int Size = 32;
+        public static readonly int Size = 12;
         public static readonly int Width = 2 * Size + 1;
         public static readonly int Area = Width * Width;
 
@@ -23,7 +23,7 @@ namespace MMH.Info
         public static readonly int DiagonalMovementCost = 14;
 
         public static readonly int SeedRoomSize = 3;
-        public static readonly int NumberOfSeedRooms = 32;
+        public static readonly int NumberOfSeedRooms = 4;
         public static readonly int MaximumExpansionAttempts = 20;
 
         public static readonly Dictionary<Type.Direction, int2> DirectionOffsets = new Dictionary<Type.Direction, int2>

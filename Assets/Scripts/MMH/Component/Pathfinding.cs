@@ -107,9 +107,6 @@ namespace MMH.Component
             {
                 Data.Node currentNode = GetNodeWithLowestFCost();
 
-                print(currentNode.Position);
-                print(currentNode.FCost);
-
                 openList.RemoveAll(node => node == currentNode.Index);
                 currentNode.Visited = true;
 
