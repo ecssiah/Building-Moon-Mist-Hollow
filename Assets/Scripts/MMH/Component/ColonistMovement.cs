@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -30,12 +31,16 @@ namespace MMH.Component
                     }
                     else
                     {
-                        int timeout = 0;
                         int2 offset = new int2(0, 0);
 
-                        while (timeout++ < 12)
+                        List<int2> offsets = Info.Map.DirectionOffsets.Values.ToList();
+
+                        while (offsets.Count > 0)
                         {
-                            int2 testOffset = Info.Map.DirectionOffsets[Util.Map.GetRandomCardinalDirection()];
+                            int testOffsetIndex = UnityEngine.Random.Range(0, offsets.Count - 1);
+                            int2 testOffset = offsets[testOffsetIndex];
+
+                            offsets.RemoveAt(testOffsetIndex);
 
                             int edgeValue = mapSystem.Map.GetEdge(
                                 colonist.Entity.Position,
@@ -105,9 +110,15 @@ namespace MMH.Component
 
                 if (colonist.Path.Index < colonist.Path.Positions.Count)
                 {
+                    colonist.Entity.Speed = Info.Entity.DefaultWalkSpeed;
+
                     colonist.Entity.Direction = Util.Map.GetCardinalDirection(
                         colonist.Path.Positions[colonist.Path.Index] - colonist.Entity.Position
                     );
+                }
+                else
+                {
+                    colonist.Entity.Speed = 0;
                 }
             }
         }
