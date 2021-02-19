@@ -88,19 +88,13 @@ namespace MMH.System
         }
 
 
-        public void SetColonistBehavior(string behaviorName)
+        public void SetColonistBehavior(Type.Behavior behavior)
         {
             foreach (Component.Colonist colonist in population.Colonists)
             {
-                if (behaviorName == "None")
-                {
-                    colonist.Behavior = Type.Behavior.None;
-                }
-                else if (behaviorName == "Wander")
-                {
-                    colonist.Behavior = Type.Behavior.Wander;
-                }
-                else if (behaviorName == "Gather")
+                colonist.Behavior = behavior;
+
+                if (behavior == Type.Behavior.Gather)
                 {
                     colonist.Behavior = Type.Behavior.Gather;
 

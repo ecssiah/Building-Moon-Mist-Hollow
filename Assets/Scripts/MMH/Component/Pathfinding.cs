@@ -171,9 +171,8 @@ namespace MMH.Component
         {
             Data.Path pathData = new Data.Path
             {
-                Index = 0,
                 StepProgress = 0,
-                Positions = new List<int2>(),
+                Positions = new Stack<int2>(),
             };
 
             if (endNode.PreviousIndex != -1)
@@ -182,13 +181,11 @@ namespace MMH.Component
 
                 while (currentNode.PreviousIndex != -1)
                 {
-                    pathData.Positions.Insert(0, currentNode.Position);
+                    pathData.Positions.Push(currentNode.Position);
 
                     currentNode = nodes[currentNode.PreviousIndex];
                 }
             }
-
-            pathData.Positions.Insert(0, startNode.Position);
 
             return pathData;
         }

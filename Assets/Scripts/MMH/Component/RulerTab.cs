@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -35,15 +37,10 @@ namespace MMH.Component
 
             dropdown = ruleListObject.transform.Find("Dropdown").GetComponent<TMP_Dropdown>();
 
-            colonistBehaviors = new List<string>
-            {
-                "None",
-                "Wander",
-                "Gather"
-            };
+            List<string> behaviorNames = Enum.GetNames(typeof(Type.Behavior)).ToList();
 
             dropdown.ClearOptions();
-            dropdown.AddOptions(colonistBehaviors);
+            dropdown.AddOptions(behaviorNames);
 
             dropdown.onValueChanged.AddListener(
                 delegate { OnColonistBehaviorChange(); }
@@ -53,7 +50,7 @@ namespace MMH.Component
 
         private void OnColonistBehaviorChange()
         {
-            entitySystem.SetColonistBehavior(colonistBehaviors[dropdown.value]);
+            entitySystem.SetColonistBehavior((Type.Behavior)dropdown.value);
         }
     }
 }

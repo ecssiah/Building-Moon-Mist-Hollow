@@ -19,7 +19,14 @@ namespace MMH.Component
             gameObject.AddComponent<ColonistAnimator>();
             gameObject.AddComponent<ColonistMovement>();
 
+            Path = new Data.Path();
             pathfinding = gameObject.AddComponent<Pathfinding>();
+        }
+
+
+        public bool HasPath()
+        {
+            return Path.Positions.Count > 0;
         }
 
 

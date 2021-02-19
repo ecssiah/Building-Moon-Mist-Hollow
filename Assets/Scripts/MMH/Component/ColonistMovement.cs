@@ -18,7 +18,7 @@ namespace MMH.Component
 
         void Update()
         {
-            if (colonist.Path.Active)
+            if (colonist.HasPath())
             {
                 FollowPath();
             }
@@ -27,12 +27,12 @@ namespace MMH.Component
                 switch (colonist.Behavior)
                 {
                     case Type.Behavior.Wander:
-                        int2 offset = new int2(UnityEngine.Random.Range(-3, 4), UnityEngine.Random.Range(-3, 4));
+                        int2 offset = new int2(
+                            UnityEngine.Random.Range(-3, 4),
+                            UnityEngine.Random.Range(-3, 4)
+                        );
 
                         colonist.FindPath(colonist.Entity.Position + offset);
-
-                        print("Wander");
-                        print(colonist.Path);
 
                         break;
                 }
@@ -44,39 +44,32 @@ namespace MMH.Component
         {
             if (colonist.Path.StepProgress < 1.0f)
             {
-                colonist.Path.StepProgress += Time.deltaTime;
+                int2 target = colonist.Path.Positions.Peek();
 
-                float2 isoPosition = new float2 (
-                    math.lerp (
-                        colonist.Entity.Position.x,
-                        colonist.Path.Positions[colonist.Path.Index].x,
-                        colonist.Path.StepProgress
-                    ),
-                    math.lerp (
-                        colonist.Entity.Position.y,
-                        colonist.Path.Positions[colonist.Path.Index].y,
-                        colonist.Path.StepProgress
-                    )
+                float2 isoPosition = Util.Math.Lerp2(
+                    colonist.Entity.Position, target, colonist.Path.StepProgress
                 );
-
                 float2 worldPosition = Util.Map.IsoToWorld(isoPosition);
 
                 transform.position = new Vector3(worldPosition.x, worldPosition.y, 0);
+
+                colonist.Path.StepProgress += Time.deltaTime;
             }
             else
             {
-                colonist.Entity.Position = colonist.Path.Positions[colonist.Path.Index];
+                colonist.Entity.Position = colonist.Path.Positions.Pop();
 
-                colonist.Path.Index++;
                 colonist.Path.StepProgress = 0;
 
-                if (colonist.Path.Index < colonist.Path.Positions.Count)
+                if (colonist.Path.Positions.Count > 0)
                 {
                     colonist.Entity.Speed = Info.Entity.DefaultWalkSpeed;
 
                     colonist.Entity.Direction = Util.Map.GetCardinalDirection(
-                        colonist.Path.Positions[colonist.Path.Index] - colonist.Entity.Position
+                        colonist.Path.Positions.Peek() - colonist.Entity.Position
                     );
+
+                    print(colonist.Entity.Direction);
                 }
                 else
                 {

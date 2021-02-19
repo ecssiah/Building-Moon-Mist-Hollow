@@ -11,6 +11,7 @@ namespace MMH.Component
 
         private TextMeshProUGUI entityIdText;
         private TextMeshProUGUI entityNameText;
+        private TextMeshProUGUI entityPositionText;
         private TextMeshProUGUI entityPopulationTypeText;
         private TextMeshProUGUI entityGroupTypeText;
 
@@ -39,6 +40,7 @@ namespace MMH.Component
 
             entityIdText = Util.UI.SetLabel("Id", entityTab.transform.Find("Id"));
             entityNameText = Util.UI.SetLabel("Name", entityTab.transform.Find("Name"));
+            entityPositionText = Util.UI.SetLabel("Position", entityTab.transform.Find("Position"));
             entityPopulationTypeText = Util.UI.SetLabel("Population", entityTab.transform.Find("Population Type"));
             entityGroupTypeText = Util.UI.SetLabel("Group", entityTab.transform.Find("Group Type"));
         }
@@ -65,6 +67,7 @@ namespace MMH.Component
 
             entityIdText.text = $"{colonist.Id.Number}";
             entityNameText.text = colonist.Id.FullName;
+            entityPositionText.text = $"{colonist.Entity.Position}";
             entityPopulationTypeText.text = $"{Enum.GetName(typeof(Type.Population), colonist.Id.PopulationType)}";
             entityGroupTypeText.text = $"{Enum.GetName(typeof(Type.Group), colonist.Id.GroupType)}";
         }
