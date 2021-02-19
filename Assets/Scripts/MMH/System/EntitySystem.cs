@@ -49,23 +49,13 @@ namespace MMH.System
 
             Component.Colonist colonist = colonistGameObject.AddComponent<Component.Colonist>();
 
-            colonist.Entity = new Data.Entity
-            {
-                GameObject = colonistGameObject,
-                Speed = 0,
-                Position = position,
-                Direction = Type.Direction.SS,
-            };
+            colonist.Entity.GameObject = colonistGameObject;
+            colonist.Entity.Position = position;
 
-            colonist.Id = new Data.Id
-            {
-                FullName = Util.Entity.GetName(groupType),
-                Number = population.NextId++,
-                PopulationType = Type.Population.Citizen,
-                GroupType = groupType,
-            };
-
-            colonist.Path = new Data.Path();
+            colonist.Id.Number = population.NextId++;
+            colonist.Id.PopulationType = Type.Population.Citizen;
+            colonist.Id.GroupType = groupType;
+            colonist.Id.FullName = Util.Entity.GetName(groupType);
 
             colonistGameObject.name = colonist.Id.FullName;
             colonistGameObject.transform.parent = entitiesObject.transform;

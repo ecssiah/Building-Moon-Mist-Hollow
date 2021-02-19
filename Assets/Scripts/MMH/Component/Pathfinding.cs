@@ -175,16 +175,13 @@ namespace MMH.Component
                 Positions = new Stack<int2>(),
             };
 
-            if (endNode.PreviousIndex != -1)
+            Data.Node currentNode = endNode;
+
+            while (currentNode.PreviousIndex != -1)
             {
-                Data.Node currentNode = endNode;
+                pathData.Positions.Push(currentNode.Position);
 
-                while (currentNode.PreviousIndex != -1)
-                {
-                    pathData.Positions.Push(currentNode.Position);
-
-                    currentNode = nodes[currentNode.PreviousIndex];
-                }
+                currentNode = nodes[currentNode.PreviousIndex];
             }
 
             return pathData;

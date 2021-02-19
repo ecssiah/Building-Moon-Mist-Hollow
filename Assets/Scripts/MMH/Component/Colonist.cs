@@ -19,7 +19,11 @@ namespace MMH.Component
             gameObject.AddComponent<ColonistAnimator>();
             gameObject.AddComponent<ColonistMovement>();
 
+            Id = new Data.Id();
+            Entity = new Data.Entity();
             Path = new Data.Path();
+            Inventory = new Data.Inventory();
+
             pathfinding = gameObject.AddComponent<Pathfinding>();
         }
 

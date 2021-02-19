@@ -18,24 +18,41 @@ namespace MMH.Component
 
         void Update()
         {
+            switch (colonist.Behavior)
+            {
+                case Type.Behavior.Wander:
+                    Wander();
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+
+        private void Wander()
+        {
             if (colonist.HasPath())
             {
                 FollowPath();
             }
             else
             {
-                switch (colonist.Behavior)
+                int2 offset = new int2(
+                    UnityEngine.Random.Range(-3, 4),
+                    UnityEngine.Random.Range(-3, 4)
+                );
+
+                colonist.FindPath(colonist.Entity.Position + offset);
+
+                if (colonist.HasPath())
                 {
-                    case Type.Behavior.Wander:
-                        int2 offset = new int2(
-                            UnityEngine.Random.Range(-3, 4),
-                            UnityEngine.Random.Range(-3, 4)
-                        );
-
-                        colonist.FindPath(colonist.Entity.Position + offset);
-
-                        break;
+                    colonist.Entity.Direction = Util.Map.GetCardinalDirection(
+                        colonist.Path.Positions.Peek() - colonist.Entity.Position
+                    );
                 }
+
+                print(colonist.Path);
             }
         }
 
@@ -53,7 +70,7 @@ namespace MMH.Component
 
                 transform.position = new Vector3(worldPosition.x, worldPosition.y, 0);
 
-                colonist.Path.StepProgress += Time.deltaTime;
+                colonist.Path.StepProgress += Info.Entity.DefaultWalkSpeed * Time.deltaTime;
             }
             else
             {
@@ -63,17 +80,9 @@ namespace MMH.Component
 
                 if (colonist.Path.Positions.Count > 0)
                 {
-                    colonist.Entity.Speed = Info.Entity.DefaultWalkSpeed;
-
                     colonist.Entity.Direction = Util.Map.GetCardinalDirection(
                         colonist.Path.Positions.Peek() - colonist.Entity.Position
                     );
-
-                    print(colonist.Entity.Direction);
-                }
-                else
-                {
-                    colonist.Entity.Speed = 0;
                 }
             }
         }

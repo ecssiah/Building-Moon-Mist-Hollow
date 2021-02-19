@@ -11,5 +11,15 @@ namespace MMH.Data
 
         public float Speed;
         public Type.Direction Direction;
+
+
+        public Entity()
+        {
+            GameObject = null;
+
+            Position = new int2();
+            Speed = Info.Entity.DefaultWalkSpeed;
+            Direction = Type.Direction.SW;
+        }
     }
 }
