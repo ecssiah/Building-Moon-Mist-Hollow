@@ -48,15 +48,15 @@ namespace MMH.System
         }
 
 
-        public void SetCell(Data.Cell cellData)
+        public void ConstructCell(Data.Cell cellData)
         {
-            SetGround(cellData.Position, cellData.GroundType);
-            SetStructure(cellData.Position, cellData.StructureType);
-            SetOverlay(cellData.Position, cellData.OverlayType);
+            ConstructGround(cellData.Position, cellData.GroundType);
+            ConstructStructure(cellData.Position, cellData.StructureType);
+            ConstructOverlay(cellData.Position, cellData.OverlayType);
         }
 
 
-        public void SetGround(int2 position, Type.Ground groundType)
+        public void ConstructGround(int2 position, Type.Ground groundType)
         {
             if (groundType == Type.Ground.None)
             {
@@ -71,7 +71,7 @@ namespace MMH.System
             }
         }
 
-        public void SetStructure(int2 position, Type.Structure structureType)
+        public void ConstructStructure(int2 position, Type.Structure structureType)
         {
             if (structureType == Type.Structure.None)
             {
@@ -86,7 +86,7 @@ namespace MMH.System
             }
         }
 
-        public void SetOverlay(int2 position, Type.Overlay overlayType)
+        public void ConstructOverlay(int2 position, Type.Overlay overlayType)
         {
             if (overlayType == Type.Overlay.None)
             {

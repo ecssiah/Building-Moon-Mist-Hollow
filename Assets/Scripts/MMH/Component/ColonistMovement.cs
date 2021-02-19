@@ -26,6 +26,9 @@ namespace MMH.Component
                     Gather();
                     break;
 
+                case Type.Behavior.Movement.None:
+                    break;
+
                 default:
                     break;
             }

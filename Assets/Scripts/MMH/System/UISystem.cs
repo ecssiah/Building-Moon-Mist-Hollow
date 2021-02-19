@@ -101,7 +101,7 @@ namespace MMH.System
             ClearSelection();
 
             mapSystem.Map.SelectCell(cellPosition);
-            renderSystem.SetOverlay(cellPosition, Type.Overlay.Selection);
+            renderSystem.ConstructOverlay(cellPosition, Type.Overlay.Selection);
 
             Data.Cell cellData = mapSystem.Map.GetCell(cellPosition);
             infoWindow.ActivateCellMode(cellData);
@@ -110,7 +110,7 @@ namespace MMH.System
 
         public void ClearSelection()
         {
-            renderSystem.SetOverlay(mapSystem.Map.SelectedCell, Type.Overlay.None);
+            renderSystem.ConstructOverlay(mapSystem.Map.SelectedCell, Type.Overlay.None);
 
             entityLabeler.Clear();
             infoWindow.Deactivate();

@@ -98,7 +98,17 @@ namespace MMH.System
                                 colonist.Path.Positions.Peek() - colonist.Entity.Position
                             );
                         }
+                        else
+                        {
+                            print($"{colonist.Id.FullName} failed to find path to: {colonyBase.Position} from {colonist.Entity.Position}");
+                        }
 
+                        break;
+
+                    case Type.Behavior.Movement.None:
+                        break;
+
+                    case Type.Behavior.Movement.Wander:
                         break;
 
                     default:

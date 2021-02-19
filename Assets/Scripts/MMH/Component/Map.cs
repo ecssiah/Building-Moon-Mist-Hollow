@@ -37,11 +37,6 @@ namespace MMH.Component
             placeholders = new List<RectInt>();
            
             colonyBases = new Dictionary<Type.Group, Data.ColonyBase>();
-
-            SetupMap();
-            ConstructMap();
-
-            CalculateEdges();
         }
 
 
@@ -54,6 +49,7 @@ namespace MMH.Component
             Factory.RoomBuilder.LayoutRooms(rooms, placeholders);
 
             SetupRooms();
+
             SetupColonyBases();
         }
 
@@ -62,9 +58,12 @@ namespace MMH.Component
         {
             foreach (Data.Cell cell in mapData.Cells)
             {
-                mapSystem.RenderCell(cell);
+                mapSystem.ConstructCell(cell);
             }
         }
+
+
+        public void SetData(Data.Map mapData) => this.mapData = mapData;
 
 
         public void CalculateEdges()

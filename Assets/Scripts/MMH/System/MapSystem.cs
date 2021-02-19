@@ -19,12 +19,16 @@ namespace MMH.System
             renderSystem = GameObject.Find("Render System").GetComponent<RenderSystem>();
 
             map = GameObject.Find("Map").AddComponent<Component.Map>();
+
+            map.SetupMap();
+            map.ConstructMap();
+            map.CalculateEdges();
         }
 
 
-        public void RenderCell(Data.Cell cellData)
+        public void ConstructCell(Data.Cell cellData)
         {
-            renderSystem.SetCell(cellData);
+            renderSystem.ConstructCell(cellData);
         }
 
 
@@ -38,9 +42,9 @@ namespace MMH.System
         {
             using (StreamWriter file = File.CreateText($"Assets/Resources/Data/{name}.json"))
             {
-                //string jsonCellsText = JsonUtility.ToJson(mapData, true);
+                string jsonCellsText = JsonUtility.ToJson(map, true);
 
-                //file.Write(jsonCellsText);
+                file.Write(jsonCellsText);
             }
         }
 
@@ -49,9 +53,10 @@ namespace MMH.System
         {
             using (StreamReader reader = new StreamReader($"Assets/Resources/Data/{name}.json"))
             {
-                //string jsonText = reader.ReadToEnd();
+                string jsonText = reader.ReadToEnd();
 
-                //mapData = JsonUtility.FromJson<Data.Map>(jsonText);
+                map.SetData(JsonUtility.FromJson<Data.Map>(jsonText));
+                map.ConstructMap();
             }
         }
     }
