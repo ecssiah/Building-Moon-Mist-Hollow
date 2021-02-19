@@ -1,4 +1,6 @@
-﻿namespace MMH.Data
+﻿using Unity.Mathematics;
+
+namespace MMH.Data
 {
     public class Id
     {

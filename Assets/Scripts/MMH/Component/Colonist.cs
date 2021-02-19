@@ -5,10 +5,9 @@ namespace MMH.Component
 {
     public class Colonist : MonoBehaviour
     {
-        public Type.Behavior Behavior;
-
         public Data.Id Id;
         public Data.Entity Entity;
+        public Data.Praxis Praxis;
         public Data.Path Path;
         public Data.Inventory Inventory;
 
@@ -21,6 +20,7 @@ namespace MMH.Component
 
             Id = new Data.Id();
             Entity = new Data.Entity();
+            Praxis = new Data.Praxis();
             Path = new Data.Path();
             Inventory = new Data.Inventory();
 

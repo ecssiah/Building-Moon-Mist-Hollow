@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Unity.Mathematics;
+﻿using Unity.Mathematics;
 using UnityEngine;
 
 namespace MMH.Component
@@ -18,10 +16,14 @@ namespace MMH.Component
 
         void Update()
         {
-            switch (colonist.Behavior)
+            switch (colonist.Praxis.Movement)
             {
-                case Type.Behavior.Wander:
+                case Type.Behavior.Movement.Wander:
                     Wander();
+                    break;
+
+                case Type.Behavior.Movement.Gather:
+                    Gather();
                     break;
 
                 default:
@@ -47,12 +49,24 @@ namespace MMH.Component
 
                 if (colonist.HasPath())
                 {
+                    colonist.Entity.Speed = Info.Entity.DefaultWalkSpeed;
                     colonist.Entity.Direction = Util.Map.GetCardinalDirection(
                         colonist.Path.Positions.Peek() - colonist.Entity.Position
                     );
                 }
+                else
+                {
+                    colonist.Entity.Speed = 0;
+                }
+            }
+        }
 
-                print(colonist.Path);
+
+        private void Gather()
+        {
+            if (colonist.HasPath())
+            {
+                FollowPath();
             }
         }
 
@@ -66,6 +80,7 @@ namespace MMH.Component
                 float2 isoPosition = Util.Math.Lerp2(
                     colonist.Entity.Position, target, colonist.Path.StepProgress
                 );
+
                 float2 worldPosition = Util.Map.IsoToWorld(isoPosition);
 
                 transform.position = new Vector3(worldPosition.x, worldPosition.y, 0);
@@ -74,11 +89,11 @@ namespace MMH.Component
             }
             else
             {
-                colonist.Entity.Position = colonist.Path.Positions.Pop();
-
                 colonist.Path.StepProgress = 0;
 
-                if (colonist.Path.Positions.Count > 0)
+                colonist.Entity.Position = colonist.Path.Positions.Pop();
+
+                if (colonist.HasPath())
                 {
                     colonist.Entity.Direction = Util.Map.GetCardinalDirection(
                         colonist.Path.Positions.Peek() - colonist.Entity.Position

@@ -22,8 +22,8 @@ namespace MMH.Info
         public static readonly int StraightMovementCost = 10;
         public static readonly int DiagonalMovementCost = 14;
 
-        public static readonly int SeedRoomSize = 3;
-        public static readonly int NumberOfSeedRooms = 4;
+        public static readonly int SeedRoomSize = 2;
+        public static readonly int NumberOfSeedRooms = 20;
         public static readonly int MaximumExpansionAttempts = 20;
 
         public static readonly Dictionary<Type.Direction, int2> DirectionOffsets = new Dictionary<Type.Direction, int2>

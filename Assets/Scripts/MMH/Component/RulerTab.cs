@@ -16,8 +16,6 @@ namespace MMH.Component
 
         private GameObject ruleListObject;
 
-        private List<string> colonistBehaviors;
-
         public override void Awake()
         {
             entitySystem = GameObject.Find("Entity System").GetComponent<System.EntitySystem>();
@@ -26,31 +24,31 @@ namespace MMH.Component
 
             ruleListObject = transform.Find("Colonist Behavior").gameObject;
 
-            SetupBehaviorDropdown();
+            SetupMovementBehaviorDropdown();
         }
 
 
-        private void SetupBehaviorDropdown()
+        private void SetupMovementBehaviorDropdown()
         {
             label = ruleListObject.transform.Find("Label").GetComponent<TextMeshProUGUI>();
-            label.text = "Colonist Behavior";
+            label.text = "Colonist Movement Behavior";
 
             dropdown = ruleListObject.transform.Find("Dropdown").GetComponent<TMP_Dropdown>();
 
-            List<string> behaviorNames = Enum.GetNames(typeof(Type.Behavior)).ToList();
+            List<string> movementBehaviorNames = Enum.GetNames(typeof(Type.Behavior.Movement)).ToList();
 
             dropdown.ClearOptions();
-            dropdown.AddOptions(behaviorNames);
+            dropdown.AddOptions(movementBehaviorNames);
 
             dropdown.onValueChanged.AddListener(
-                delegate { OnColonistBehaviorChange(); }
+                delegate { OnColonistMovementBehaviorChange(); }
             );
         }
 
 
-        private void OnColonistBehaviorChange()
+        private void OnColonistMovementBehaviorChange()
         {
-            entitySystem.SetColonistBehavior((Type.Behavior)dropdown.value);
+            entitySystem.SetColonistMovementBehavior((Type.Behavior.Movement)dropdown.value);
         }
     }
 }

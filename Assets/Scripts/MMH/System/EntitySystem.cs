@@ -78,22 +78,31 @@ namespace MMH.System
         }
 
 
-        public void SetColonistBehavior(Type.Behavior behavior)
+        public void SetColonistMovementBehavior(Type.Behavior.Movement movementBehavior)
         {
             foreach (Component.Colonist colonist in population.Colonists)
             {
-                colonist.Behavior = behavior;
+                colonist.Praxis.Movement = movementBehavior;
 
-                if (behavior == Type.Behavior.Gather)
+                switch (movementBehavior)
                 {
-                    colonist.Behavior = Type.Behavior.Gather;
+                    case Type.Behavior.Movement.Gather:
+                        Data.ColonyBase colonyBase = mapSystem.Map.GetColonyBase(colonist.Id.GroupType);
 
-                    Data.ColonyBase colonyBase = mapSystem.Map.GetColonyBase(colonist.Id.GroupType);
+                        colonist.FindPath(colonyBase.Position);
 
-                    colonist.FindPath(colonyBase.Position);
+                        if (colonist.HasPath())
+                        {
+                            colonist.Entity.Speed = Info.Entity.DefaultWalkSpeed;
+                            colonist.Entity.Direction = Util.Map.GetCardinalDirection(
+                                colonist.Path.Positions.Peek() - colonist.Entity.Position
+                            );
+                        }
 
-                    print("Gather");
-                    print(colonist.Path);
+                        break;
+
+                    default:
+                        break;
                 }
             }
         }

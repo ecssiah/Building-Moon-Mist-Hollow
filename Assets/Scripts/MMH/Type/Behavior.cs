@@ -1,6 +1,6 @@
-﻿namespace MMH.Type
+﻿namespace MMH.Type.Behavior
 {
-    public enum Behavior
+    public enum Movement
     {
         None,
         Wander,

@@ -7,6 +7,6 @@ namespace MMH.Handler
 {
     public interface IEntityEventHandler : IEventSystemHandler
     {
-        void SetColonistBehavior(Type.Behavior behavior);
+        void SetColonistMovementBehavior(Type.Behavior.Movement movementBehavior);
     }
 }
