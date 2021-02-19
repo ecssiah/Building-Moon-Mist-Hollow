@@ -103,6 +103,13 @@ namespace MMH.System
                 else if (behaviorName == "Gather")
                 {
                     colonist.Behavior = Type.Behavior.Gather;
+
+                    Data.ColonyBase colonyBase = mapSystem.Map.GetColonyBase(colonist.Id.GroupType);
+
+                    colonist.FindPath(colonyBase.Position);
+
+                    print("Gather");
+                    print(colonist.Path);
                 }
             }
         }

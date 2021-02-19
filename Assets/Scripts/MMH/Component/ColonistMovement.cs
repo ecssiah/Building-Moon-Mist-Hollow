@@ -9,63 +9,33 @@ namespace MMH.Component
     {
         private Colonist colonist;
 
-        private Pathfinding pathfinding;
-
-        private System.MapSystem mapSystem;
-
 
         private void Awake()
         {
             colonist = GetComponent<Colonist>();
-
-            mapSystem = GameObject.Find("Map System").GetComponent<System.MapSystem>();
-        }
-
-
-        private void Start()
-        {
-            pathfinding = colonist.GetComponentInParent<Pathfinding>();
         }
 
 
         void Update()
         {
-            switch (colonist.Behavior)
+            if (colonist.Path.Active)
             {
-                case Type.Behavior.Wander:
-                    if (colonist.Path.Active)
-                    {
-                        FollowPath();
-                    }
-                    else
-                    {
-                        int2 offset = new int2(UnityEngine.Random.Range(-2, 2), UnityEngine.Random.Range(-2, 2));
+                FollowPath();
+            }
+            else
+            {
+                switch (colonist.Behavior)
+                {
+                    case Type.Behavior.Wander:
+                        int2 offset = new int2(UnityEngine.Random.Range(-3, 4), UnityEngine.Random.Range(-3, 4));
 
-                        colonist.Path = pathfinding.FindPath(colonist.Entity.Position, colonist.Entity.Position + offset);
-                    }
+                        colonist.FindPath(colonist.Entity.Position + offset);
 
-                    break;
+                        print("Wander");
+                        print(colonist.Path);
 
-                case Type.Behavior.Gather:
-                    if (colonist.Path.Active)
-                    {
-                        FollowPath();
-                    }
-                    else
-                    {
-                        Data.ColonyBase colonyBase = mapSystem.Map.GetColonyBase(colonist.Id.GroupType);
-
-                        colonist.Path = pathfinding.FindPath(colonist.Entity.Position, colonyBase.Position);
-                    }
-
-                    break;
-
-                case Type.Behavior.None:
-
-                    break;
-
-                default:
-                    break;
+                        break;
+                }
             }
         }
 
